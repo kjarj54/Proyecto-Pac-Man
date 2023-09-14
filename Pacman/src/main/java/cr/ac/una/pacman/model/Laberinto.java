@@ -4,6 +4,8 @@
  */
 package cr.ac.una.pacman.model;
 
+import java.awt.Rectangle;
+
 /**
  *
  * @author ANTHONY
@@ -55,8 +57,6 @@ public class Laberinto {
         this.matriz = matriz;
     }
 
-    // Otras funciones relevantes para el laberinto
-
     public void imprimirLaberinto() {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
@@ -65,6 +65,4 @@ public class Laberinto {
             System.out.println();
         }
     }
-
-    // Otras funciones y métodos relacionados con el juego en el laberinto
 }
