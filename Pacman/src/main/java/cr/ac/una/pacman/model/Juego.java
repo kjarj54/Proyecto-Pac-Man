@@ -51,84 +51,111 @@ public class Juego {
     public void generarLaberinto() {
         Random random = new Random();
 
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLUMNS; j++) {
-                laberinto.matriz[i][j] = ' ';
+        for (int i = 1; i < ROWS; i++) {
+            for (int j = 1; j < COLUMNS; j++) {
+                laberinto.setMatrizCelda(' ', i, j);
             }
         }
 
-        for (int i = 0; i < COLUMNS; i++) {
-            laberinto.matriz[0][i] = '#';
-            laberinto.matriz[ROWS - 1][i] = '#';
+        for (int i = 1; i < COLUMNS; i++) {
+            laberinto.setMatrizCelda('#', 1, i);
+            laberinto.setMatrizCelda('#', ROWS - 1, i);
         }
 
         for (int i = 1; i < ROWS - 1; i++) {
-            laberinto.matriz[i][0] = '#';
-            laberinto.matriz[i][COLUMNS - 1] = '#';
+            laberinto.setMatrizCelda('#', i, 1);
+            laberinto.setMatrizCelda('#', i, COLUMNS - 1);
         }
 
-        for (int i = 1; i < ROWS - 1; i++) {
-            for (int j = 1; j < COLUMNS - 1; j++) {
-//                if (i % 2 == 1 && j % 2 == 1 && random.nextInt(10) > 0) {
-                if (i % 2 == 1 && j % 2 == 1) {
-
-                    laberinto.matriz[i][j] = '#';
+        for (int i = 2; i < ROWS - 1; i++) {
+            for (int j = 2; j < COLUMNS - 1; j++) {
+                if (i % 2 == 1 && j % 2 == 1 && random.nextInt(10) >= 0) {
+//                if (i % 2 == 1 && j % 2 == 1) {
+                    laberinto.setMatrizCelda('#', i, j);
                     int vecino = random.nextInt(4);
                     if (j < COLUMNS - 1 && vecino == 0) {
-
-                        laberinto.matriz[i][j + 1] = '#';
+                        laberinto.setMatrizCelda('#', i, j + 1);
                     }
                     if (i < ROWS - 1 && vecino == 1) {
-
-                        laberinto.matriz[i + 1][j] = '#';
+                        laberinto.setMatrizCelda('#', i + 1, j);
                     }
                     if (j > 1 && vecino == 2) {
-
-                        laberinto.matriz[i][j - 1] = '#';
+                        laberinto.setMatrizCelda('#', i, j - 1);
                     }
                     if (i > 1 && vecino == 3) {
-
-                        laberinto.matriz[i - 1][j] = '#';
+                        laberinto.setMatrizCelda('#', i - 1, j);
                     }
+                }
+            }
+        }
+        for (int i = 2; i < ROWS - 1; i++) {
+            for (int j = 2; j < COLUMNS - 1; j++) {
+                if (laberinto.getMatrizCelda(i, j) == ' ') {
+                    laberinto.setMatrizCelda('p', i, j);
                 }
             }
         }
         for (int i = (ROWS / 2) - 3; i < (ROWS / 2) + 3; i++) {
             for (int j = (COLUMNS / 2) - 3; j < (COLUMNS / 2) + 4; j++) {
                 if ((i == (ROWS / 2) - 2 || i == (ROWS / 2) + 1) && (j >= (COLUMNS / 2) - 2 && j <= (COLUMNS / 2) + 2)) {
-                    laberinto.matriz[i][j] = '#';
+                    laberinto.setMatrizCelda('#', i, j);
                 } else if ((j == (COLUMNS / 2) - 2 || j == (COLUMNS / 2) + 2) && (i >= (ROWS / 2) - 2 && i <= (ROWS / 2) + 1)) {
-                    laberinto.matriz[i][j] = '#';
+                    laberinto.setMatrizCelda('#', i, j);
                 } else {
-                    laberinto.matriz[i][j] = ' ';
+                    laberinto.setMatrizCelda(' ', i, j);
                 }
             }
         }
-        laberinto.matriz[(ROWS / 2) - 2][COLUMNS / 2 - 1] = ' ';
-        laberinto.matriz[(ROWS / 2) - 2][COLUMNS / 2] = ' ';
-        laberinto.matriz[(ROWS / 2) - 2][COLUMNS / 2 + 1] = ' ';
+        laberinto.setMatrizCelda(' ', (ROWS / 2) - 2, COLUMNS / 2 - 1);
+        laberinto.setMatrizCelda(' ', (ROWS / 2) - 2, COLUMNS / 2);
+        laberinto.setMatrizCelda(' ', (ROWS / 2) - 2, COLUMNS / 2 + 1);
         int vecino = random.nextInt(2);
 //        int vecino = 0;
-        if (vecino == 0) {
-            for (int i = ROWS / 2 - 1; i <= ROWS / 2 + 1; i++) {
-                for (int j = 0; j <= 1; j++) {
-                    laberinto.matriz[i][j] = ' ';
+        switch (vecino) {
+            case 0:
+                for (int i = ROWS / 2 - 1; i <= ROWS / 2 + 1; i++) {
+                    for (int j = 2; j <= 1; j++) {
+                        laberinto.setMatrizCelda(' ', i, j);
+                    }
+                    for (int j = COLUMNS - 2; j <= COLUMNS - 1; j++) {
+                        laberinto.setMatrizCelda(' ', i, j);
+                    }
                 }
-                for (int j = COLUMNS - 2; j <= COLUMNS - 1; j++) {
-                    laberinto.matriz[i][j] = ' ';
+                break;
+
+            case 1:
+                for (int i = 2; i <= 1; i++) {
+                    for (int j = COLUMNS / 2 - 1; j <= COLUMNS / 2 + 1; j++) {
+                        laberinto.setMatrizCelda(' ', i, j);
+                    }
                 }
+                for (int i = ROWS - 2; i <= ROWS - 1; i++) {
+                    for (int j = COLUMNS / 2 - 1; j <= COLUMNS / 2 + 1; j++) {
+                        laberinto.setMatrizCelda(' ', i, j);
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+        int contPP = 0;
+        while (contPP < 4) {
+            int randomX = random.nextInt(COLUMNS - 1) + 1;
+            int randomY = random.nextInt(ROWS - 1) + 1;
+            if(laberinto.getMatrizCelda(randomY, randomX) == ' ' || laberinto.getMatrizCelda(randomY, randomX) == 'p') {
+                laberinto.setMatrizCelda('*', randomY, randomX);
+                contPP++;
             }
         }
-        if (vecino == 1) {
-            for (int i = 0; i <= 1; i++) {
-                for (int j = COLUMNS / 2 - 1; j <= COLUMNS / 2 + 1; j++) {
-                    laberinto.matriz[i][j] = ' ';
-                }
-            }
-            for (int i = ROWS - 2; i <= ROWS - 1; i++) {
-                for (int j = COLUMNS / 2 - 1; j <= COLUMNS / 2 + 1; j++) {
-                    laberinto.matriz[i][j] = ' ';
-                }
+        boolean pacmanListo = false;
+        while (!pacmanListo) {
+            int randomX = random.nextInt(COLUMNS - 1) + 1;
+            int randomY = random.nextInt(ROWS - 1) + 1;
+            if(laberinto.getMatrizCelda(randomY, randomX) == ' ' || laberinto.getMatrizCelda(randomY, randomX) == 'p') {
+                this.getPacMan().setX(randomX * 20);
+                this.getPacMan().setY(randomY * 20);
+                pacmanListo = true;
             }
         }
     }

@@ -13,7 +13,7 @@ import java.awt.Rectangle;
 public class Laberinto {
     private int nivel;
     private String tema;
-    public char[][] matriz;
+    private char[][] matriz;
 
     public Laberinto(int rows, int columns) {
         this.nivel = 0;
@@ -48,13 +48,17 @@ public class Laberinto {
     public char[][] getMatriz() {
         return matriz;
     }
+
+    public void setMatriz(char[][] matriz) {
+        this.matriz = matriz;
+    }
     
     public char getMatrizCelda(int row, int col) {
         return matriz[row][col];
     }
-
-    public void setMatriz(char[][] matriz) {
-        this.matriz = matriz;
+    
+    public void setMatrizCelda(char valor, int row, int col) {
+        matriz[row][col] = valor;
     }
 
     public void imprimirLaberinto() {

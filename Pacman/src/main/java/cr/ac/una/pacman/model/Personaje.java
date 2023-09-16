@@ -4,6 +4,9 @@
  */
 package cr.ac.una.pacman.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author ANTHONY
@@ -12,17 +15,17 @@ public class Personaje {
     private int x, y;
     private int velocidad;
     private int direccion;
-    private String imagen;
+    private List<String> imagen;
 
     public Personaje() {
         this.x = 0;
         this.y = 0;
         this.velocidad = 0;
         this.direccion = 1;
-        this.imagen = "";
+        this.imagen = new ArrayList<>();
     }
     
-    public Personaje(int x, int y, int velocidad, int direccion, String imagen) {
+    public Personaje(int x, int y, int velocidad, int direccion, List<String> imagen) {
         this.x = x;
         this.y = y;
         this.velocidad = velocidad;
@@ -62,11 +65,11 @@ public class Personaje {
         this.direccion = direccion;
     }
 
-    public String getImagen() {
+    public List<String> getImagen() {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
+    public void setImagen(List<String> imagen) {
         this.imagen = imagen;
     }
     
