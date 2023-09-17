@@ -5,6 +5,7 @@
 package cr.ac.una.pacman.controller;
 
 import com.jfoenix.controls.JFXButton;
+import cr.ac.una.pacman.model.Fantasma;
 import cr.ac.una.pacman.model.Juego;
 import cr.ac.una.pacman.model.PacMan;
 import java.net.URL;
@@ -74,9 +75,15 @@ public class JuegoViewController extends Controller implements Initializable {
         imagenPacman.add("cr/ac/una/pacman/resources/PacMan.png");
         imagenPacman.add("cr/ac/una/pacman/resources/PacMan2.png");
 
+        List<Fantasma> fantasmas = new ArrayList<>();
+        List<String> imagenFantasmaRojo = new ArrayList<>();
+        imagenFantasmaRojo.add("cr/ac/una/pacman/resources/FantasmaRojo.png");
+        Fantasma fantasmaRojo = new Fantasma((COLUMNS * 20) / 2, (ROWS * 20) / 2, 2, 0, imagenFantasmaRojo, "Rojo", "");
+        fantasmas.add(fantasmaRojo);
+
         PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * 20) / 2, (ROWS * 20) / 2, 1, 3, imagenPacman);
 
-        juego = new Juego(pacman, ROWS, COLUMNS);
+        juego = new Juego(pacman, fantasmas, ROWS, COLUMNS);
         juego.generarLaberinto();
         pintar();
 
@@ -121,10 +128,11 @@ public class JuegoViewController extends Controller implements Initializable {
     public void actualizar() {
         if (segundoAct > segundoAnt + 0.4) {
             segundoAnt = segundoAct;
+//            System.out.println("X : " + juego.getPacMan().getX() / 20 + " | Y: " + juego.getPacMan().getY() / 20);
+            juego.getFantasmas().get(0).encontrarCamino(juego.getLaberinto(), juego.getPacMan().getX() / 20, juego.getPacMan().getY() / 20);
         }
         juego.getPacMan().mover(direccion, juego.getLaberinto());
         juego.getPacMan().comer(juego.getLaberinto());
-
     }
 
     public void pintar() {
@@ -150,6 +158,7 @@ public class JuegoViewController extends Controller implements Initializable {
             }
         }
         juego.getPacMan().pintar(graficos, segundoAct, segundoAnt);
+        juego.getFantasmas().get(0).pintar(graficos, segundoAct, segundoAnt);
         lbScore.setText("" + juego.getPacMan().getPuntos());
     }
 }

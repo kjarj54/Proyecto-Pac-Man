@@ -4,6 +4,7 @@
  */
 package cr.ac.una.pacman.model;
 
+import java.util.List;
 import java.util.Random;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -18,7 +19,7 @@ import javafx.scene.layout.StackPane;
 public class Juego {
 
     private PacMan pacMan;
-//    private List<Fantasma> fantasmas;
+    private List<Fantasma> fantasmas;
     private Laberinto laberinto;
     private double tiempo;
 //    private List<String> trofeos;
@@ -26,10 +27,10 @@ public class Juego {
     private static final int ROWS = 20;
     private static final int COLUMNS = 32;
 
-    public Juego(PacMan pacMan, int rows, int columns) {
+    public Juego(PacMan pacMan, List<Fantasma> fantasmas, int rows, int columns) {
 //    public Juego(PacMan pacMan, List<Fantasma> fantasmas, Laberinto laberinto) {
         this.pacMan = pacMan;
-//        this.fantasmas = fantasmas;
+        this.fantasmas = fantasmas;
         this.laberinto = new Laberinto(rows, columns);
         this.tiempo = 0.0;
 //        this.trofeos = new ArrayList<>();
@@ -159,14 +160,14 @@ public class Juego {
             }
         }
     }
-//
-//    public List<Fantasma> getFantasmas() {
-//        return fantasmas;
-//    }
-//
-//    public void setFantasmas(List<Fantasma> fantasmas) {
-//        this.fantasmas = fantasmas;
-//    }
+
+    public List<Fantasma> getFantasmas() {
+        return fantasmas;
+    }
+
+    public void setFantasmas(List<Fantasma> fantasmas) {
+        this.fantasmas = fantasmas;
+    }
 
     public Laberinto getLaberinto() {
         return laberinto;
