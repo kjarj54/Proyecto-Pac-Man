@@ -12,8 +12,8 @@ import java.util.List;
  * @author ANTHONY
  */
 public class Personaje {
-    private int x, y;
-    private int velocidad;
+    private double x, y;
+    private double velocidad;
     private int direccion;
     private List<String> imagen;
 
@@ -25,7 +25,7 @@ public class Personaje {
         this.imagen = new ArrayList<>();
     }
     
-    public Personaje(int x, int y, int velocidad, int direccion, List<String> imagen) {
+    public Personaje(double x, double y, double velocidad, int direccion, List<String> imagen) {
         this.x = x;
         this.y = y;
         this.velocidad = velocidad;
@@ -33,27 +33,27 @@ public class Personaje {
         this.imagen = imagen;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 
-    public int getVelocidad() {
+    public double getVelocidad() {
         return velocidad;
     }
 
-    public void setVelocidad(int velocidad) {
+    public void setVelocidad(double velocidad) {
         this.velocidad = velocidad;
     }
 
