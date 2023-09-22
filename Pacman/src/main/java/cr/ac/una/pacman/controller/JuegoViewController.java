@@ -78,10 +78,10 @@ public class JuegoViewController extends Controller implements Initializable {
         List<Fantasma> fantasmas = new ArrayList<>();
         List<String> imagenFantasmaRojo = new ArrayList<>();
         imagenFantasmaRojo.add("cr/ac/una/pacman/resources/FantasmaRojo.png");
-        Fantasma fantasmaRojo = new Fantasma((COLUMNS * 20) / 2, (ROWS * 20) / 2, 0.6, 0, imagenFantasmaRojo, "Rojo", "");
+        Fantasma fantasmaRojo = new Fantasma((COLUMNS * 20) / 2, (ROWS * 20) / 2, 1, 3, imagenFantasmaRojo, "Rojo", "");
         fantasmas.add(fantasmaRojo);
 
-        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * 20) / 2, (ROWS * 20) / 2, 0.55, 3, imagenPacman);
+        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * 20) / 2, (ROWS * 20) / 2, 0.9, 3, imagenPacman);
 
         juego = new Juego(pacman, fantasmas, ROWS, COLUMNS);
         juego.generarLaberinto();
@@ -132,7 +132,7 @@ public class JuegoViewController extends Controller implements Initializable {
         }
         juego.getPacMan().mover(direccion, juego.getLaberinto());
         juego.getPacMan().comer(juego.getLaberinto());
-        juego.getFantasmas().get(0).encontrarCamino(juego.getLaberinto(), (int) juego.getPacMan().getX() / 20, (int) juego.getPacMan().getY() / 20);
+        juego.getFantasmas().get(0).mover(juego.getLaberinto(), juego.getPacMan().getX(), juego.getPacMan().getY());
     }
 
     public void pintar() {

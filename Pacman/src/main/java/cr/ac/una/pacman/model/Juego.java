@@ -144,7 +144,7 @@ public class Juego {
         while (contPP < 4) {
             int randomX = random.nextInt(COLUMNS - 1) + 1;
             int randomY = random.nextInt(ROWS - 1) + 1;
-            if(laberinto.getMatrizCelda(randomY, randomX) == ' ' || laberinto.getMatrizCelda(randomY, randomX) == 'p') {
+            if (laberinto.getMatrizCelda(randomY, randomX) == ' ' || laberinto.getMatrizCelda(randomY, randomX) == 'p') {
                 laberinto.setMatrizCelda('*', randomY, randomX);
                 contPP++;
             }
@@ -153,12 +153,14 @@ public class Juego {
         while (!pacmanListo) {
             int randomX = random.nextInt(COLUMNS - 1) + 1;
             int randomY = random.nextInt(ROWS - 1) + 1;
-            if(laberinto.getMatrizCelda(randomY, randomX) == ' ' || laberinto.getMatrizCelda(randomY, randomX) == 'p') {
+            if (laberinto.getMatrizCelda(randomY, randomX) == ' ' || laberinto.getMatrizCelda(randomY, randomX) == 'p') {
                 this.getPacMan().setX(randomX * 20);
                 this.getPacMan().setY(randomY * 20);
                 pacmanListo = true;
             }
         }
+//        this.getPacMan().setX(3 * 20);
+//        this.getPacMan().setY(10 * 20);
     }
 
     public List<Fantasma> getFantasmas() {

@@ -31,8 +31,10 @@ public class Fantasma extends Personaje {
     private String color;
     private String algoritmo;
     private boolean vulnerable;
-    int[][] padresX;
-    int[][] padresY;
+    int[][] padresX = null;
+    int[][] padresY = null;
+    int ultPosX;
+    int ultPosY;
 
     public Fantasma(double x, double y, double velocidad, int direccion, List<String> imagenes, String color, String algoritmo) {
         super(x, y, velocidad, direccion, imagenes);
@@ -58,11 +60,17 @@ public class Fantasma extends Personaje {
     }
 
     // Este método mueve al fantasma según su algoritmo y el estado del juego
-    public void mover(Laberinto laberinto, int objetivoX, int objetivoY) {
-
+    public void mover(Laberinto laberinto, double objetivoX, double objetivoY) {
+        if ((int) this.getX() / 20 == (int) (this.getX() + 19) / 20 && (int) this.getY() / 20 == (int) (this.getY() + 19) / 20) {
+            algoritmoDijkstra(laberinto, (int) objetivoX / 20, (int) objetivoY / 20);
+            ultPosX = (int) objetivoX / 20;
+            ultPosY = (int) objetivoY / 20;
+        }
+        System.out.println("X: " + this.getX() + " | Y: " + this.getY());
+        moverFantasma(laberinto, ultPosX, ultPosY);
         switch (this.algoritmo) {
             case DIJKSTRA:
-                encontrarCamino(laberinto, objetivoX, objetivoY);
+
                 break;
             case FLOYD:
 //        nuevaPosicion = laberinto.floyd(filaActual, columnaActual, this.vulnerable);
@@ -76,7 +84,7 @@ public class Fantasma extends Personaje {
         }
     }
 
-    public void encontrarCamino(Laberinto laberinto, int objetivoX, int objetivoY) {
+    public void algoritmoDijkstra(Laberinto laberinto, int objetivoX, int objetivoY) {
         int filas = laberinto.getMatriz().length;
         int columnas = laberinto.getMatriz()[0].length;
 
@@ -92,10 +100,10 @@ public class Fantasma extends Personaje {
             Arrays.fill(visitado[i], false);
         }
 
-        distancias[(int)this.getY() / 20][(int)this.getX() / 20] = 0;
+        distancias[(int) this.getY() / 20][(int) this.getX() / 20] = 0;
 
         PriorityQueue<Nodo> colaPrioridad = new PriorityQueue<>();
-        colaPrioridad.add(new Nodo((int)this.getX() / 20, (int)this.getY() / 20, 0));
+        colaPrioridad.add(new Nodo((int) this.getX() / 20, (int) this.getY() / 20, 0));
 
         int[][] movimientos = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Movimientos arriba, abajo, izquierda, derecha
 
@@ -139,8 +147,7 @@ public class Fantasma extends Personaje {
         } else {
             System.out.println("La distancia mínima al objetivo es: " + distancias[objetivoY][objetivoX]);
             System.out.println("Camino desde (" + this.getX() / 20 + ", " + this.getY() / 20 + ") a (" + objetivoX + ", " + objetivoY + "):");
-//            imprimirCamino(padresX, padresY, this.getX() / 20, this.getY() / 20, objetivoX, objetivoY);
-            mover(laberinto, padresX, padresY, (int)this.getX() / 20, (int)this.getY() / 20, objetivoX, objetivoY);
+//            imprimirCamino(padresX, padresY, (int) this.getX() / 20, (int) this.getY() / 20, objetivoX, objetivoY);
         }
     }
 
@@ -184,30 +191,39 @@ public class Fantasma extends Personaje {
         System.out.println();
     }
 
-    public void mover(Laberinto laberinto, int[][] padresX, int[][] padresY, int inicioX, int inicioY, int objetivoX, int objetivoY) {
-        Stack<int[]> camino = new Stack<>();
-        int x = objetivoX;
-        int y = objetivoY;
+    public void moverFantasma(Laberinto laberinto, int objetivoX, int objetivoY) {
+        int direccion = this.getDireccion();
+        if (padresX != null && padresY != null) {
+            Stack<int[]> camino = new Stack<>();
+            int x = objetivoX;
+            int y = objetivoY;
 
-        while (x != inicioX || y != inicioY) {
-            camino.push(new int[]{x, y});
-            int tempX = padresX[y][x];
-            int tempY = padresY[y][x];
-            x = tempX;
-            y = tempY;
-        }
-        int[] nuevaPos = camino.pop();
-        int xMovimiento = nuevaPos[0] - (int)this.getX() / 20;
-        int yMovimiento = nuevaPos[1] - (int)this.getY() / 20;
-        int direccion = 0;
-        if (xMovimiento == 1 && yMovimiento == 0) {
-            direccion = 0;
-        } else if (xMovimiento == 0 && yMovimiento == 1) {
-            direccion = 1;
-        } else if (xMovimiento == -1 && yMovimiento == 0) {
-            direccion = 2;
-        } else if (xMovimiento == 0 && yMovimiento == -1) {
-            direccion = 3;
+            while (x != (int) this.getX() / 20 || y != (int) this.getY() / 20) {
+                camino.push(new int[]{x, y});
+                int tempX = padresX[y][x];
+                int tempY = padresY[y][x];
+                x = tempX;
+                y = tempY;
+            }
+            int[] nuevaPos = camino.pop();
+            int xDestino = nuevaPos[0] * 20; // Multiplicamos por 20 para obtener la coordenada real del destino
+            int yDestino = nuevaPos[1] * 20;
+
+            int xActual = (int) this.getX();
+            int yActual = (int) this.getY();
+
+            int xMovimiento = xDestino - xActual;
+            int yMovimiento = yDestino - yActual;
+
+            if (xMovimiento > 0) {
+                direccion = 0; // Mover hacia la derecha
+            } else if (xMovimiento < 0) {
+                direccion = 2; // Mover hacia la izquierda
+            } else if (yMovimiento > 0) {
+                direccion = 1; // Mover hacia abajo
+            } else if (yMovimiento < 0) {
+                direccion = 3; // Mover hacia arriba
+            }
         }
         switch (this.getDireccion()) {
             case 0:
