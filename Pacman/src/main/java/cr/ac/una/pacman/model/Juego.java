@@ -4,6 +4,9 @@
  */
 package cr.ac.una.pacman.model;
 
+import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
+import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
+import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import java.util.List;
 import java.util.Random;
 import javafx.scene.Node;
@@ -24,8 +27,6 @@ public class Juego {
     private double tiempo;
 //    private List<String> trofeos;
 //    private Map<String, Integer> estadisticas;
-    private static final int ROWS = 20;
-    private static final int COLUMNS = 32;
 
     public Juego(PacMan pacMan, List<Fantasma> fantasmas, int rows, int columns) {
 //    public Juego(PacMan pacMan, List<Fantasma> fantasmas, Laberinto laberinto) {
@@ -70,7 +71,7 @@ public class Juego {
 
         for (int i = 2; i < ROWS - 1; i++) {
             for (int j = 2; j < COLUMNS - 1; j++) {
-                if (i % 2 == 1 && j % 2 == 1 && random.nextInt(10) >= 0) {
+                if (i % 2 == 1 && j % 2 == 1 && random.nextInt(10) >= 4) {
 //                if (i % 2 == 1 && j % 2 == 1) {
                     laberinto.setMatrizCelda('#', i, j);
                     int vecino = random.nextInt(4);
@@ -115,7 +116,7 @@ public class Juego {
         switch (vecino) {
             case 0:
                 for (int i = ROWS / 2 - 1; i <= ROWS / 2 + 1; i++) {
-                    for (int j = 2; j <= 1; j++) {
+                    for (int j = 1; j <= 2; j++) {
                         laberinto.setMatrizCelda(' ', i, j);
                     }
                     for (int j = COLUMNS - 2; j <= COLUMNS - 1; j++) {
@@ -125,7 +126,7 @@ public class Juego {
                 break;
 
             case 1:
-                for (int i = 2; i <= 1; i++) {
+                for (int i = 1; i <= 2; i++) {
                     for (int j = COLUMNS / 2 - 1; j <= COLUMNS / 2 + 1; j++) {
                         laberinto.setMatrizCelda(' ', i, j);
                     }
@@ -154,13 +155,13 @@ public class Juego {
             int randomX = random.nextInt(COLUMNS - 1) + 1;
             int randomY = random.nextInt(ROWS - 1) + 1;
             if (laberinto.getMatrizCelda(randomY, randomX) == ' ' || laberinto.getMatrizCelda(randomY, randomX) == 'p') {
-                this.getPacMan().setX(randomX * 20);
-                this.getPacMan().setY(randomY * 20);
+                this.getPacMan().setX(randomX * SIZE);
+                this.getPacMan().setY(randomY * SIZE);
                 pacmanListo = true;
             }
         }
-//        this.getPacMan().setX(3 * 20);
-//        this.getPacMan().setY(10 * 20);
+//        this.getPacMan().setX(3 * SIZE);
+//        this.getPacMan().setY(10 * SIZE);
     }
 
     public List<Fantasma> getFantasmas() {
