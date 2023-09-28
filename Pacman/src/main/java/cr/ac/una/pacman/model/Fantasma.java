@@ -7,6 +7,7 @@ package cr.ac.una.pacman.model;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -30,6 +31,7 @@ public class Fantasma extends Personaje {
     public static final String DIJKSTRA = "dijkstra";
     public static final String DIJKSTRAALTERNATIVO = "dijkstraAlternativo";
     public static final String FLOYD = "floyd";
+    public static final String ESCAPAR = "escapar";
     public static final String ALEATORIO = "aleatorio";
 
     private String color;
@@ -40,8 +42,8 @@ public class Fantasma extends Personaje {
     int[][] distance = null;
     int miUltPosX;
     int miUltPosY;
-    int ultPosX;
-    int ultPosY;
+    public int ultPosX;
+    public int ultPosY;
 
     public Fantasma(double x, double y, double velocidad, int direccion, List<String> imagenes, String color, String algoritmo) {
         super(x, y, velocidad, direccion, imagenes);
@@ -67,7 +69,7 @@ public class Fantasma extends Personaje {
     }
 
     // Este método mueve al fantasma según su algoritmo y el estado del juego
-    public void mover(Laberinto laberinto, double objetivoX, double objetivoY) {
+    public void mover(Laberinto laberinto, PacMan pacman, double objetivoX, double objetivoY) {
         switch (this.algoritmo) {
             case DIJKSTRA -> {
                 if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
@@ -90,6 +92,15 @@ public class Fantasma extends Personaje {
             case FLOYD -> {
                 if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
                     algoritmoFloyd(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
+                    miUltPosX = (int) this.getX() / SIZE;
+                    miUltPosY = (int) this.getY() / SIZE;
+                    ultPosX = (int) objetivoX / SIZE;
+                    ultPosY = (int) objetivoY / SIZE;
+                }
+            }
+            case ESCAPAR -> {
+                if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                    escaparDePacman(laberinto, pacman, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
                     miUltPosX = (int) this.getX() / SIZE;
                     miUltPosY = (int) this.getY() / SIZE;
                     ultPosX = (int) objetivoX / SIZE;
@@ -305,20 +316,106 @@ public class Fantasma extends Personaje {
 //        }
     }
 
-    public void imprimirCamino(int[][] padresX, int[][] padresY, int inicioX, int inicioY, int objetivoX, int objetivoY) {
+    public void escaparDePacman(Laberinto laberinto, PacMan pacman, int objetivoX, int objetivoY) {
+        int filas = laberinto.getMatriz().length;
+        int columnas = laberinto.getMatriz()[0].length;
+
+        int[][] distancias = new int[filas][columnas];
+        padresX = new int[filas][columnas];
+        padresY = new int[filas][columnas];
+        boolean[][] visitado = new boolean[filas][columnas];
+
+        for (int i = 0; i < filas; i++) {
+            Arrays.fill(distancias[i], Integer.MAX_VALUE);
+            Arrays.fill(padresX[i], -1);
+            Arrays.fill(padresY[i], -1);
+            Arrays.fill(visitado[i], false);
+        }
+
+        distancias[(int) this.getY() / SIZE][(int) this.getX() / SIZE] = 0;
+
+        PriorityQueue<Nodo> colaPrioridad = new PriorityQueue<>();
+        colaPrioridad.add(new Nodo((int) this.getX() / SIZE, (int) this.getY() / SIZE, 0));
+
+        int[][] movimientos = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Movimientos arriba, abajo, izquierda, derecha
+
+        while (!colaPrioridad.isEmpty()) {
+            Nodo nodoActual = colaPrioridad.poll();
+
+            int x = nodoActual.x;
+            int y = nodoActual.y;
+
+            if (x == objetivoX && y == objetivoY) {
+                // Llegamos al objetivo, detener la búsqueda
+                break;
+            }
+
+            if (visitado[y][x]) {
+                continue;
+            }
+
+            visitado[y][x] = true;
+
+            for (int[] movimiento : movimientos) {
+                int nuevoX = x + movimiento[0];
+                int nuevoY = y + movimiento[1];
+
+                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas && !visitado[nuevoY][nuevoX]
+                        && (laberinto.getMatriz()[nuevoY][nuevoX] == ' ' || laberinto.getMatriz()[nuevoY][nuevoX] == 'p' || laberinto.getMatriz()[nuevoY][nuevoX] == '*'
+                        && ((int) pacman.getX() / SIZE != nuevoX || (int) pacman.getY() / SIZE != nuevoY))
+                        && ((int) pacman.getX() / SIZE != nuevoX || (int) pacman.getY() / SIZE - 1 != nuevoY)
+                        && ((int) pacman.getX() / SIZE - 1 != nuevoX || (int) pacman.getY() / SIZE != nuevoY)
+                        && ((int) pacman.getX() / SIZE != nuevoX || (int) pacman.getY() / SIZE + 1 != nuevoY)
+                        && ((int) pacman.getX() / SIZE + 1 != nuevoX || (int) pacman.getY() / SIZE != nuevoY)) {
+                    int distanciaActual = distancias[y][x];
+                    int pesoCelda = 1; // Costo uniforme para todos los caminos
+
+                    if (distanciaActual + pesoCelda < distancias[nuevoY][nuevoX]) {
+                        distancias[nuevoY][nuevoX] = distanciaActual + pesoCelda;
+                        padresX[nuevoY][nuevoX] = x;
+                        padresY[nuevoY][nuevoX] = y;
+                        colaPrioridad.add(new Nodo(nuevoX, nuevoY, distancias[nuevoY][nuevoX]));
+                    }
+                }
+            }
+        }
+
+//        if (distancias[objetivoY][objetivoX] == Integer.MAX_VALUE) {
+//            System.out.println("No se encontró un camino al objetivo.");
+//        } else {
+//            System.out.println("La distancia mínima al objetivo es: " + distancias[objetivoY][objetivoX]);
+//            System.out.println("Camino desde (" + this.getX() / SIZE + ", " + this.getY() / SIZE + ") a (" + objetivoX + ", " + objetivoY + "):");
+//            imprimirCamino((int) this.getX() / SIZE, (int) this.getY() / SIZE, objetivoX, objetivoY);
+//            System.out.println("X: " + pacman.getX() / SIZE + " - Y: " + pacman.getY() / SIZE);
+//            System.out.println("");
+//        }
+    }
+
+    public void imprimirCamino(int inicioX, int inicioY, int objetivoX, int objetivoY) {
         Stack<String> camino = new Stack<>();
         int x = objetivoX;
         int y = objetivoY;
 
-        while (x != inicioX || y != inicioY) {
-            camino.push("(" + x + ", " + y + ")");
-            int tempX = padresX[y][x];
-            int tempY = padresY[y][x];
-            x = tempX;
-            y = tempY;
+        // Verificar si hay un camino válido antes de intentar imprimirlo
+        if (padresX != null && padresY != null && x >= 0 && x < padresX[0].length && y >= 0 && y < padresY.length) {
+            while (x != inicioX || y != inicioY) {
+                if (x < 0 || y < 0) {
+                    break;  // Salir si se alcanza un valor no válido
+                }
+                camino.push("(" + x + ", " + y + ")");
+                int tempX = padresX[y][x];
+                int tempY = padresY[y][x];
+                x = tempX;
+                y = tempY;
+            }
+            if (x >= 0 && y >= 0) {
+                camino.push("(" + inicioX + ", " + inicioY + ")");
+            } else {
+                camino.push("No hay camino válido");
+            }
+        } else {
+            camino.push("No hay camino válido");
         }
-
-        camino.push("(" + inicioX + ", " + inicioY + ")");
 
         while (!camino.isEmpty()) {
             System.out.print(camino.pop());
@@ -413,6 +510,41 @@ public class Fantasma extends Personaje {
                         y = newY;
                         break;
                     }
+                }
+            }
+            int[] nuevaPos = camino.pop();
+            int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
+            int yDestino = nuevaPos[1] * SIZE;
+
+            int xActual = (int) this.getX();
+            int yActual = (int) this.getY();
+
+            int xMovimiento = xDestino - xActual;
+            int yMovimiento = yDestino - yActual;
+
+            if (xMovimiento > 0) {
+                direccion = 0; // Mover hacia la derecha
+            } else if (xMovimiento < 0) {
+                direccion = 2; // Mover hacia la izquierda
+            } else if (yMovimiento > 0) {
+                direccion = 1; // Mover hacia abajo
+            } else if (yMovimiento < 0) {
+                direccion = 3; // Mover hacia arriba
+            }
+        } else if ("escapar".equals(algoritmo) && padresX != null && padresY != null) {
+            Stack<int[]> camino = new Stack<>();
+
+            // Verificar si hay un camino válido antes de intentar imprimirlo
+            if (padresX != null && padresY != null && x >= 0 && x < padresX[0].length && y >= 0 && y < padresY.length) {
+                while (x != miUltPosX || y != miUltPosY) {
+                    if (x < 0 || y < 0) {
+                        break;  // Salir si se alcanza un valor no válido
+                    }
+                    camino.push(new int[]{x, y});
+                    int tempX = padresX[y][x];
+                    int tempY = padresY[y][x];
+                    x = tempX;
+                    y = tempY;
                 }
             }
             int[] nuevaPos = camino.pop();

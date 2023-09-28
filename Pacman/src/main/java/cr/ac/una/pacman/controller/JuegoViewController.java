@@ -81,16 +81,21 @@ public class JuegoViewController extends Controller implements Initializable {
         List<Fantasma> fantasmas = new ArrayList<>();
         List<String> imagenFantasmaRojo = new ArrayList<>();
         imagenFantasmaRojo.add("cr/ac/una/pacman/resources/FantasmaRojo.png");
-        Fantasma fantasmaRojo = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
-        Fantasma fantasmaRosa = new Fantasma((COLUMNS * SIZE) / 2 + SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rosa", "dijkstraAlternativo");
-        Fantasma fantasmaCian = new Fantasma((COLUMNS * SIZE) / 2 - SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Cian", "dijkstraAlternativo");
+//        Fantasma fantasmaRojo = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
+//        Fantasma fantasmaRosa = new Fantasma((COLUMNS * SIZE) / 2 + SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rosa", "dijkstraAlternativo");
+//        Fantasma fantasmaCian = new Fantasma((COLUMNS * SIZE) / 2 - SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Cian", "dijkstraAlternativo");
+//        Fantasma fantasmaNaranja = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2 - SIZE, 0.8, 3, imagenFantasmaRojo, "Naranja", "floyd");
+        Fantasma fantasmaRojo = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rojo", "escapar");
+        Fantasma fantasmaRosa = new Fantasma((COLUMNS * SIZE) / 2 + SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rosa", "escapar");
+        Fantasma fantasmaCian = new Fantasma((COLUMNS * SIZE) / 2 - SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Cian", "escapar");
+        fantasmaCian.setVulnerable(true);
         Fantasma fantasmaNaranja = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2 - SIZE, 0.8, 3, imagenFantasmaRojo, "Naranja", "floyd");
         fantasmas.add(fantasmaRojo);
         fantasmas.add(fantasmaRosa);
         fantasmas.add(fantasmaCian);
         fantasmas.add(fantasmaNaranja);
 
-        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 1, 3, imagenPacman);
+        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.8, 3, imagenPacman);
 
         juego = new Juego(pacman, fantasmas, ROWS, COLUMNS);
         juego.generarLaberinto();
@@ -116,6 +121,7 @@ public class JuegoViewController extends Controller implements Initializable {
             }
         });
 
+        nuevaPosEscape(juego.getFantasmas().get(2));
         nuevaPosAleatoria();
         ciclo();
     }
@@ -142,16 +148,27 @@ public class JuegoViewController extends Controller implements Initializable {
 //            System.out.println("X : " + juego.getPacMan().getX() / SIZE + " | Y: " + juego.getPacMan().getY() / SIZE);
         }
         if (segundoAct1 > segundoAnt1 + 10
-                || (int) juego.getFantasmas().get(3).getX() / SIZE == (int) posXAle / SIZE && (int) juego.getFantasmas().get(3).getY() / SIZE == (int) posYAle / SIZE) {
+                || (int) juego.getFantasmas().get(3).getX() / SIZE == (int) posXAle / SIZE
+                && (int) juego.getFantasmas().get(3).getY() / SIZE == (int) posYAle / SIZE) {
             segundoAnt1 = segundoAct1;
             nuevaPosAleatoria();
         }
+
         juego.getPacMan().mover(direccion, juego.getLaberinto());
         juego.getPacMan().comer(juego.getLaberinto());
-        juego.getFantasmas().get(0).mover(juego.getLaberinto(), juego.getPacMan().getX(), juego.getPacMan().getY());
-        juego.getFantasmas().get(1).mover(juego.getLaberinto(), juego.getPacMan().getX(), juego.getPacMan().getY());
-        juego.getFantasmas().get(2).mover(juego.getLaberinto(), juego.getPacMan().getX(), juego.getPacMan().getY());
-        juego.getFantasmas().get(3).mover(juego.getLaberinto(), posXAle, posYAle);
+//        juego.getFantasmas().get(0).mover(juego.getLaberinto(), juego.getPacMan().getX(), juego.getPacMan().getY());
+//        juego.getFantasmas().get(1).mover(juego.getLaberinto(), juego.getPacMan().getX(), juego.getPacMan().getY());
+        if (juego.getFantasmas().get(2).isVulnerable()) {
+            if ((int) juego.getFantasmas().get(2).getX() / SIZE == (int) juego.getFantasmas().get(2).ultPosX
+                    && (int) juego.getFantasmas().get(2).getY() / SIZE == (int) juego.getFantasmas().get(2).ultPosY) {
+                nuevaPosEscape(juego.getFantasmas().get(2));
+            }
+            juego.getFantasmas().get(2).mover(juego.getLaberinto(), juego.getPacMan(), juego.getFantasmas().get(2).ultPosX * SIZE, juego.getFantasmas().get(2).ultPosY * SIZE);            
+        } else {
+            juego.getFantasmas().get(2).mover(juego.getLaberinto(), null, juego.getPacMan().getX(), juego.getPacMan().getY());
+
+        }
+//        juego.getFantasmas().get(3).mover(juego.getLaberinto(), posXAle, posYAle);
     }
 
     public void pintar() {
@@ -196,4 +213,25 @@ public class JuegoViewController extends Controller implements Initializable {
             }
         }
     }
+
+    public void nuevaPosEscape(Fantasma fantasma) {
+        boolean Listo = false;
+        while (!Listo) {
+            int randomX = random.nextInt(COLUMNS - 1) + 1;
+            int randomY = random.nextInt(ROWS - 1) + 1;
+            if ((juego.getLaberinto().getMatrizCelda(randomY, randomX) == ' '
+                    || juego.getLaberinto().getMatrizCelda(randomY, randomX) == 'p'
+                    || juego.getLaberinto().getMatrizCelda(randomY, randomX) == '*')
+                    && (Math.sqrt((juego.getPacMan().getX() / SIZE - randomX) * (juego.getPacMan().getX() / SIZE - randomX)
+                            + (juego.getPacMan().getY() / SIZE - randomY) * (juego.getPacMan().getY() / SIZE - randomY)) >= 10)
+                    && (randomX != fantasma.ultPosX || fantasma.ultPosY != randomY)) {
+                System.out.println("X ante: " + fantasma.ultPosX + " Y ante: " + fantasma.ultPosY);
+                fantasma.ultPosX = randomX;
+                fantasma.ultPosY = randomY;
+                System.out.println("X nuevo: " + fantasma.ultPosX + " Y nuevo: " + fantasma.ultPosY);
+                Listo = true;
+            }
+        }
+    }
+
 }

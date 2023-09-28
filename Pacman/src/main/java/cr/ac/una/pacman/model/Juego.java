@@ -58,6 +58,13 @@ public class Juego {
                 laberinto.setMatrizCelda(' ', i, j);
             }
         }
+        for (int i = 0; i < ROWS; i++) {
+            laberinto.setMatrizCelda('n', i, 0);
+
+        }
+        for (int j = 0; j < COLUMNS; j++) {
+            laberinto.setMatrizCelda('n', 0, j);
+        }
 
         for (int i = 1; i < COLUMNS; i++) {
             laberinto.setMatrizCelda('#', 1, i);
