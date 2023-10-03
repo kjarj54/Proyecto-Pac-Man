@@ -31,7 +31,6 @@ public class Fantasma extends Personaje {
     public static final String DIJKSTRA = "dijkstra";
     public static final String DIJKSTRAALTERNATIVO = "dijkstraAlternativo";
     public static final String FLOYD = "floyd";
-    public static final String ESCAPAR = "escapar";
     public static final String ALEATORIO = "aleatorio";
 
     private String color;
@@ -70,44 +69,45 @@ public class Fantasma extends Personaje {
 
     // Este método mueve al fantasma según su algoritmo y el estado del juego
     public void mover(Laberinto laberinto, PacMan pacman, double objetivoX, double objetivoY) {
-        switch (this.algoritmo) {
-            case DIJKSTRA -> {
-                if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
-                    algoritmoDijkstra(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
-                    miUltPosX = (int) this.getX() / SIZE;
-                    miUltPosY = (int) this.getY() / SIZE;
-                    ultPosX = (int) objetivoX / SIZE;
-                    ultPosY = (int) objetivoY / SIZE;
-                }
+        if (this.vulnerable) {
+            if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                escaparDePacman(laberinto, pacman, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
+                miUltPosX = (int) this.getX() / SIZE;
+                miUltPosY = (int) this.getY() / SIZE;
+                ultPosX = (int) objetivoX / SIZE;
+                ultPosY = (int) objetivoY / SIZE;
             }
-            case DIJKSTRAALTERNATIVO -> {
-                if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
-                    algoritmoDijkstraAlternativo(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
-                    miUltPosX = (int) this.getX() / SIZE;
-                    miUltPosY = (int) this.getY() / SIZE;
-                    ultPosX = (int) objetivoX / SIZE;
-                    ultPosY = (int) objetivoY / SIZE;
+        } else {
+            switch (this.algoritmo) {
+                case DIJKSTRA -> {
+                    if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                        algoritmoDijkstra(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
+                        miUltPosX = (int) this.getX() / SIZE;
+                        miUltPosY = (int) this.getY() / SIZE;
+                        ultPosX = (int) objetivoX / SIZE;
+                        ultPosY = (int) objetivoY / SIZE;
+                    }
                 }
-            }
-            case FLOYD -> {
-                if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
-                    algoritmoFloyd(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
-                    miUltPosX = (int) this.getX() / SIZE;
-                    miUltPosY = (int) this.getY() / SIZE;
-                    ultPosX = (int) objetivoX / SIZE;
-                    ultPosY = (int) objetivoY / SIZE;
+                case DIJKSTRAALTERNATIVO -> {
+                    if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                        algoritmoDijkstraAlternativo(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
+                        miUltPosX = (int) this.getX() / SIZE;
+                        miUltPosY = (int) this.getY() / SIZE;
+                        ultPosX = (int) objetivoX / SIZE;
+                        ultPosY = (int) objetivoY / SIZE;
+                    }
                 }
-            }
-            case ESCAPAR -> {
-                if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
-                    escaparDePacman(laberinto, pacman, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
-                    miUltPosX = (int) this.getX() / SIZE;
-                    miUltPosY = (int) this.getY() / SIZE;
-                    ultPosX = (int) objetivoX / SIZE;
-                    ultPosY = (int) objetivoY / SIZE;
+                case FLOYD -> {
+                    if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                        algoritmoFloyd(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
+                        miUltPosX = (int) this.getX() / SIZE;
+                        miUltPosY = (int) this.getY() / SIZE;
+                        ultPosX = (int) objetivoX / SIZE;
+                        ultPosY = (int) objetivoY / SIZE;
+                    }
                 }
-            }
-            default -> {
+                default -> {
+                }
             }
         }
 //        System.out.println("X: " + this.getX() + " | Y: " + this.getY());
@@ -463,7 +463,7 @@ public class Fantasma extends Personaje {
         int direccion = this.getDireccion();
         int x = objetivoX;
         int y = objetivoY;
-        if ("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo) && padresX != null && padresY != null) {
+        if (("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo)) && padresX != null && padresY != null && !this.isVulnerable()) {
             Stack<int[]> camino = new Stack<>();
 
             while (x != miUltPosX || y != miUltPosY) {
@@ -492,7 +492,7 @@ public class Fantasma extends Personaje {
             } else if (yMovimiento < 0) {
                 direccion = 3; // Mover hacia arriba
             }
-        } else if ("floyd".equals(algoritmo) && distance != null) {
+        } else if ("floyd".equals(algoritmo) && distance != null  && !this.isVulnerable()) {
             Stack<int[]> camino = new Stack<>();
 
             while (x != miUltPosX || y != miUltPosY) {
@@ -531,7 +531,7 @@ public class Fantasma extends Personaje {
             } else if (yMovimiento < 0) {
                 direccion = 3; // Mover hacia arriba
             }
-        } else if ("escapar".equals(algoritmo) && padresX != null && padresY != null) {
+        } else if (this.isVulnerable() && padresX != null && padresY != null) {
             Stack<int[]> camino = new Stack<>();
 
             // Verificar si hay un camino válido antes de intentar imprimirlo
@@ -567,46 +567,37 @@ public class Fantasma extends Personaje {
                 direccion = 3; // Mover hacia arriba
             }
         }
+        if (this.getDireccion() != direccion) {
+            cambioDireccion(direccion, laberinto);
+        }
         switch (this.getDireccion()) {
-            case 0:
-                if (this.getDireccion() != direccion) {
-                    cambioDireccion(direccion, laberinto);
-                }
+            case 0 -> {
                 if (this.getDireccion() == 0 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() + SIZE) / SIZE) != '#'
                         && laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + SIZE) / SIZE) != '#') {
                     this.setX(getX() + this.getVelocidad());
                 }
-                break;
-            case 1:
-                if (this.getDireccion() != direccion) {
-                    cambioDireccion(direccion, laberinto);
-                }
+            }
+            case 1 -> {
                 if (this.getDireccion() == 1 && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) getX() / SIZE) != '#'
                         && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
                     this.setY(getY() + this.getVelocidad());
                 }
-                break;
-            case 2:
-                if (this.getDireccion() != direccion) {
-                    cambioDireccion(direccion, laberinto);
-                }
+            }
+            case 2 -> {
                 if (this.getDireccion() == 2 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() - 1) / SIZE) != '#'
                         && laberinto.getMatrizCelda(((int) getY() + (SIZE - 1)) / SIZE, (int) (getX() - 1) / SIZE) != '#') {
                     this.setX(getX() - this.getVelocidad());
                 }
-                break;
-            case 3:
-                if (this.getDireccion() != direccion) {
-                    cambioDireccion(direccion, laberinto);
-                }
+            }
+            case 3 -> {
                 if (this.getDireccion() == 3 && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) getX() / SIZE) != '#'
                         && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
                     this.setY(getY() - this.getVelocidad());
                 }
-                break;
+            }
 
-            default:
-                break;
+            default -> {
+            }
         }
     }
 
@@ -633,20 +624,12 @@ public class Fantasma extends Personaje {
     public void pintar(GraphicsContext graficos, double segundoAct, double segundoAnt) {
         double angulo = 0;
         switch (this.getDireccion()) {
-            case 0:
-                angulo = 0;
-                break;
-            case 1:
-                angulo = 90;
-                break;
-            case 2:
-                angulo = 180;
-                break;
-            case 3:
-                angulo = -90;
-                break;
-            default:
-                break;
+            case 0 -> angulo = 0;
+            case 1 -> angulo = 90;
+            case 2 -> angulo = 180;
+            case 3 -> angulo = -90;
+            default -> {
+            }
         }
         Affine oldTransform = graficos.getTransform();
         Rotate rotate = new Rotate(angulo, getX() + 10, getY() + 10);
