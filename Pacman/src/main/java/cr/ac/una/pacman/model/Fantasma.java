@@ -36,6 +36,7 @@ public class Fantasma extends Personaje {
     private String color;
     private String algoritmo;
     private boolean vulnerable;
+    private boolean eraVulnerable = false;
     int[][] padresX = null;
     int[][] padresY = null;
     int[][] distance = null;
@@ -76,6 +77,7 @@ public class Fantasma extends Personaje {
                 miUltPosY = (int) this.getY() / SIZE;
                 ultPosX = (int) objetivoX / SIZE;
                 ultPosY = (int) objetivoY / SIZE;
+                eraVulnerable = true;
             }
         } else {
             switch (this.algoritmo) {
@@ -86,6 +88,7 @@ public class Fantasma extends Personaje {
                         miUltPosY = (int) this.getY() / SIZE;
                         ultPosX = (int) objetivoX / SIZE;
                         ultPosY = (int) objetivoY / SIZE;
+                        eraVulnerable = false;
                     }
                 }
                 case DIJKSTRAALTERNATIVO -> {
@@ -95,6 +98,7 @@ public class Fantasma extends Personaje {
                         miUltPosY = (int) this.getY() / SIZE;
                         ultPosX = (int) objetivoX / SIZE;
                         ultPosY = (int) objetivoY / SIZE;
+                        eraVulnerable = false;
                     }
                 }
                 case FLOYD -> {
@@ -104,13 +108,13 @@ public class Fantasma extends Personaje {
                         miUltPosY = (int) this.getY() / SIZE;
                         ultPosX = (int) objetivoX / SIZE;
                         ultPosY = (int) objetivoY / SIZE;
+                        eraVulnerable = false;
                     }
                 }
                 default -> {
                 }
             }
         }
-//        System.out.println("X: " + this.getX() + " | Y: " + this.getY());
         moverFantasma(laberinto, ultPosX, ultPosY);
     }
 
@@ -463,7 +467,7 @@ public class Fantasma extends Personaje {
         int direccion = this.getDireccion();
         int x = objetivoX;
         int y = objetivoY;
-        if (("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo)) && padresX != null && padresY != null && !this.isVulnerable()) {
+        if (("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo)) && padresX != null && padresY != null && !this.isVulnerable() && !this.eraVulnerable) {
             Stack<int[]> camino = new Stack<>();
 
             while (x != miUltPosX || y != miUltPosY) {
@@ -492,7 +496,7 @@ public class Fantasma extends Personaje {
             } else if (yMovimiento < 0) {
                 direccion = 3; // Mover hacia arriba
             }
-        } else if ("floyd".equals(algoritmo) && distance != null  && !this.isVulnerable()) {
+        } else if ("floyd".equals(algoritmo) && distance != null && !this.isVulnerable() && !this.eraVulnerable) {
             Stack<int[]> camino = new Stack<>();
 
             while (x != miUltPosX || y != miUltPosY) {
@@ -531,7 +535,7 @@ public class Fantasma extends Personaje {
             } else if (yMovimiento < 0) {
                 direccion = 3; // Mover hacia arriba
             }
-        } else if (this.isVulnerable() && padresX != null && padresY != null) {
+        } else if (this.isVulnerable() && this.eraVulnerable && padresX != null && padresY != null) {
             Stack<int[]> camino = new Stack<>();
 
             // Verificar si hay un camino válido antes de intentar imprimirlo
@@ -558,15 +562,26 @@ public class Fantasma extends Personaje {
             int yMovimiento = yDestino - yActual;
 
             if (xMovimiento > 0) {
+                this.setY(miUltPosY * 20);
                 direccion = 0; // Mover hacia la derecha
             } else if (xMovimiento < 0) {
+                this.setY(miUltPosY * 20);
                 direccion = 2; // Mover hacia la izquierda
             } else if (yMovimiento > 0) {
+                this.setX(miUltPosX * 20);
                 direccion = 1; // Mover hacia abajo
             } else if (yMovimiento < 0) {
+                this.setX(miUltPosX * 20);
                 direccion = 3; // Mover hacia arriba
             }
         }
+//        System.out.println("Direccion Actual: " + this.getDireccion());
+//        System.out.println("Direccion Nueva: " + direccion);
+//        System.out.println("X: " + this.getX() + " | Y: " + this.getY());
+//        System.out.println("Objetivo X: " + ultPosX + " | Objetivo Y: " + ultPosY);
+//        System.out.println("Vulnerable: " + this.isVulnerable());
+//        System.out.println("Era vulnerable: " + this.eraVulnerable);
+//        System.out.println("");
         if (this.getDireccion() != direccion) {
             cambioDireccion(direccion, laberinto);
         }
@@ -624,10 +639,14 @@ public class Fantasma extends Personaje {
     public void pintar(GraphicsContext graficos, double segundoAct, double segundoAnt) {
         double angulo = 0;
         switch (this.getDireccion()) {
-            case 0 -> angulo = 0;
-            case 1 -> angulo = 90;
-            case 2 -> angulo = 180;
-            case 3 -> angulo = -90;
+            case 0 ->
+                angulo = 0;
+            case 1 ->
+                angulo = 90;
+            case 2 ->
+                angulo = 180;
+            case 3 ->
+                angulo = -90;
             default -> {
             }
         }

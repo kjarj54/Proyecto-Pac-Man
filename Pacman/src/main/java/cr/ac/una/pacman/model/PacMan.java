@@ -115,7 +115,7 @@ public class PacMan extends Personaje {
         }
     }
 
-    public void comer(Laberinto laberinto) {
+    public void comer(Laberinto laberinto, Juego juego) {
         char celda = laberinto.getMatrizCelda((int) getY() / SIZE, (int) getX() / SIZE); 
         char celda1 = laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
         if ((this.getDireccion() == 0 || this.getDireccion() == 1) && celda == 'p') {
@@ -126,8 +126,10 @@ public class PacMan extends Personaje {
             this.puntos += 10;
         } else if ((this.getDireccion() == 0 || this.getDireccion() == 1) && celda == '*') {
             laberinto.setMatrizCelda(' ', (int) getY() / SIZE, (int) getX() / SIZE);
+            juego.powerPellet();
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3) && celda1 == '*') {
             laberinto.setMatrizCelda(' ', (int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+            juego.powerPellet();
         }
     }
 

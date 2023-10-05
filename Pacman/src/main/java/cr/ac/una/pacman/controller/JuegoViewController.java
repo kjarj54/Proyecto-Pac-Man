@@ -81,10 +81,10 @@ public class JuegoViewController extends Controller implements Initializable {
         List<Fantasma> fantasmas = new ArrayList<>();
         List<String> imagenFantasmaRojo = new ArrayList<>();
         imagenFantasmaRojo.add("cr/ac/una/pacman/resources/FantasmaRojo.png");
-        Fantasma fantasmaRojo = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.81, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
-        Fantasma fantasmaRosa = new Fantasma((COLUMNS * SIZE) / 2 + SIZE, (ROWS * SIZE) / 2,0.81, 3, imagenFantasmaRojo, "Rosa", "dijkstraAlternativo");
-        Fantasma fantasmaCian = new Fantasma((COLUMNS * SIZE) / 2 - SIZE, (ROWS * SIZE) / 2, 0.81, 3, imagenFantasmaRojo, "Cian", "dijkstraAlternativo");
-        Fantasma fantasmaNaranja = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2 - SIZE, 0.81, 3, imagenFantasmaRojo, "Naranja", "floyd");
+        Fantasma fantasmaRojo = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
+        Fantasma fantasmaRosa = new Fantasma((COLUMNS * SIZE) / 2 + SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rosa", "dijkstraAlternativo");
+        Fantasma fantasmaCian = new Fantasma((COLUMNS * SIZE) / 2 - SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Cian", "dijkstraAlternativo");
+        Fantasma fantasmaNaranja = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2 - SIZE, 0.8, 3, imagenFantasmaRojo, "Naranja", "floyd");
 //        fantasmaRojo.setVulnerable(true);
 //        fantasmaRosa.setVulnerable(true);
 //        fantasmaCian.setVulnerable(true);
@@ -94,7 +94,7 @@ public class JuegoViewController extends Controller implements Initializable {
         fantasmas.add(fantasmaCian);
         fantasmas.add(fantasmaNaranja);
 
-        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.8, 3, imagenPacman);
+        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.9, 3, imagenPacman);
 
         juego = new Juego(pacman, fantasmas, ROWS, COLUMNS);
         juego.generarLaberinto();
@@ -116,11 +116,11 @@ public class JuegoViewController extends Controller implements Initializable {
             }
         });
 
-        nuevaPosEscape(juego.getFantasmas().get(0));
-        nuevaPosEscape(juego.getFantasmas().get(1));
-        nuevaPosEscape(juego.getFantasmas().get(2));
-        nuevaPosEscape(juego.getFantasmas().get(3));
-        nuevaPosAleatoria();
+//        juego.nuevaPosEscape(juego.getFantasmas().get(0));
+//        juego.nuevaPosEscape(juego.getFantasmas().get(1));
+//        juego.nuevaPosEscape(juego.getFantasmas().get(2));
+//        juego.nuevaPosEscape(juego.getFantasmas().get(3));
+        juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
         ciclo();
     }
 
@@ -162,21 +162,20 @@ public class JuegoViewController extends Controller implements Initializable {
         if (segundoAct > segundoAnt + 0.4) {
             segundoAnt = segundoAct;
         }
-        if (segundoAct1 > segundoAnt1 + 10
-                || (int) juego.getFantasmas().get(3).getX() / SIZE == (int) posXAle / SIZE
-                && (int) juego.getFantasmas().get(3).getY() / SIZE == (int) posYAle / SIZE) {
-            segundoAnt1 = segundoAct1;
-            nuevaPosAleatoria();
+        if ((int) juego.getFantasmas().get(3).getX() / SIZE == juego.getFantasmas().get(3).ultPosX
+                && (int) juego.getFantasmas().get(3).getY() / SIZE == juego.getFantasmas().get(3).ultPosY) {
+            
+            juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
         }
         juego.getPacMan().mover(direccion, juego.getLaberinto());
-        juego.getPacMan().comer(juego.getLaberinto());
+        juego.getPacMan().comer(juego.getLaberinto(), juego);
 
         for (Fantasma fant : juego.getFantasmas()) {
             int fantX = (int) fant.getX() / SIZE;
             int fantY = (int) fant.getY() / SIZE;
 
             if (fant.isVulnerable() && fantX == (int) fant.ultPosX && fantY == (int) fant.ultPosY) {
-                nuevaPosEscape(fant);
+                juego.nuevaPosEscape(fant);
             }
 
             if (fant.isVulnerable()) {
@@ -184,14 +183,14 @@ public class JuegoViewController extends Controller implements Initializable {
             } else if (!"floyd".equals(fant.getAlgoritmo())) {
                 fant.mover(juego.getLaberinto(), null, juego.getPacMan().getX(), juego.getPacMan().getY());
             } else {
-                fant.mover(juego.getLaberinto(), null, posXAle, posYAle);
+                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE);
             }
         }
 
 //        if (juego.getFantasmas().get(2).isVulnerable()) {
 //            if ((int) juego.getFantasmas().get(2).getX() / SIZE == (int) juego.getFantasmas().get(2).ultPosX
 //                    && (int) juego.getFantasmas().get(2).getY() / SIZE == (int) juego.getFantasmas().get(2).ultPosY) {
-//                nuevaPosEscape(juego.getFantasmas().get(2));
+//                juego.nuevaPosEscape(juego.getFantasmas().get(2));
 //            }
 //            juego.getFantasmas().get(2).mover(juego.getLaberinto(), juego.getPacMan(), juego.getFantasmas().get(2).ultPosX * SIZE, juego.getFantasmas().get(2).ultPosY * SIZE);
 //        } else {
@@ -236,39 +235,4 @@ public class JuegoViewController extends Controller implements Initializable {
 
         lbScore.setText(String.valueOf(juego.getPacMan().getPuntos()));
     }
-
-    public void nuevaPosAleatoria() {
-        boolean Listo = false;
-        while (!Listo) {
-            int randomX = random.nextInt(COLUMNS - 1) + 1;
-            int randomY = random.nextInt(ROWS - 1) + 1;
-            char celda = juego.getLaberinto().getMatrizCelda(randomY, randomX);
-
-            if (celda == ' ' || celda == 'p') {
-                posXAle = randomX * SIZE;
-                posYAle = randomY * SIZE;
-                Listo = true;
-            }
-        }
-    }
-
-    public void nuevaPosEscape(Fantasma fantasma) {
-        boolean Listo = false;
-        while (!Listo) {
-            int randomX = random.nextInt(COLUMNS - 1) + 1;
-            int randomY = random.nextInt(ROWS - 1) + 1;
-            char celda = juego.getLaberinto().getMatrizCelda(randomY, randomX);
-            double distancia = Math.sqrt(Math.pow((juego.getPacMan().getX() / SIZE - randomX), 2)
-                    + Math.pow((juego.getPacMan().getY() / SIZE - randomY), 2));
-
-            if ((celda == ' ' || celda == 'p' || celda == '*')
-                    && (distancia >= 10)
-                    && (randomX != fantasma.ultPosX || fantasma.ultPosY != randomY)) {
-                fantasma.ultPosX = randomX;
-                fantasma.ultPosY = randomY;
-                Listo = true;
-            }
-        }
-    }
-
 }

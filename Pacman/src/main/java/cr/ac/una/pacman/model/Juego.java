@@ -7,6 +7,7 @@ package cr.ac.una.pacman.model;
 import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
 import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
+import static io.github.palexdev.materialfx.utils.RandomUtils.random;
 import java.util.List;
 import java.util.Random;
 import javafx.scene.Node;
@@ -27,6 +28,7 @@ public class Juego {
     private double tiempo;
 //    private List<String> trofeos;
 //    private Map<String, Integer> estadisticas;
+    private boolean hiloEnEjecucion = false;
 
     public Juego(PacMan pacMan, List<Fantasma> fantasmas, int rows, int columns) {
 //    public Juego(PacMan pacMan, List<Fantasma> fantasmas, Laberinto laberinto) {
@@ -39,15 +41,6 @@ public class Juego {
 //        estadisticas.put("puntosTotales", 0);
 //        estadisticas.put("vidasPerdidas", 0);
 //        estadisticas.put("fantasmasComidos", 0);
-    }
-
-//     Getters y Setters para todos los atributos
-    public PacMan getPacMan() {
-        return pacMan;
-    }
-
-    public void setPacMan(PacMan pacMan) {
-        this.pacMan = pacMan;
     }
 
     public void generarLaberinto() {
@@ -169,6 +162,82 @@ public class Juego {
         }
 //        this.getPacMan().setX(3 * SIZE);
 //        this.getPacMan().setY(10 * SIZE);
+    }
+
+    public void fantasmasVulnerables() {
+        for (Fantasma fant : this.getFantasmas()) {
+            fant.setVulnerable(true);
+            nuevaPosEscape(fant);
+        }
+            nuevaPosAleatoria(this.getFantasmas().get(3));
+    }
+
+    public void fantasmasNoVulnerables() {
+        for (Fantasma fant : this.getFantasmas()) {
+            fant.setVulnerable(false);
+        }
+    }
+
+    public void powerPellet() {
+        if (!hiloEnEjecucion) {
+            hiloEnEjecucion = true;
+            Thread hilo = new Thread(() -> {
+                fantasmasVulnerables();
+                System.out.println("Hola");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                fantasmasNoVulnerables();
+                System.out.println("Adiós");
+                hiloEnEjecucion = false; // Marcar que el hilo ha terminado
+            });
+            hilo.start();
+        }
+    }
+    
+    public void nuevaPosAleatoria(Fantasma fantasma) {
+        boolean Listo = false;
+        while (!Listo) {
+            int randomX = random.nextInt(COLUMNS - 1) + 1;
+            int randomY = random.nextInt(ROWS - 1) + 1;
+            char celda = this.getLaberinto().getMatrizCelda(randomY, randomX);
+
+            if (celda == ' ' || celda == 'p') {
+                fantasma.ultPosX = randomX;
+                fantasma.ultPosY = randomY;
+                Listo = true;
+            }
+        }
+    }
+    
+    public void nuevaPosEscape(Fantasma fantasma) {
+        boolean Listo = false;
+        while (!Listo) {
+            int randomX = random.nextInt(COLUMNS - 1) + 1;
+            int randomY = random.nextInt(ROWS - 1) + 1;
+            char celda = this.getLaberinto().getMatrizCelda(randomY, randomX);
+            int distancia = (int) Math.sqrt(Math.pow((this.getPacMan().getX() / SIZE - randomX), 2)
+                    + Math.pow((this.getPacMan().getY() / SIZE - randomY), 2));
+
+            if ((celda == ' ' || celda == 'p' || celda == '*')
+                    && (distancia >= 10)
+                    && (randomX != fantasma.ultPosX || fantasma.ultPosY != randomY)) {
+                fantasma.ultPosX = randomX;
+                fantasma.ultPosY = randomY;
+                Listo = true;
+            }
+        }
+    }
+
+    //     Getters y Setters para todos los atributos
+    public PacMan getPacMan() {
+        return pacMan;
+    }
+
+    public void setPacMan(PacMan pacMan) {
+        this.pacMan = pacMan;
     }
 
     public List<Fantasma> getFantasmas() {
