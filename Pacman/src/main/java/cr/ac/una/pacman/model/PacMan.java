@@ -4,6 +4,8 @@
  */
 package cr.ac.una.pacman.model;
 
+import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
+import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
@@ -116,30 +118,56 @@ public class PacMan extends Personaje {
     }
 
     public void comer(Laberinto laberinto, Juego juego) {
-        char celda = laberinto.getMatrizCelda((int) getY() / SIZE, (int) getX() / SIZE); 
-        char celda1 = laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+        int x = (int) getX() / SIZE;
+        int x1 = (int) (getX() + (SIZE - 1)) / SIZE;
+        int y = (int) getY() / SIZE;
+        int y1 = (int) (getY() + (SIZE - 1)) / SIZE;
+        char celda = laberinto.getMatrizCelda(y, x);
+        char celda1 = laberinto.getMatrizCelda(y1, x1);
+
         if ((this.getDireccion() == 0 || this.getDireccion() == 1) && celda == 'p') {
-            laberinto.setMatrizCelda(' ', (int) getY() / SIZE, (int) getX() / SIZE);
+            laberinto.setMatrizCelda(' ', y, x);
             this.puntos += 10;
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3) && celda1 == 'p') {
-            laberinto.setMatrizCelda(' ', (int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+            laberinto.setMatrizCelda(' ', y1, x1);
             this.puntos += 10;
         } else if ((this.getDireccion() == 0 || this.getDireccion() == 1) && celda == '*') {
-            laberinto.setMatrizCelda(' ', (int) getY() / SIZE, (int) getX() / SIZE);
+            laberinto.setMatrizCelda(' ', y, x);
             juego.powerPellet();
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3) && celda1 == '*') {
-            laberinto.setMatrizCelda(' ', (int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+            laberinto.setMatrizCelda(' ', y1, x1);
             juego.powerPellet();
+        }
+        if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
+            for (Fantasma fant : juego.getFantasmas()) {
+                if (fant.isVulnerable() && ((int)fant.getY() / SIZE == y && (int)fant.getX() / SIZE == x)) {
+                    fant.setY((ROWS * SIZE) / 2);
+                    fant.setX((COLUMNS * SIZE) / 2);
+                    this.puntos += 20;
+                }
+            }
+        } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
+            for (Fantasma fant : juego.getFantasmas()) {
+                if (fant.isVulnerable() && ((int)(fant.getY() + 19) / SIZE == y1 && (int)(fant.getX() + 19) / SIZE == x1)) {
+                    fant.setY((ROWS * SIZE) / 2);
+                    fant.setX((COLUMNS * SIZE) / 2);
+                    this.puntos += 20;
+                }
+            }
         }
     }
 
     public void pintar(GraphicsContext graficos, double segundoAct, double segundoAnt) {
         double angulo = 0;
         switch (this.getDireccion()) {
-            case 0 -> angulo = 0;
-            case 1 -> angulo = 90;
-            case 2 -> angulo = 180;
-            case 3 -> angulo = -90;
+            case 0 ->
+                angulo = 0;
+            case 1 ->
+                angulo = 90;
+            case 2 ->
+                angulo = 180;
+            case 3 ->
+                angulo = -90;
             default -> {
             }
         }

@@ -164,12 +164,25 @@ public class Juego {
 //        this.getPacMan().setY(10 * SIZE);
     }
 
+    public boolean revisarColision(int posY, int posX) {
+        boolean comio = false;
+        for (Fantasma fant : this.getFantasmas()) {
+            if (fant.isVulnerable() && (fant.getY() / SIZE == posY && fant.getX() / SIZE == posX)) {
+                System.out.println("Asesina al fantasma " + fant.getColor());
+                fant.setY((ROWS * SIZE) / 2);
+                fant.setX((COLUMNS * SIZE) / 2);
+                comio = true;
+            }
+        }
+        return comio;
+    }
+
     public void fantasmasVulnerables() {
         for (Fantasma fant : this.getFantasmas()) {
             fant.setVulnerable(true);
             nuevaPosEscape(fant);
         }
-            nuevaPosAleatoria(this.getFantasmas().get(3));
+        nuevaPosAleatoria(this.getFantasmas().get(3));
     }
 
     public void fantasmasNoVulnerables() {
@@ -178,11 +191,16 @@ public class Juego {
         }
     }
 
+    public void cambiarVelocidadPacman(double velocidad) {
+        getPacMan().setVelocidad(getPacMan().getVelocidad() + velocidad);
+    }
+
     public void powerPellet() {
         if (!hiloEnEjecucion) {
             hiloEnEjecucion = true;
             Thread hilo = new Thread(() -> {
                 fantasmasVulnerables();
+                cambiarVelocidadPacman(0.2);
                 System.out.println("Hola");
                 try {
                     Thread.sleep(10000);
@@ -190,13 +208,14 @@ public class Juego {
                     e.printStackTrace();
                 }
                 fantasmasNoVulnerables();
+                cambiarVelocidadPacman(-0.2);
                 System.out.println("Adiós");
                 hiloEnEjecucion = false; // Marcar que el hilo ha terminado
             });
             hilo.start();
         }
     }
-    
+
     public void nuevaPosAleatoria(Fantasma fantasma) {
         boolean Listo = false;
         while (!Listo) {
@@ -211,7 +230,7 @@ public class Juego {
             }
         }
     }
-    
+
     public void nuevaPosEscape(Fantasma fantasma) {
         boolean Listo = false;
         while (!Listo) {

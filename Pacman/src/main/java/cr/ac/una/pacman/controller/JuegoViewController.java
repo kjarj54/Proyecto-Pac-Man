@@ -94,7 +94,7 @@ public class JuegoViewController extends Controller implements Initializable {
         fantasmas.add(fantasmaCian);
         fantasmas.add(fantasmaNaranja);
 
-        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.9, 3, imagenPacman);
+        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.79, 3, imagenPacman);
 
         juego = new Juego(pacman, fantasmas, ROWS, COLUMNS);
         juego.generarLaberinto();
@@ -164,7 +164,6 @@ public class JuegoViewController extends Controller implements Initializable {
         }
         if ((int) juego.getFantasmas().get(3).getX() / SIZE == juego.getFantasmas().get(3).ultPosX
                 && (int) juego.getFantasmas().get(3).getY() / SIZE == juego.getFantasmas().get(3).ultPosY) {
-            
             juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
         }
         juego.getPacMan().mover(direccion, juego.getLaberinto());
