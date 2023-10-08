@@ -22,6 +22,7 @@ public class PacMan extends Personaje {
     private int vidas;
     private int puntos;
     private String color;
+    public boolean superVelocidad;
 
     public PacMan() {
         super(0, 0, 1, 1, null);
@@ -35,6 +36,7 @@ public class PacMan extends Personaje {
         this.vidas = vidas;
         this.puntos = puntos;
         this.color = color;
+        this.superVelocidad = false;
     }
 
     public int getVidas() {
@@ -63,61 +65,84 @@ public class PacMan extends Personaje {
 
     // Métodos
     public void mover(int direccion, Laberinto laberinto) {
-        if (this.getDireccion() != direccion && (int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+        if (this.getDireccion() != direccion
+                && (int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
             cambioDireccion(direccion, laberinto);
         }
         switch (this.getDireccion()) {
             case 0 -> {
-                if (this.getDireccion() == 0 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() + SIZE) / SIZE) != '#'
-                        && laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + SIZE) / SIZE) != '#') {
+                char compro1 = laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() + SIZE) / SIZE);
+                char compro2 = laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + SIZE) / SIZE);
+                if (this.getDireccion() == 0 && compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
                     this.setX(getX() + this.getVelocidad());
                 }
             }
             case 1 -> {
-                if (this.getDireccion() == 1 && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) getX() / SIZE) != '#'
-                        && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
+                char compro1 = laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) getX() / SIZE);
+                char compro2 = laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+                if (this.getDireccion() == 1 && compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
                     this.setY(getY() + this.getVelocidad());
                 }
             }
             case 2 -> {
-                if (this.getDireccion() == 2 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() - 1) / SIZE) != '#'
-                        && laberinto.getMatrizCelda(((int) getY() + (SIZE - 1)) / SIZE, (int) (getX() - 1) / SIZE) != '#') {
+                char compro1 = laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() - 1) / SIZE);
+                char compro2 = laberinto.getMatrizCelda(((int) getY() + (SIZE - 1)) / SIZE, (int) (getX() - 1) / SIZE);
+                if (this.getDireccion() == 2 && compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
                     this.setX(getX() - this.getVelocidad());
                 }
             }
             case 3 -> {
-                if (this.getDireccion() == 3 && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) getX() / SIZE) != '#'
-                        && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
+                char compro1 = laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) getX() / SIZE);
+                char compro2 = laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+                if (this.getDireccion() == 3 && compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
                     this.setY(getY() - this.getVelocidad());
                 }
             }
-
             default -> {
             }
         }
     }
 
     public void cambioDireccion(int direccion, Laberinto laberinto) {
-        if (direccion == 0 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() + SIZE) / SIZE) != '#'
-                && laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + SIZE) / SIZE) != '#') {
-            this.setX(getX() + this.getVelocidad());
-            this.setDireccion(direccion);
-        } else if (direccion == 1 && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) getX() / SIZE) != '#'
-                && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
-            this.setY(getY() + this.getVelocidad());
-            this.setDireccion(direccion);
-        } else if (direccion == 2 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() - 1) / SIZE) != '#'
-                && laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() - 1) / SIZE) != '#') {
-            this.setX(getX() - this.getVelocidad());
-            this.setDireccion(direccion);
-        } else if (direccion == 3 && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) getX() / SIZE) != '#'
-                && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
-            this.setY(getY() - this.getVelocidad());
-            this.setDireccion(direccion);
+        switch (direccion) {
+            case 0 -> {
+                char compro1 = laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() + SIZE) / SIZE);
+                char compro2 = laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + SIZE) / SIZE);
+                if (compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
+                    this.setX(getX() + this.getVelocidad());
+                    this.setDireccion(direccion);
+                }
+            }
+            case 1 -> {
+                char compro1 = laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) getX() / SIZE);
+                char compro2 = laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+                if (compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
+                    this.setY(getY() + this.getVelocidad());
+                    this.setDireccion(direccion);
+                }
+            }
+            case 2 -> {
+                char compro1 = laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() - 1) / SIZE);
+                char compro2 = laberinto.getMatrizCelda(((int) getY() + (SIZE - 1)) / SIZE, (int) (getX() - 1) / SIZE);
+                if (compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
+                    this.setX(getX() - this.getVelocidad());
+                    this.setDireccion(direccion);
+                }
+            }
+            case 3 -> {
+                char compro1 = laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) getX() / SIZE);
+                char compro2 = laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE);
+                if (compro1 != '#' && compro2 != '#' && compro1 != '-' && compro2 != '-') {
+                    this.setY(getY() - this.getVelocidad());
+                    this.setDireccion(direccion);
+                }
+            }
+            default -> {
+            }
         }
     }
 
-    public void comer(Laberinto laberinto, Juego juego) {
+    public void comer(Laberinto laberinto, Juego juego) { // Come Pac-dots y Power Pellets ademas revisa si come fantasmas y si son consecutivos
         int x = (int) getX() / SIZE;
         int x1 = (int) (getX() + (SIZE - 1)) / SIZE;
         int y = (int) getY() / SIZE;
@@ -140,18 +165,30 @@ public class PacMan extends Personaje {
         }
         if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
             for (Fantasma fant : juego.getFantasmas()) {
-                if (fant.isVulnerable() && ((int)fant.getY() / SIZE == y && (int)fant.getX() / SIZE == x)) {
+                if (fant.isVulnerable() && ((int) fant.getY() / SIZE == y && (int) fant.getX() / SIZE == x)) {
                     fant.setY((ROWS * SIZE) / 2);
                     fant.setX((COLUMNS * SIZE) / 2);
-                    this.puntos += 20;
+                    juego.comeFantasmasConsecutivos();
+                    juego.fantasmasConsecutivos++;
+                    this.puntos += 300;
+                    if (juego.fantasmasConsecutivos > 1) {
+                        this.superVelocidad = true;
+                        this.puntos += 100;
+                    }
                 }
             }
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             for (Fantasma fant : juego.getFantasmas()) {
-                if (fant.isVulnerable() && ((int)(fant.getY() + 19) / SIZE == y1 && (int)(fant.getX() + 19) / SIZE == x1)) {
+                if (fant.isVulnerable() && ((int) (fant.getY() + 19) / SIZE == y1 && (int) (fant.getX() + 19) / SIZE == x1)) {
                     fant.setY((ROWS * SIZE) / 2);
                     fant.setX((COLUMNS * SIZE) / 2);
-                    this.puntos += 20;
+                    juego.comeFantasmasConsecutivos();
+                    juego.fantasmasConsecutivos++;
+                    this.puntos += 300;
+                    if (juego.fantasmasConsecutivos > 1) {
+                        this.superVelocidad = true;
+                        this.puntos += 100;
+                    }
                 }
             }
         }
@@ -172,7 +209,7 @@ public class PacMan extends Personaje {
             }
         }
         Affine oldTransform = graficos.getTransform();
-        Rotate rotate = new Rotate(angulo, getX() + 10, getY() + 10);
+        Rotate rotate = new Rotate(angulo, getX() + SIZE / 2, getY() + SIZE / 2);
         Affine transform = new Affine();
         transform.append(rotate);
         graficos.setTransform(transform);

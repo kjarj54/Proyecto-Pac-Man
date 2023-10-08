@@ -48,15 +48,11 @@ public class JuegoViewController extends Controller implements Initializable {
     AnimationTimer animationTimer;
     GraphicsContext graficos;
     public static final int ROWS = 20;
-    public static final int COLUMNS = 22;
+    public static final int COLUMNS = 18;
     public static final int SIZE = 20;
     double segundoAct = 0;
-    double segundoAct1 = 0;
     double segundoAnt = 0;
-    double segundoAnt1 = 0;
     int direccion = 3;
-    int posXAle;
-    int posYAle;
     Juego juego;
 
     /**
@@ -81,10 +77,16 @@ public class JuegoViewController extends Controller implements Initializable {
         List<Fantasma> fantasmas = new ArrayList<>();
         List<String> imagenFantasmaRojo = new ArrayList<>();
         imagenFantasmaRojo.add("cr/ac/una/pacman/resources/FantasmaRojo.png");
-        Fantasma fantasmaRojo = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
-        Fantasma fantasmaRosa = new Fantasma((COLUMNS * SIZE) / 2 + SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Rosa", "dijkstraAlternativo");
-        Fantasma fantasmaCian = new Fantasma((COLUMNS * SIZE) / 2 - SIZE, (ROWS * SIZE) / 2, 0.8, 3, imagenFantasmaRojo, "Cian", "dijkstraAlternativo");
-        Fantasma fantasmaNaranja = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2 - SIZE, 0.8, 3, imagenFantasmaRojo, "Naranja", "floyd");
+        List<String> imagenFantasmaRosa = new ArrayList<>();
+        imagenFantasmaRosa.add("cr/ac/una/pacman/resources/FantasmaRosa.png");
+        List<String> imagenFantasmaCian = new ArrayList<>();
+        imagenFantasmaCian.add("cr/ac/una/pacman/resources/FantasmaCian.png");
+        List<String> imagenFantasmaNaranja = new ArrayList<>();
+        imagenFantasmaNaranja.add("cr/ac/una/pacman/resources/FantasmaNaranja.png");
+        Fantasma fantasmaRojo = new Fantasma((COLUMNS * SIZE) / 2, ((ROWS * SIZE) / 2) - SIZE * 2, 0.7, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
+        Fantasma fantasmaRosa = new Fantasma((COLUMNS * SIZE) / 2 + SIZE, (ROWS * SIZE) / 2, 0.7, 3, imagenFantasmaRosa, "Rosa", "dijkstraAlternativo");
+        Fantasma fantasmaCian = new Fantasma((COLUMNS * SIZE) / 2 - SIZE, (ROWS * SIZE) / 2, 0.7, 3, imagenFantasmaCian, "Cian", "dijkstraAlternativo");
+        Fantasma fantasmaNaranja = new Fantasma((COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.7, 3, imagenFantasmaNaranja, "Naranja", "floyd");
 //        fantasmaRojo.setVulnerable(true);
 //        fantasmaRosa.setVulnerable(true);
 //        fantasmaCian.setVulnerable(true);
@@ -94,7 +96,7 @@ public class JuegoViewController extends Controller implements Initializable {
         fantasmas.add(fantasmaCian);
         fantasmas.add(fantasmaNaranja);
 
-        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.79, 3, imagenPacman);
+        PacMan pacman = new PacMan(3, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.69, 3, imagenPacman);
 
         juego = new Juego(pacman, fantasmas, ROWS, COLUMNS);
         juego.generarLaberinto();
@@ -112,6 +114,8 @@ public class JuegoViewController extends Controller implements Initializable {
                         direccion = 2;
                     case "W" ->
                         direccion = 3;
+                    case "SPACE" ->
+                        juego.superVelocidad();
                 }
             }
         });
@@ -125,7 +129,7 @@ public class JuegoViewController extends Controller implements Initializable {
     }
 
     public void ciclo() {
-        final double targetFPS = 45.0;
+        final double targetFPS = 60.0;
         final double targetFrameTime = 1.0 / targetFPS;
         animationTimer = new AnimationTimer() {
             long tiempoInicial = System.nanoTime();
@@ -143,7 +147,6 @@ public class JuegoViewController extends Controller implements Initializable {
 
                 lastUpdate = tiempoActual;
                 segundoAct = t;
-                segundoAct1 = t;
 
                 segAct += elapsedSeconds;
 
@@ -170,6 +173,10 @@ public class JuegoViewController extends Controller implements Initializable {
         juego.getPacMan().comer(juego.getLaberinto(), juego);
 
         for (Fantasma fant : juego.getFantasmas()) {
+            if (!fant.isVulnerable()) {
+                fant.comer(juego.getLaberinto(), juego);
+            }
+            
             int fantX = (int) fant.getX() / SIZE;
             int fantY = (int) fant.getY() / SIZE;
 
@@ -204,6 +211,9 @@ public class JuegoViewController extends Controller implements Initializable {
         graficos.setFill(Color.BLACK);
         graficos.fillRect(SIZE, SIZE, COLUMNS * SIZE, ROWS * SIZE);
 
+        graficos.setStroke(Color.YELLOW);
+        graficos.setLineWidth(SIZE / 3);
+        graficos.strokeLine((COLUMNS / 2) * SIZE, ((ROWS / 2 - 1) * SIZE) + SIZE / 2, ((COLUMNS / 2) * SIZE) + SIZE - 1, ((ROWS / 2 - 1) * SIZE) + SIZE / 2);
         for (int row = 1; row < ROWS; row++) {
             for (int col = 1; col < COLUMNS; col++) {
                 char celda = juego.getLaberinto().getMatrizCelda(row, col);
@@ -215,12 +225,11 @@ public class JuegoViewController extends Controller implements Initializable {
                         graficos.drawImage(muro, x, y, SIZE, SIZE);
                     case 'p' -> {
                         graficos.setFill(Color.YELLOW);
-                        graficos.fillOval(x + 7, y + 7, 6, 6);
+                        graficos.fillOval(x + SIZE / 2.5, y + SIZE / 2.5, SIZE / 5, SIZE / 5);
                     }
                     case '*' -> {
                         graficos.setFill(Color.YELLOW);
-                        double radio = 7; // Radio común para ambos casos
-                        graficos.fillOval(x + SIZE / 2 - radio, y + SIZE / 2 - radio, 2 * radio, 2 * radio);
+                        graficos.fillOval(x + SIZE / 4, y + SIZE / 4, SIZE / 2, SIZE / 2);
                     }
                     default -> {
                     }

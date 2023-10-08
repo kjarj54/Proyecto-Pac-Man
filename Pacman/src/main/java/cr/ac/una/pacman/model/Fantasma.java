@@ -4,6 +4,8 @@
  */
 package cr.ac.una.pacman.model;
 
+import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
+import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -162,7 +164,15 @@ public class Fantasma extends Personaje {
                 int nuevoX = x + movimiento[0];
                 int nuevoY = y + movimiento[1];
 
-                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas && !visitado[nuevoY][nuevoX] && (laberinto.getMatriz()[nuevoY][nuevoX] == ' ' || laberinto.getMatriz()[nuevoY][nuevoX] == 'p' || laberinto.getMatriz()[nuevoY][nuevoX] == '*')) {
+                char celda = '#';
+
+                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas) {
+                    celda = laberinto.getMatrizCelda(nuevoY, nuevoX);
+                }
+
+                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas && !visitado[nuevoY][nuevoX]
+                        && (celda == ' ' || celda == 'p'
+                        || celda == '*' || celda == '-')) {
                     int distanciaActual = distancias[y][x];
                     int pesoCelda = 1; // Costo uniforme para todos los caminos
 
@@ -229,17 +239,25 @@ public class Fantasma extends Personaje {
                 int nuevoX = x + movimiento[0];
                 int nuevoY = y + movimiento[1];
 
-                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas && !visitado[nuevoY][nuevoX] && (laberinto.getMatriz()[nuevoY][nuevoX] == ' ' || laberinto.getMatriz()[nuevoY][nuevoX] == 'p' || laberinto.getMatriz()[nuevoY][nuevoX] == '*')) {
+                char celda = '#';
+
+                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas) {
+                    celda = laberinto.getMatrizCelda(nuevoY, nuevoX);
+                }
+
+                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas && !visitado[nuevoY][nuevoX]
+                        && (celda == ' ' || celda == 'p'
+                        || celda == '*' || celda == '-')) {
                     int distanciaActual = distancias[y][x];
                     int pesoCelda = 1; // Costo uniforme para todos los caminos
 
                     // Aplicar el factor de peso aleatorio
                     double probabilidad = Math.random();
-                    if (probabilidad < 0.2) {
+                    if (probabilidad < 0.3) {
                         pesoCelda *= 5; // Aumenta el peso (reduce la probabilidad de elegir este camino)
-                    } else if (probabilidad < 0.4) {
+                    } else if (probabilidad < 0.5) {
                         pesoCelda *= 3; // Aumenta el peso (reduce la probabilidad de elegir este camino)
-                    } else if (probabilidad < 0.7) {
+                    } else if (probabilidad < 0.8) {
                         pesoCelda *= 2; // Aumenta el peso (reduce la probabilidad de elegir este camino)
                     }
 
@@ -301,9 +319,15 @@ public class Fantasma extends Personaje {
             for (int[] dir : directions) {
                 int newX = currentX + dir[0];
                 int newY = currentY + dir[1];
+                char celda = '#';
+
+                if (newX >= 0 && newX < cols && newY >= 0 && newY < rows) {
+                    celda = laberinto.getMatrizCelda(newY, newX);
+                }
 
                 if (newX >= 0 && newX < cols && newY >= 0 && newY < rows
-                        && (laberinto.getMatriz()[newY][newX] == 'p' || laberinto.getMatriz()[newY][newX] == '*' || laberinto.getMatriz()[newY][newX] == ' ')
+                        && (celda == 'p' || celda == '*'
+                        || celda == ' ' || celda == '-')
                         && distance[newY][newX] == Integer.MAX_VALUE) {
                     distance[newY][newX] = distance[currentY][currentX] + 1;
                     queue.offer(new int[]{newX, newY});
@@ -363,14 +387,19 @@ public class Fantasma extends Personaje {
             for (int[] movimiento : movimientos) {
                 int nuevoX = x + movimiento[0];
                 int nuevoY = y + movimiento[1];
+                char celda = '#';
+
+                if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas) {
+                    celda = laberinto.getMatrizCelda(nuevoY, nuevoX);
+                }
+                int distancia = (int) Math.sqrt(Math.pow((pacman.getX() / SIZE - nuevoX), 2)
+                        + Math.pow((pacman.getY() / SIZE - nuevoY), 2));
 
                 if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas && !visitado[nuevoY][nuevoX]
-                        && (laberinto.getMatriz()[nuevoY][nuevoX] == ' ' || laberinto.getMatriz()[nuevoY][nuevoX] == 'p' || laberinto.getMatriz()[nuevoY][nuevoX] == '*'
+                        && (celda == ' ' || celda == 'p'
+                        || celda == '*' || celda == '-'
                         && ((int) pacman.getX() / SIZE != nuevoX || (int) pacman.getY() / SIZE != nuevoY))
-                        && ((int) pacman.getX() / SIZE != nuevoX || (int) pacman.getY() / SIZE - 1 != nuevoY)
-                        && ((int) pacman.getX() / SIZE - 1 != nuevoX || (int) pacman.getY() / SIZE != nuevoY)
-                        && ((int) pacman.getX() / SIZE != nuevoX || (int) pacman.getY() / SIZE + 1 != nuevoY)
-                        && ((int) pacman.getX() / SIZE + 1 != nuevoX || (int) pacman.getY() / SIZE != nuevoY)) {
+                        && distancia > 1) {
                     int distanciaActual = distancias[y][x];
                     int pesoCelda = 1; // Costo uniforme para todos los caminos
 
@@ -488,12 +517,16 @@ public class Fantasma extends Personaje {
             int yMovimiento = yDestino - yActual;
 
             if (xMovimiento > 0) {
+                this.setY(miUltPosY * SIZE);
                 direccion = 0; // Mover hacia la derecha
             } else if (xMovimiento < 0) {
+                this.setY(miUltPosY * SIZE);
                 direccion = 2; // Mover hacia la izquierda
             } else if (yMovimiento > 0) {
+                this.setX(miUltPosX * SIZE);
                 direccion = 1; // Mover hacia abajo
             } else if (yMovimiento < 0) {
+                this.setX(miUltPosX * SIZE);
                 direccion = 3; // Mover hacia arriba
             }
         } else if ("floyd".equals(algoritmo) && distance != null && !this.isVulnerable() && !this.eraVulnerable) {
@@ -527,12 +560,16 @@ public class Fantasma extends Personaje {
             int yMovimiento = yDestino - yActual;
 
             if (xMovimiento > 0) {
+                this.setY(miUltPosY * SIZE);
                 direccion = 0; // Mover hacia la derecha
             } else if (xMovimiento < 0) {
+                this.setY(miUltPosY * SIZE);
                 direccion = 2; // Mover hacia la izquierda
             } else if (yMovimiento > 0) {
+                this.setX(miUltPosX * SIZE);
                 direccion = 1; // Mover hacia abajo
             } else if (yMovimiento < 0) {
+                this.setX(miUltPosX * SIZE);
                 direccion = 3; // Mover hacia arriba
             }
         } else if (this.isVulnerable() && this.eraVulnerable && padresX != null && padresY != null) {
@@ -562,16 +599,16 @@ public class Fantasma extends Personaje {
             int yMovimiento = yDestino - yActual;
 
             if (xMovimiento > 0) {
-                this.setY(miUltPosY * 20);
+                this.setY(miUltPosY * SIZE);
                 direccion = 0; // Mover hacia la derecha
             } else if (xMovimiento < 0) {
-                this.setY(miUltPosY * 20);
+                this.setY(miUltPosY * SIZE);
                 direccion = 2; // Mover hacia la izquierda
             } else if (yMovimiento > 0) {
-                this.setX(miUltPosX * 20);
+                this.setX(miUltPosX * SIZE);
                 direccion = 1; // Mover hacia abajo
             } else if (yMovimiento < 0) {
-                this.setX(miUltPosX * 20);
+                this.setX(miUltPosX * SIZE);
                 direccion = 3; // Mover hacia arriba
             }
         }
@@ -636,6 +673,25 @@ public class Fantasma extends Personaje {
         }
     }
 
+    public void comer(Laberinto laberinto, Juego juego) { // Come Pacman y vuelve a pacman y los fantasmas a una posicion inicial
+        int x = (int) getX() / SIZE;
+        int x1 = (int) (getX() + (SIZE - 1)) / SIZE;
+        int y = (int) getY() / SIZE;
+        int y1 = (int) (getY() + (SIZE - 1)) / SIZE;
+
+        if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
+            if ((int) juego.getPacMan().getY() / SIZE == y && (int) juego.getPacMan().getX() / SIZE == x) {
+                juego.nuevaPosIniPacman();
+                juego.posIniFantasmas();
+            }
+        } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
+            if ((int) (juego.getPacMan().getY() + 19) / SIZE == y1 && (int) (juego.getPacMan().getX() + 19) / SIZE == x1) {
+                juego.nuevaPosIniPacman();
+                juego.posIniFantasmas();
+            }
+        }
+    }
+
     public void pintar(GraphicsContext graficos, double segundoAct, double segundoAnt) {
         double angulo = 0;
         switch (this.getDireccion()) {
@@ -651,7 +707,7 @@ public class Fantasma extends Personaje {
             }
         }
         Affine oldTransform = graficos.getTransform();
-        Rotate rotate = new Rotate(angulo, getX() + 10, getY() + 10);
+        Rotate rotate = new Rotate(angulo, getX() + SIZE / 2, getY() + SIZE / 2);
         Affine transform = new Affine();
         transform.append(rotate);
         graficos.setTransform(transform);
