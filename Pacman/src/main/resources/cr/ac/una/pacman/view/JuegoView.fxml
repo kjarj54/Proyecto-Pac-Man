@@ -23,7 +23,7 @@
             </StackPane>
          </center>
          <bottom>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <HBox fx:id="hboxVidas" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
                <children>
                   <HBox fx:id="hboxVidas" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />

@@ -9,6 +9,8 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 import java.util.Stack;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 /**
  * JavaFX App

@@ -37,8 +37,10 @@ public class Fantasma extends Personaje {
 
     private String color;
     private String algoritmo;
+    private boolean encerrado;
     private boolean vulnerable;
     private boolean eraVulnerable = false;
+    private boolean muerto = false;
     int[][] padresX = null;
     int[][] padresY = null;
     int[][] distance = null;
@@ -52,6 +54,7 @@ public class Fantasma extends Personaje {
         this.color = color;
         this.algoritmo = algoritmo;
         this.vulnerable = false;
+        this.encerrado = false;
     }
 
     public String getColor() {
@@ -62,6 +65,14 @@ public class Fantasma extends Personaje {
         return this.algoritmo;
     }
 
+    public boolean isEncerrado() {
+        return encerrado;
+    }
+
+    public void setEncerrado(boolean encerrado) {
+        this.encerrado = encerrado;
+    }
+
     public boolean isVulnerable() {
         return this.vulnerable;
     }
@@ -70,9 +81,17 @@ public class Fantasma extends Personaje {
         this.vulnerable = vulnerable;
     }
 
+    public boolean isMuerto() {
+        return muerto;
+    }
+
+    public void setMuerto(boolean muerto) {
+        this.muerto = muerto;
+    }
+
     // Este método mueve al fantasma según su algoritmo y el estado del juego
     public void mover(Laberinto laberinto, PacMan pacman, double objetivoX, double objetivoY) {
-        if (this.vulnerable) {
+        if (this.vulnerable && !this.encerrado && !this.muerto) {
             if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
                 escaparDePacman(laberinto, pacman, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
                 miUltPosX = (int) this.getX() / SIZE;
@@ -496,7 +515,48 @@ public class Fantasma extends Personaje {
         int direccion = this.getDireccion();
         int x = objetivoX;
         int y = objetivoY;
-        if (("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo)) && padresX != null && padresY != null && !this.isVulnerable() && !this.eraVulnerable) {
+        if ((this.vulnerable && !this.encerrado) && !this.muerto && this.eraVulnerable && padresX != null && padresY != null) {
+            Stack<int[]> camino = new Stack<>();
+
+            // Verificar si hay un camino válido antes de intentar imprimirlo
+            if (padresX != null && padresY != null && x >= 0 && x < padresX[0].length && y >= 0 && y < padresY.length) {
+                while (x != miUltPosX || y != miUltPosY) {
+                    if (x < 0 || y < 0) {
+                        break;  // Salir si se alcanza un valor no válido
+                    }
+                    camino.push(new int[]{x, y});
+                    int tempX = padresX[y][x];
+                    int tempY = padresY[y][x];
+                    x = tempX;
+                    y = tempY;
+                }
+            }
+            int[] nuevaPos = camino.pop();
+            int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
+            int yDestino = nuevaPos[1] * SIZE;
+
+            int xActual = (int) this.getX();
+            int yActual = (int) this.getY();
+
+            int xMovimiento = xDestino - xActual;
+            int yMovimiento = yDestino - yActual;
+
+            if (xMovimiento > 0) {
+                this.setY(miUltPosY * SIZE);
+                direccion = 0; // Mover hacia la derecha
+            } else if (xMovimiento < 0) {
+                this.setY(miUltPosY * SIZE);
+                direccion = 2; // Mover hacia la izquierda
+            } else if (yMovimiento > 0) {
+                this.setX(miUltPosX * SIZE);
+                direccion = 1; // Mover hacia abajo
+            } else if (yMovimiento < 0) {
+                this.setX(miUltPosX * SIZE);
+                direccion = 3; // Mover hacia arriba
+            }
+        } else if (("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo))
+                && padresX != null && padresY != null
+                && !this.eraVulnerable) {
             Stack<int[]> camino = new Stack<>();
 
             while (x != miUltPosX || y != miUltPosY) {
@@ -529,7 +589,8 @@ public class Fantasma extends Personaje {
                 this.setX(miUltPosX * SIZE);
                 direccion = 3; // Mover hacia arriba
             }
-        } else if ("floyd".equals(algoritmo) && distance != null && !this.isVulnerable() && !this.eraVulnerable) {
+        } else if ("floyd".equals(algoritmo) && distance != null
+                && !this.eraVulnerable) {
             Stack<int[]> camino = new Stack<>();
 
             while (x != miUltPosX || y != miUltPosY) {
@@ -547,45 +608,6 @@ public class Fantasma extends Personaje {
                         y = newY;
                         break;
                     }
-                }
-            }
-            int[] nuevaPos = camino.pop();
-            int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
-            int yDestino = nuevaPos[1] * SIZE;
-
-            int xActual = (int) this.getX();
-            int yActual = (int) this.getY();
-
-            int xMovimiento = xDestino - xActual;
-            int yMovimiento = yDestino - yActual;
-
-            if (xMovimiento > 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 0; // Mover hacia la derecha
-            } else if (xMovimiento < 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 2; // Mover hacia la izquierda
-            } else if (yMovimiento > 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 1; // Mover hacia abajo
-            } else if (yMovimiento < 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 3; // Mover hacia arriba
-            }
-        } else if (this.isVulnerable() && this.eraVulnerable && padresX != null && padresY != null) {
-            Stack<int[]> camino = new Stack<>();
-
-            // Verificar si hay un camino válido antes de intentar imprimirlo
-            if (padresX != null && padresY != null && x >= 0 && x < padresX[0].length && y >= 0 && y < padresY.length) {
-                while (x != miUltPosX || y != miUltPosY) {
-                    if (x < 0 || y < 0) {
-                        break;  // Salir si se alcanza un valor no válido
-                    }
-                    camino.push(new int[]{x, y});
-                    int tempX = padresX[y][x];
-                    int tempY = padresY[y][x];
-                    x = tempX;
-                    y = tempY;
                 }
             }
             int[] nuevaPos = camino.pop();
@@ -681,13 +703,23 @@ public class Fantasma extends Personaje {
 
         if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
             if ((int) juego.getPacMan().getY() / SIZE == y && (int) juego.getPacMan().getX() / SIZE == x) {
+                juego.cambiarVidas(-1);
                 juego.nuevaPosIniPacman();
                 juego.posIniFantasmas();
+                if (juego.isHiloAnimacionInicialFantasmas()) {
+                    juego.interrumpirAnimacionInicialFantasmas();
+                }
+                juego.animacionInicialFantasmas();
             }
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             if ((int) (juego.getPacMan().getY() + 19) / SIZE == y1 && (int) (juego.getPacMan().getX() + 19) / SIZE == x1) {
+                juego.cambiarVidas(-1);
                 juego.nuevaPosIniPacman();
                 juego.posIniFantasmas();
+                if (juego.isHiloAnimacionInicialFantasmas()) {
+                    juego.interrumpirAnimacionInicialFantasmas();
+                }
+                juego.animacionInicialFantasmas();
             }
         }
     }
