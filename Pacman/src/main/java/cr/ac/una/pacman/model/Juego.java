@@ -11,7 +11,6 @@ import static io.github.palexdev.materialfx.utils.RandomUtils.random;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -246,7 +245,7 @@ public class Juego {
             }
         }
 
-        nuevaPosIniPacman();
+        posIniPacman();
 //        this.getPacMan().setX(3 * SIZE);
 //        this.getPacMan().setY(10 * SIZE);
     }
@@ -536,17 +535,9 @@ public class Juego {
         }
     }
 
-    public void nuevaPosIniPacman() {
-        boolean pacmanListo = false;
-        while (!pacmanListo) { // Coloca a pacman aleatoriamente en el mapa
-            int randomX = random.nextInt(COLUMNS - 1) + 1;
-            int randomY = random.nextInt(ROWS - 1) + 1;
-            if (laberinto.getMatrizCelda(randomY, randomX) == 'p') {
-                this.getPacMan().setX(randomX * SIZE);
-                this.getPacMan().setY(randomY * SIZE);
-                pacmanListo = true;
-            }
-        }
+    public void posIniPacman() {
+        this.getPacMan().setX((COLUMNS * SIZE) / 2);
+        this.getPacMan().setY(((ROWS * SIZE) / 2) + SIZE * 3);
     }
 
     public void contarPuntosTotales() {

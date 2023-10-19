@@ -4,12 +4,9 @@
  */
 package cr.ac.una.pacman.model;
 
-import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
-import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -704,7 +701,7 @@ public class Fantasma extends Personaje {
         if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
             if ((int) juego.getPacMan().getY() / SIZE == y && (int) juego.getPacMan().getX() / SIZE == x) {
                 juego.cambiarVidas(-1);
-                juego.nuevaPosIniPacman();
+                juego.posIniPacman();
                 juego.posIniFantasmas();
                 if (juego.isHiloAnimacionInicialFantasmas()) {
                     juego.interrumpirAnimacionInicialFantasmas();
@@ -714,7 +711,7 @@ public class Fantasma extends Personaje {
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             if ((int) (juego.getPacMan().getY() + 19) / SIZE == y1 && (int) (juego.getPacMan().getX() + 19) / SIZE == x1) {
                 juego.cambiarVidas(-1);
-                juego.nuevaPosIniPacman();
+                juego.posIniPacman();
                 juego.posIniFantasmas();
                 if (juego.isHiloAnimacionInicialFantasmas()) {
                     juego.interrumpirAnimacionInicialFantasmas();
