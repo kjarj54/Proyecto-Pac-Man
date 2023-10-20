@@ -18,19 +18,19 @@ import javafx.scene.transform.Rotate;
  * @author ANTHONY
  */
 public class PacMan extends Personaje {
-    
+
     private int vidas;
     private int puntos;
     private String color;
     public boolean superVelocidad;
-    
+
     public PacMan() {
         super(0, 0, 1, 1, null);
         this.vidas = 1;
         this.puntos = 0;
         this.color = "";
     }
-    
+
     public PacMan(int vidas, int puntos, String color, double x, double y, double velocidad, int direccion, List<String> imagen) {
         super(x, y, velocidad, direccion, imagen);
         this.vidas = vidas;
@@ -38,27 +38,27 @@ public class PacMan extends Personaje {
         this.color = color;
         this.superVelocidad = false;
     }
-    
+
     public int getVidas() {
         return vidas;
     }
-    
+
     public void setVidas(int vidas) {
         this.vidas = vidas;
     }
-    
+
     public int getPuntos() {
         return puntos;
     }
-    
+
     public void setPuntos(int puntos) {
         this.puntos = puntos;
     }
-    
+
     public String getColor() {
         return color;
     }
-    
+
     public void setColor(String color) {
         this.color = color;
     }
@@ -118,7 +118,7 @@ public class PacMan extends Personaje {
             }
         }
     }
-    
+
     public void cambioDireccion(int direccion, Laberinto laberinto) {
         switch (direccion) {
             case 0 -> {
@@ -173,7 +173,7 @@ public class PacMan extends Personaje {
             }
         }
     }
-    
+
     public void comer(Laberinto laberinto, Juego juego) { // Come Pac-dots y Power Pellets ademas revisa si come fantasmas y si son consecutivos
         int x = (int) getX() / SIZE;
         int x1 = (int) (getX() + (SIZE - 1)) / SIZE;
@@ -181,14 +181,14 @@ public class PacMan extends Personaje {
         int y1 = (int) (getY() + (SIZE - 1)) / SIZE;
         char celda = laberinto.getMatrizCelda(y, x);
         char celda1 = laberinto.getMatrizCelda(y1, x1);
-        
+
         if ((this.getDireccion() == 0 || this.getDireccion() == 1) && celda == 'p') {
             laberinto.setMatrizCelda(' ', y, x);
-            this.puntos += 10;
+            this.puntos += (10 * juego.multiplicadorPuntaje);
             juego.puntosActuales -= 1;
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3) && celda1 == 'p') {
             laberinto.setMatrizCelda(' ', y1, x1);
-            this.puntos += 10;
+            this.puntos += (10 * juego.multiplicadorPuntaje);
             juego.puntosActuales -= 1;
         } else if ((this.getDireccion() == 0 || this.getDireccion() == 1) && celda == '*') {
             laberinto.setMatrizCelda(' ', y, x);
@@ -203,35 +203,35 @@ public class PacMan extends Personaje {
                     fant.ultPosY = ROWS / 2;
                     fant.ultPosX = COLUMNS / 2;
                     fant.setMuerto(true);
-                    fant.setVelocidad(fant.getVelocidad() + 0.3);
+                    fant.setVelocidad(0.9);
                     juego.comeFantasmasConsecutivos();
                     juego.fantasmasConsecutivos++;
-                    this.puntos += 300;
+                    this.puntos += (300 * juego.multiplicadorPuntaje);
                     if (juego.fantasmasConsecutivos > 1) {
                         this.superVelocidad = true;
-                        this.puntos += 100;
+                        this.puntos += (100 * juego.multiplicadorPuntaje);
                     }
                 }
             }
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             for (Fantasma fant : juego.getFantasmas()) {
-                if (!fant.isEncerrado() && !fant.isMuerto() && fant.isVulnerable() && ((int) (fant.getY() + 19) / SIZE == y1 && (int) (fant.getX() + 19) / SIZE == x1)) {
+                if (!fant.isEncerrado() && !fant.isMuerto() && fant.isVulnerable() && ((int) (fant.getY() + (SIZE - 1)) / SIZE == y1 && (int) (fant.getX() + (SIZE - 1)) / SIZE == x1)) {
                     fant.ultPosY = ROWS / 2;
                     fant.ultPosX = COLUMNS / 2;
                     fant.setMuerto(true);
-                    fant.setVelocidad(fant.getVelocidad() + 0.3);
+                    fant.setVelocidad(0.9);
                     juego.comeFantasmasConsecutivos();
                     juego.fantasmasConsecutivos++;
-                    this.puntos += 300;
+                    this.puntos += (300 * juego.multiplicadorPuntaje);
                     if (juego.fantasmasConsecutivos > 1) {
                         this.superVelocidad = true;
-                        this.puntos += 100;
+                        this.puntos += (100 * juego.multiplicadorPuntaje);
                     }
                 }
             }
         }
     }
-    
+
     public void pintar(GraphicsContext graficos, double segundoAct, double segundoAnt) {
         double angulo = 0;
         switch (this.getDireccion()) {
@@ -251,7 +251,7 @@ public class PacMan extends Personaje {
         Affine transform = new Affine();
         transform.append(rotate);
         graficos.setTransform(transform);
-        
+
         if (segundoAct > segundoAnt + 0.25) {
             graficos.drawImage(new Image(getImagen().get(0)), getX() + 2, getY() + 2, SIZE - 5, SIZE - 5);
         } else {

@@ -37,10 +37,12 @@ public class Juego {
     private boolean hiloPowerPellets = false;
     private boolean hiloEncierro = false;
     private boolean hiloSuperVelocidad = false;
+    public double incrementoVelocidad;
+    public int multiplicadorPuntaje;
     public int fantasmasConsecutivos = 0;
     public int puntosTotales;
     public int puntosActuales;
-    public boolean encierroUsado = false;
+    public boolean encierroUsado;
     public boolean pausa;
 
     public Juego(PacMan pacMan, List<Fantasma> fantasmas, int rows, int columns) {
@@ -49,14 +51,17 @@ public class Juego {
         this.fantasmas = fantasmas;
         this.laberinto = new Laberinto(rows, columns);
         this.tiempo = 0.0;
-        this.puntosTotales = 0;
-        this.puntosActuales = 0;
-        this.pausa = false;
         this.trofeos = new ArrayList<>();
 //        this.estadisticas = new HashMap<>();
 //        estadisticas.put("puntosTotales", 0);
 //        estadisticas.put("vidasPerdidas", 0);
 //        estadisticas.put("fantasmasComidos", 0);
+        this.incrementoVelocidad = 0;
+        this.multiplicadorPuntaje = 1;
+        this.puntosTotales = 0;
+        this.puntosActuales = 0;
+        this.pausa = false;
+        this.encierroUsado = false;
     }
 
     //     Getters y Setters para todos los atributos
@@ -122,6 +127,14 @@ public class Juego {
 
     public void setHiloAnimacionInicialFantasmas(boolean hiloAnimacionInicialFantasmas) {
         this.hiloAnimacionInicialFantasmas = hiloAnimacionInicialFantasmas;
+    }
+
+    public boolean isHiloPowerPellets() {
+        return hiloPowerPellets;
+    }
+
+    public void setHiloPowerPellets(boolean hiloPowerPellets) {
+        this.hiloPowerPellets = hiloPowerPellets;
     }
 
     public void posIniFantasmas() {
@@ -264,14 +277,18 @@ public class Juego {
 
     public void fantasmasVulnerables() {
         for (Fantasma fant : this.getFantasmas()) {
-            cambiarVelocidadFantasma(-0.2, fant);
+            cambiarVelocidadFantasma(-0.15, fant);
             fant.setVulnerable(true);
         }
     }
 
     public void fantasmasNoVulnerables() {
         for (Fantasma fant : this.getFantasmas()) {
-            cambiarVelocidadFantasma(0.2, fant);
+            if ("Rojo".equals(fant.getColor())) {
+                cambiarVelocidadFantasma(this.incrementoVelocidad, fant);
+            } else {
+                cambiarVelocidadFantasma(0, fant);
+            }
             fant.setVulnerable(false);
         }
         nuevaPosAleatoria(this.getFantasmas().get(3));
@@ -286,7 +303,7 @@ public class Juego {
     }
 
     public void cambiarVelocidadFantasma(double velocidad, Fantasma fant) {
-        fant.setVelocidad(fant.getVelocidad() + velocidad);
+        fant.setVelocidad(0.7 + velocidad);
     }
 
     int estado = 0;
@@ -415,11 +432,11 @@ public class Juego {
 
                 getFantasmas().get(random1).ultPosX = (COLUMNS / 2);
                 getFantasmas().get(random1).ultPosY = (ROWS / 2) + 1;
-                getFantasmas().get(random1).setVelocidad(getFantasmas().get(random1).getVelocidad() + 0.3);
+                getFantasmas().get(random1).setVelocidad(0.9);
 
                 getFantasmas().get(random2).ultPosX = (COLUMNS / 2) + 1;
                 getFantasmas().get(random2).ultPosY = (ROWS / 2) + 1;
-                getFantasmas().get(random2).setVelocidad(getFantasmas().get(random2).getVelocidad() + 0.3);
+                getFantasmas().get(random2).setVelocidad(0.9);
 
                 System.out.println("Hola Encierro");
             });
@@ -446,11 +463,13 @@ public class Juego {
 
             KeyFrame inicioKeyFrame = new KeyFrame(Duration.ZERO, (event) -> {
                 cambiarVelocidadPacman(0.1);
+                this.multiplicadorPuntaje = 2;
                 System.out.println("Hola Super Velocidad");
             });
 
             KeyFrame finalKeyFrame = new KeyFrame(Duration.seconds(6), (event) -> {
                 cambiarVelocidadPacman(-0.1);
+                this.multiplicadorPuntaje = 1;
                 this.getPacMan().superVelocidad = false;
                 System.out.println("Adiós Super Velocidad");
                 hiloSuperVelocidad = false; // Marcar que el hilo ha terminado

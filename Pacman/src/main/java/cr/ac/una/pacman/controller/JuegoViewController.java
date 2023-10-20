@@ -170,7 +170,7 @@ public class JuegoViewController extends Controller implements Initializable {
                     pintar();
                     root.requestFocus();
                     segAct -= targetFrameTime;
-                } else if (segAct >= targetFrameTime  && juego.pausa) {
+                } else if (segAct >= targetFrameTime && juego.pausa) {
                     root.requestFocus();
                     segAct -= targetFrameTime;
                 }
@@ -182,6 +182,13 @@ public class JuegoViewController extends Controller implements Initializable {
     public void actualizar() {
         if (juego.encierroUsado == false && juego.getPacMan().getVidas() == 6 && juego.puntosActuales <= juego.puntosTotales / 2) {
             juego.encierro();
+        }
+        if (juego.getPacMan().getPuntos() >= 500 && juego.incrementoVelocidad == 0) {
+            juego.incrementoVelocidad += 0.05;
+            juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
+        } else if (juego.getPacMan().getPuntos() >= 1000 && juego.incrementoVelocidad == 0.05) {
+            juego.incrementoVelocidad += 0.1;
+            juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
         }
         if (segundoAct > segundoAnt + 0.4) {
             segundoAnt = segundoAct;
@@ -200,7 +207,11 @@ public class JuegoViewController extends Controller implements Initializable {
                 if ((int) fant.getX() / SIZE == fant.ultPosX
                         && (int) fant.getY() / SIZE == fant.ultPosY) {
                     fant.setMuerto(false);
-                    fant.setVelocidad(fant.getVelocidad() - 0.3);
+                    if ("Rojo".equals(fant.getColor()) && !juego.isHiloPowerPellets()) {
+                        fant.setVelocidad(0.7 + juego.incrementoVelocidad);
+                    } else if (!juego.isHiloPowerPellets()) {
+                        fant.setVelocidad(0.7);
+                    }
                 }
             } else if (!fant.isEncerrado()) {
                 if (!fant.isVulnerable()) {
@@ -267,9 +278,9 @@ public class JuegoViewController extends Controller implements Initializable {
             fantasma.pintar(graficos, segundoAct, segundoAnt);
         }
 
-        if(juego.getPacMan().getVidas() > hboxVidas.getChildren().size()) {
+        if (juego.getPacMan().getVidas() > hboxVidas.getChildren().size()) {
             hboxVidas.getChildren().add(new ImageView(new Image("cr/ac/una/pacman/resources/PacMan.png")));
-        } else if(juego.getPacMan().getVidas() < hboxVidas.getChildren().size()) {
+        } else if (juego.getPacMan().getVidas() < hboxVidas.getChildren().size()) {
             hboxVidas.getChildren().remove(0);
         }
         lbScore.setText(String.valueOf(juego.getPacMan().getPuntos()));
