@@ -102,7 +102,7 @@ public class JuegoViewController extends Controller implements Initializable {
 
         PacMan pacman = new PacMan(6, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.69, 3, imagenPacman);
 
-        juego = new Juego(pacman, fantasmas, ROWS, COLUMNS);
+        juego = new Juego(pacman, fantasmas, ROWS, COLUMNS, 1);
         juego.generarLaberinto();
         juego.contarPuntosTotales();
         System.out.println(juego.puntosTotales);
@@ -180,7 +180,10 @@ public class JuegoViewController extends Controller implements Initializable {
     }
 
     public void actualizar() {
-        if (juego.encierroUsado == false && juego.getPacMan().getVidas() == 6 && juego.puntosActuales <= juego.puntosTotales / 2) {
+        if(juego.getPacMan().getVidas() <= 0) {
+            juego.pausa();
+        }
+        if (!juego.encierroUsado && !juego.pacmanMurio && juego.puntosActuales <= juego.puntosTotales / 2) {
             juego.encierro();
         }
         if (juego.getPacMan().getPuntos() >= 500 && juego.incrementoVelocidad == 0) {

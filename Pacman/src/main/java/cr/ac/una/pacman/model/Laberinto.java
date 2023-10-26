@@ -4,8 +4,6 @@
  */
 package cr.ac.una.pacman.model;
 
-import java.awt.Rectangle;
-
 /**
  *
  * @author ANTHONY
@@ -62,9 +60,9 @@ public class Laberinto {
     }
 
     public void imprimirLaberinto() {
-        for (int i = 0; i < matriz.length; i++) {
+        for (char[] matriz1 : matriz) {
             for (int j = 0; j < matriz[0].length; j++) {
-                System.out.print(matriz[i][j]);
+                System.out.print(matriz1[j]);
             }
             System.out.println();
         }

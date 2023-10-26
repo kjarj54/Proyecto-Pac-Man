@@ -701,6 +701,7 @@ public class Fantasma extends Personaje {
         if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
             if ((int) juego.getPacMan().getY() / SIZE == y && (int) juego.getPacMan().getX() / SIZE == x) {
                 juego.cambiarVidas(-1);
+                juego.pacmanMurio = true;
                 juego.posIniPacman();
                 juego.posIniFantasmas();
                 if (juego.isHiloAnimacionInicialFantasmas()) {
@@ -711,6 +712,7 @@ public class Fantasma extends Personaje {
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             if ((int) (juego.getPacMan().getY() + 19) / SIZE == y1 && (int) (juego.getPacMan().getX() + 19) / SIZE == x1) {
                 juego.cambiarVidas(-1);
+                juego.pacmanMurio = true;
                 juego.posIniPacman();
                 juego.posIniFantasmas();
                 if (juego.isHiloAnimacionInicialFantasmas()) {

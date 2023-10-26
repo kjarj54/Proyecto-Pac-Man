@@ -27,6 +27,8 @@ public class Juego {
     private double tiempo;
     private List<String> trofeos;
 //    private Map<String, Integer> estadisticas;
+    private int nivel;
+    
     private Timeline animacionInicialFantasmasHilo;
     private Timeline comeFantasmasConsecutivosHilo;
     private Timeline powerPelletHilo;
@@ -42,10 +44,11 @@ public class Juego {
     public int fantasmasConsecutivos = 0;
     public int puntosTotales;
     public int puntosActuales;
+    public boolean pacmanMurio;
     public boolean encierroUsado;
     public boolean pausa;
 
-    public Juego(PacMan pacMan, List<Fantasma> fantasmas, int rows, int columns) {
+    public Juego(PacMan pacMan, List<Fantasma> fantasmas, int rows, int columns, int nivel) {
 //    public Juego(PacMan pacMan, List<Fantasma> fantasmas, Laberinto laberinto) {
         this.pacMan = pacMan;
         this.fantasmas = fantasmas;
@@ -53,6 +56,7 @@ public class Juego {
         this.tiempo = 0.0;
         this.trofeos = new ArrayList<>();
 //        this.estadisticas = new HashMap<>();
+        this.nivel = nivel;
 //        estadisticas.put("puntosTotales", 0);
 //        estadisticas.put("vidasPerdidas", 0);
 //        estadisticas.put("fantasmasComidos", 0);
@@ -60,8 +64,9 @@ public class Juego {
         this.multiplicadorPuntaje = 1;
         this.puntosTotales = 0;
         this.puntosActuales = 0;
-        this.pausa = false;
+        this.pacmanMurio = false;
         this.encierroUsado = false;
+        this.pausa = false;
     }
 
     //     Getters y Setters para todos los atributos
@@ -121,6 +126,15 @@ public class Juego {
 //    public void setEstadisticas(Map<String, Integer> estadisticas) {
 //        this.estadisticas = estadisticas;
 //    }
+    
+    public int getNivel() {
+        return nivel;
+    }
+    
+    public void setNivel(int nivel) {    
+        this.nivel = nivel;
+    }
+
     public boolean isHiloAnimacionInicialFantasmas() {
         return hiloAnimacionInicialFantasmas;
     }

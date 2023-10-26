@@ -22,7 +22,7 @@ public class App extends Application {
         FlowController.getInstance().InitializeFlow(stage, null);
 //        stage.getIcons().add(new Image(App.class.getResourceAsStream("/cr/ac/una/unaplanilla/resources/LogoUNArojo.png")));
         stage.setTitle("Pac-Man");
-        FlowController.getInstance().goViewInWindow("JuegoView");
+        FlowController.getInstance().goMain();
     }
 
     public static void main(String[] args) {
