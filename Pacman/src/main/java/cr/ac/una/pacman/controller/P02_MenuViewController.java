@@ -51,8 +51,7 @@ public class P02_MenuViewController extends Controller implements Initializable 
 
     @FXML
     private void onActionBtnNuevaPartida(ActionEvent event) {
-//        FlowController.getInstance().goView("P03_NuevaPartidaView");
-        FlowController.getInstance().goViewInWindow("JuegoView");
+        FlowController.getInstance().goView("P03_NuevaPartidaView");
     }
 
     @FXML

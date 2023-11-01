@@ -71,7 +71,5 @@ public class Personaje {
 
     public void setImagen(List<String> imagen) {
         this.imagen = imagen;
-    }
-    
-    
+    }    
 }

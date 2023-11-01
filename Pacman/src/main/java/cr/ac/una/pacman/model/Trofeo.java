@@ -13,11 +13,13 @@ public class Trofeo {
     private String nombre;
     private int anio;
     private String descripcion;
+    private boolean desbloqueado;
 
     public Trofeo(String nombre, int anio, String descripcion) {
         this.nombre = nombre;
         this.anio = anio;
         this.descripcion = descripcion;
+        this.desbloqueado = false;
     }
 
     // Métodos getters y setters
@@ -43,5 +45,13 @@ public class Trofeo {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public boolean isDesbloqueado() {
+        return desbloqueado;
+    }
+
+    public void setDesbloqueado(boolean desbloqueado) {
+        this.desbloqueado = desbloqueado;
     }
 }

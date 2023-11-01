@@ -557,6 +557,9 @@ public class Fantasma extends Personaje {
             Stack<int[]> camino = new Stack<>();
 
             while (x != miUltPosX || y != miUltPosY) {
+                if (x < 0 || y < 0) {
+                    break;  // Salir si se alcanza un valor no válido
+                }
                 camino.push(new int[]{x, y});
                 int tempX = padresX[y][x];
                 int tempY = padresY[y][x];
