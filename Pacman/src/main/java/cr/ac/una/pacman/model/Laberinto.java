@@ -140,6 +140,8 @@ public class Laberinto {
                 contPP++;
             }
         }
+        setMatrizCelda(' ', 1, 1);
+        setMatrizCelda(' ', 18, 14);
     }
 
     // Getters y Setters para todos los atributos

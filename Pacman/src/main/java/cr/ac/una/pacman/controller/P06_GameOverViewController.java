@@ -6,6 +6,7 @@ package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Juego;
 import cr.ac.una.pacman.model.Partida;
+import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.Mensaje;
@@ -55,8 +56,37 @@ public class P06_GameOverViewController extends Controller implements Initializa
         hxContBoton.getChildren().clear();
         getStage().close();
     }
-    
+
+    public void cargarInterfazJuegoCompletado(Juego juego, Partida partida) {
+        Trofeo trofeo = partida.obtenerTrofeo("Experto");
+        if (!juego.pacmanMurio && !trofeo.isDesbloqueado()) {
+            trofeo.setCont(1);
+            if (trofeo.getCont() >= 3) {
+                trofeo.setDesbloqueado(true);
+            }
+            partida.actualizarTrofeo("Experto", trofeo);
+        }
+        trofeo = partida.obtenerTrofeo("Clasico");
+        if (!trofeo.isDesbloqueado()) {
+            trofeo.setDesbloqueado(true);
+            partida.actualizarTrofeo("Clasico", trofeo);
+        }
+        trofeo = partida.obtenerTrofeo("Rey");
+        if ("Dificil".equals(partida.getDificultad()) && !trofeo.isDesbloqueado()) {
+            trofeo.setDesbloqueado(true);
+            partida.actualizarTrofeo("Rey", trofeo);
+        }
+    }
+
     public void cargarInterfazSiguienteNivel(Juego juego, Partida partida) {
+        Trofeo trofeo = partida.obtenerTrofeo("Experto");
+        if (!juego.pacmanMurio && !trofeo.isDesbloqueado()) {
+            trofeo.setCont(1);
+            if (trofeo.getCont() >= 3) {
+                trofeo.setDesbloqueado(true);
+            }
+            partida.actualizarTrofeo("Experto", trofeo);
+        }
         MFXButton btnContinuar = new MFXButton("Siguiente Nivel");
         btnContinuar.setOnAction(event -> {
             JuegoViewController juegoView = (JuegoViewController) FlowController.getInstance().getController("JuegoView");

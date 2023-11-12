@@ -5,6 +5,7 @@
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Partida;
+import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.Mensaje;
@@ -78,6 +79,29 @@ public class P05_PartidaViewController extends Controller implements Initializab
             }
             z++;
             vxContJuegos.getChildren().add(hxItems);
+        }
+
+        String[] vector = {"Clasico", "Cazador", "Experto", "Encierro", "Flash", "Rey"};
+        for (int i = 0; i < 6; i++) {
+            Trofeo trofeo = partida.obtenerTrofeo(vector[i]);
+            VBox vxItem = new VBox();
+            vxItem.setId(vector[i]);
+            vxItem.setPrefHeight(150);
+            vxItem.setPrefWidth(200);
+            vxItem.setAlignment(Pos.TOP_CENTER);
+            vxItem.setDisable(!trofeo.isDesbloqueado());
+            // Cambiar el fondo a gris cuando el mouse pasa por encima
+            vxItem.setOnMouseEntered(event -> {
+                vxItem.setStyle("-fx-background-color: grey;");
+            });
+            // Restaurar el fondo cuando el mouse sale
+            vxItem.setOnMouseExited(event -> {
+                vxItem.setStyle("-fx-background-color: transparent;");
+            });
+
+            Label lbTituloItem = new Label(trofeo.getNombre());
+            vxItem.getChildren().add(lbTituloItem);
+            vxContTrofeos.getChildren().add(vxItem);
         }
     }
 

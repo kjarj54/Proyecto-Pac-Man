@@ -4,6 +4,7 @@
  */
 package cr.ac.una.pacman.model;
 
+import cr.ac.una.pacman.App;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -88,6 +89,10 @@ public class Fantasma extends Personaje {
 
     // Este método mueve al fantasma según su algoritmo y el estado del juego
     public void mover(Laberinto laberinto, PacMan pacman, double objetivoX, double objetivoY) {
+        int distancia = (int) Math.sqrt(Math.pow(ultPosX - objetivoX / SIZE, 2)
+                + Math.pow(ultPosY - objetivoY / SIZE, 2));
+        int distanciaFantasma = (int) Math.sqrt(Math.pow(ultPosX - miUltPosX, 2)
+                + Math.pow(ultPosY - miUltPosY, 2));
         if (this.vulnerable && !this.encerrado && !this.muerto) {
             if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
                 escaparDePacman(laberinto, pacman, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
@@ -100,13 +105,23 @@ public class Fantasma extends Personaje {
         } else {
             switch (this.algoritmo) {
                 case DIJKSTRA -> {
-                    if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                    if ((distancia >= 5 || distanciaFantasma <= 7) && (int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
                         algoritmoDijkstra(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
                         miUltPosX = (int) this.getX() / SIZE;
                         miUltPosY = (int) this.getY() / SIZE;
                         ultPosX = (int) objetivoX / SIZE;
                         ultPosY = (int) objetivoY / SIZE;
                         eraVulnerable = false;
+                        System.out.println(miUltPosX);
+                        System.out.println(miUltPosY);
+                        System.out.println("");
+                    } else if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                        miUltPosX = (int) this.getX() / SIZE;
+                        miUltPosY = (int) this.getY() / SIZE;
+                        eraVulnerable = false;
+                        System.out.println(miUltPosX);
+                        System.out.println(miUltPosY);
+                        System.out.println("");
                     }
                 }
                 case DIJKSTRAALTERNATIVO -> {
@@ -137,6 +152,158 @@ public class Fantasma extends Personaje {
     }
 
     public void algoritmoDijkstra(Laberinto laberinto, int objetivoX, int objetivoY) {
+        int filas = laberinto.getMatriz().length;
+        int columnas = laberinto.getMatriz()[0].length;
+        int valorMaximo = Integer.MAX_VALUE;
+
+        int[][] distancias = new int[filas][columnas];
+        int[][][] distanciasCopia = new int[3][filas][columnas];
+        padresX = new int[filas][columnas];
+        padresY = new int[filas][columnas];
+        int[][][] padresXCopia = new int[3][filas][columnas];
+        int[][][] padresYCopia = new int[3][filas][columnas];
+
+        for (int iteracion = 0; iteracion < 3; iteracion++) {
+            PriorityQueue<Nodo> colaPrioridad = new PriorityQueue<>();
+            boolean[][] visitado = new boolean[filas][columnas];
+            for (int i = 0; i < filas; i++) {
+                Arrays.fill(distancias[i], valorMaximo);
+                Arrays.fill(visitado[i], false);
+            }
+
+            int x = objetivoX;
+            int y = objetivoY;
+
+            if (iteracion > 0) {
+                Stack<int[]> camino = new Stack<>();
+                Stack<int[]> camino2 = new Stack<>();
+                while (x != 1 || y != 1) {
+                    if (x < 0 || y < 0) {
+                        break;  // Salir si se alcanza un valor no válido
+                    }
+                    camino.push(new int[]{x, y});
+                    int tempX = padresXCopia[0][y][x];
+                    int tempY = padresYCopia[0][y][x];
+                    x = tempX;
+                    y = tempY;
+                }
+                if (iteracion == 2) {
+                    x = objetivoX;
+                    y = objetivoY;
+                    while (x != 1 || y != 1) {
+                        if (x < 0 || y < 0) {
+                            break;  // Salir si se alcanza un valor no válido
+                        }
+                        camino2.push(new int[]{x, y});
+                        int tempX = padresXCopia[1][y][x];
+                        int tempY = padresYCopia[1][y][x];
+                        x = tempX;
+                        y = tempY;
+                    }
+                }
+                int itera = 0;
+                int size = camino.size();
+
+                while (!camino.isEmpty()) {
+                    int[] nuevaPos = camino.pop();
+                    if (itera > 5 && itera < size - 6) {
+                        distancias[nuevaPos[1]][nuevaPos[0]] = distanciasCopia[0][nuevaPos[1]][nuevaPos[0]];
+                    }
+                    itera++;
+                }
+                if (iteracion == 2) {
+                    size = camino2.size();
+                    itera = 0;
+                    while (!camino2.isEmpty()) {
+                        int[] nuevaPos = camino2.pop();
+                        if (itera > 9 && itera < size - 9) {
+                            distancias[nuevaPos[1]][nuevaPos[0]] = distanciasCopia[1][nuevaPos[1]][nuevaPos[0]];
+                        }
+                        itera++;
+                    }
+                }
+            }
+
+            for (int i = 0; i < filas; i++) {
+                Arrays.fill(padresX[i], -1);
+                Arrays.fill(padresY[i], -1);
+            }
+
+            distancias[(int) this.getY() / SIZE][(int) this.getX() / SIZE] = 0;
+            colaPrioridad.add(new Nodo((int) this.getX() / SIZE, (int) this.getY() / SIZE, 0));
+
+            while (!colaPrioridad.isEmpty()) {
+                Nodo nodoActual = colaPrioridad.poll();
+
+                x = nodoActual.x;
+                y = nodoActual.y;
+
+                if (x == objetivoX && y == objetivoY) {
+                    break;
+                }
+
+                if (visitado[y][x]) {
+                    continue;
+                }
+
+                visitado[y][x] = true;
+
+                int[][] movimientos = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+                for (int[] movimiento : movimientos) {
+                    int nuevoX = x + movimiento[0];
+                    int nuevoY = y + movimiento[1];
+
+                    char celda = '#';
+
+                    if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas) {
+                        celda = laberinto.getMatrizCelda(nuevoY, nuevoX);
+                    }
+
+                    if (nuevoX >= 0 && nuevoX < columnas && nuevoY >= 0 && nuevoY < filas && !visitado[nuevoY][nuevoX]
+                            && (celda == ' ' || celda == 'p' || celda == '*' || celda == '-')) {
+                        int distanciaActual = distancias[y][x];
+                        int pesoCelda = 1; // Costo uniforme para todos los caminos
+
+                        if (distanciaActual + pesoCelda < distancias[nuevoY][nuevoX]) {
+                            distancias[nuevoY][nuevoX] = distanciaActual + pesoCelda;
+                            padresX[nuevoY][nuevoX] = x;
+                            padresY[nuevoY][nuevoX] = y;
+                            colaPrioridad.add(new Nodo(nuevoX, nuevoY, distancias[nuevoY][nuevoX]));
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < filas; i++) {
+                System.arraycopy(distancias[i], 0, distanciasCopia[iteracion][i], 0, columnas);
+                System.arraycopy(padresX[i], 0, padresXCopia[iteracion][i], 0, columnas);
+                System.arraycopy(padresY[i], 0, padresYCopia[iteracion][i], 0, columnas);
+            }
+        }
+        if (distancias[objetivoY][objetivoX] == valorMaximo) {
+//                if (distanciasCopia[1][objetivoY][objetivoX] == valorMaximo) {
+//                    if (distanciasCopia[0][objetivoY][objetivoX] == valorMaximo) {
+            System.out.println("No se encontró un camino al objetivo.");
+//                    } else {
+//                        for (int i = 0; i < filas; i++) {
+//                            System.arraycopy(padresX[i], 0, padresXCopia[0][i], 0, columnas);
+//                            System.arraycopy(padresY[i], 0, padresYCopia[0][i], 0, columnas);
+//                        }
+//                    }
+//                } else {
+//                    for (int i = 0; i < filas; i++) {
+//                        System.arraycopy(padresX[i], 0, padresXCopia[1][i], 0, columnas);
+//                        System.arraycopy(padresY[i], 0, padresYCopia[1][i], 0, columnas);
+//                    }
+//                }
+        } else {
+            System.out.println("La distancia mínima al objetivo es: " + distancias[objetivoY][objetivoX]);
+            System.out.println("Camino desde (" + (int) this.getX() / SIZE + (int) this.getY() / SIZE + ") a (" + objetivoX + ", " + objetivoY + ")");
+            imprimirCamino((int) this.getX() / SIZE, (int) this.getY() / SIZE, objetivoX, objetivoY);
+        }
+    }
+
+    /*public void algoritmoDijkstra(Laberinto laberinto, int objetivoX, int objetivoY) {
         int filas = laberinto.getMatriz().length;
         int columnas = laberinto.getMatriz()[0].length;
 
@@ -209,8 +376,7 @@ public class Fantasma extends Personaje {
 //            System.out.println("Camino desde (" + this.getX() / SIZE + ", " + this.getY() / SIZE + ") a (" + objetivoX + ", " + objetivoY + "):");
 //            imprimirCamino(padresX, padresY, (int) this.getX() / SIZE, (int) this.getY() / SIZE, objetivoX, objetivoY);
 //        }
-    }
-
+    }*/
     public void algoritmoDijkstraAlternativo(Laberinto laberinto, int objetivoX, int objetivoY) {
         int filas = laberinto.getMatriz().length;
         int columnas = laberinto.getMatriz()[0].length;
@@ -695,7 +861,7 @@ public class Fantasma extends Personaje {
         }
     }
 
-    public void comer(Laberinto laberinto, Juego juego) { // Come Pacman y vuelve a pacman y los fantasmas a una posicion inicial
+    public void comer(Laberinto laberinto, Juego juego, Partida partida) { // Come Pacman y vuelve a pacman y los fantasmas a una posicion inicial
         int x = (int) getX() / SIZE;
         int x1 = (int) (getX() + (SIZE - 1)) / SIZE;
         int y = (int) getY() / SIZE;
@@ -703,6 +869,7 @@ public class Fantasma extends Personaje {
 
         if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
             if ((int) juego.getPacMan().getY() / SIZE == y && (int) juego.getPacMan().getX() / SIZE == x) {
+                partida.actualizarEstadistica("TotalVidasPerdidas", partida.obtenerEstadistica("TotalVidasPerdidas") + 1);
                 juego.cambiarVidas(-1);
                 juego.pacmanMurio = true;
                 juego.posIniPacman();
@@ -715,6 +882,7 @@ public class Fantasma extends Personaje {
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             if ((int) (juego.getPacMan().getY() + 19) / SIZE == y1 && (int) (juego.getPacMan().getX() + 19) / SIZE == x1) {
                 juego.cambiarVidas(-1);
+                partida.actualizarEstadistica("TotalVidasPerdidas", partida.obtenerEstadistica("TotalVidasPerdidas") + 1);
                 juego.pacmanMurio = true;
                 juego.posIniPacman();
                 juego.posIniFantasmas();

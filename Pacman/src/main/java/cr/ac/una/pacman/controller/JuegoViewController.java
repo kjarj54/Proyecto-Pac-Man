@@ -9,6 +9,7 @@ import cr.ac.una.pacman.model.Juego;
 import cr.ac.una.pacman.model.Laberinto;
 import cr.ac.una.pacman.model.PacMan;
 import cr.ac.una.pacman.model.Partida;
+import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
 import java.net.URL;
@@ -85,6 +86,7 @@ public class JuegoViewController extends Controller implements Initializable {
         partida = (Partida) AppContext.getInstance().get("Partida");
         nivel = Integer.parseInt((String) AppContext.getInstance().get("Nivel"));
         laberinto = partida.getNivel(nivel - 1);
+        partida.actualizarEstadistica("CantNivelJugadoN" + nivel, partida.obtenerEstadistica("CantNivelJugadoN" + nivel) + 1);
 
         List<String> imagenPacman = new ArrayList<>();
         imagenPacman.add("cr/ac/una/pacman/resources/PacMan.png");
@@ -100,17 +102,19 @@ public class JuegoViewController extends Controller implements Initializable {
         List<String> imagenFantasmaNaranja = new ArrayList<>();
         imagenFantasmaNaranja.add("cr/ac/una/pacman/resources/FantasmaNaranja.png");
         Fantasma fantasmaRojo = new Fantasma(iniX, iniY - SIZE * 2, 0.7, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
-        Fantasma fantasmaRosa = new Fantasma(iniX + SIZE, iniY, 0.7, 3, imagenFantasmaRosa, "Rosa", "dijkstraAlternativo");
-        Fantasma fantasmaCian = new Fantasma(iniX - SIZE, iniY, 0.7, 3, imagenFantasmaCian, "Cian", "dijkstraAlternativo");
-        Fantasma fantasmaNaranja = new Fantasma(iniX, iniY, 0.7, 3, imagenFantasmaNaranja, "Naranja", "floyd");
+        fantasmaRojo.ultPosX = ((COLUMNS * SIZE) / 2) / SIZE;
+        fantasmaRojo.ultPosY = (((ROWS * SIZE) / 2) + SIZE * 3) / SIZE;
+//        Fantasma fantasmaRosa = new Fantasma(iniX + SIZE, iniY, 0.7, 3, imagenFantasmaRosa, "Rosa", "dijkstraAlternativo");
+//        Fantasma fantasmaCian = new Fantasma(iniX - SIZE, iniY, 0.7, 3, imagenFantasmaCian, "Cian", "dijkstraAlternativo");
+//        Fantasma fantasmaNaranja = new Fantasma(iniX, iniY, 0.7, 3, imagenFantasmaNaranja, "Naranja", "floyd");
 //            fantasmaRojo.setVulnerable(true);
 //            fantasmaRosa.setVulnerable(true);
 //            fantasmaCian.setVulnerable(true);
 //            fantasmaNaranja.setVulnerable(true);
         fantasmas.add(fantasmaRojo);
-        fantasmas.add(fantasmaRosa);
-        fantasmas.add(fantasmaCian);
-        fantasmas.add(fantasmaNaranja);
+//        fantasmas.add(fantasmaRosa);
+//        fantasmas.add(fantasmaCian);
+//        fantasmas.add(fantasmaNaranja);
 
         PacMan pacman = new PacMan(6, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.69, 3, imagenPacman);
 
@@ -124,8 +128,7 @@ public class JuegoViewController extends Controller implements Initializable {
 //            juego.nuevaPosEscape(juego.getFantasmas().get(1));
 //            juego.nuevaPosEscape(juego.getFantasmas().get(2));
 //            juego.nuevaPosEscape(juego.getFantasmas().get(3));
-        juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
-
+//        juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
         lbPlayer.setText(partida.getJugador());
         lbNivel.setText("Nivel " + juego.getNivel());
         lbHighScore.setText("" + partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()));
@@ -146,7 +149,7 @@ public class JuegoViewController extends Controller implements Initializable {
                     case "W" ->
                         direccion = 3;
                     case "SPACE" ->
-                        juego.superVelocidad();
+                        juego.superVelocidad(partida);
                     case "P" -> {
                         if (!juego.pausa) {
                             juego.pausa();
@@ -159,7 +162,7 @@ public class JuegoViewController extends Controller implements Initializable {
                 }
             }
         });
-        juego.animacionInicialFantasmas();
+//        juego.animacionInicialFantasmas();
         segundoAct = 0;
         segundoAnt = 0;
         direccion = 3;
@@ -185,66 +188,97 @@ public class JuegoViewController extends Controller implements Initializable {
 
                 lastUpdate = tiempoActual;
                 segundoAct = t;
-
                 segAct += elapsedSeconds;
 
-                if (segAct >= targetFrameTime && !juego.pausa && juego.puntosActuales == 0) {
-                    juego.pausa();
-                    P06_GameOverViewController gameOver = (P06_GameOverViewController) FlowController.getInstance().getController("P06_GameOverView");
-                    gameOver.cargarInterfazSiguienteNivel(juego, partida);
-
-                    Platform.runLater(() -> {
-                        FlowController.getInstance().goViewInWindowModal("P06_GameOverView", stage, false);
-                    });
-                }
-                if (segAct >= targetFrameTime && !juego.pausa && juego.getPacMan().getVidas() <= 0) {
-                    juego.pausa();
-                    P06_GameOverViewController gameOver = (P06_GameOverViewController) FlowController.getInstance().getController("P06_GameOverView");
-                    if (juego.getPacMan().getPuntos() > 1500) {
-                        gameOver.cargarInterfazSinVidas(juego, partida);
-                    } else {
-                        gameOver.cargarInterfazSinVidasSinPuntos(juego, partida);
+                if (segAct >= targetFrameTime) {
+                    if (!juego.pausa) {
+                        if (juego.puntosActuales == 0) {
+                            handleGameCompletion();
+                        } else if (juego.getPacMan().getVidas() <= 0) {
+                            handleGameOver();
+                        } else {
+                            handleGameUpdate();
+                        }
                     }
-                    Platform.runLater(() -> {
-                        FlowController.getInstance().goViewInWindowModal("P06_GameOverView", stage, false);
-                    });
-                }
-                if (segAct >= targetFrameTime && !juego.pausa) {
-                    actualizar();
-                    pintar();
-                    root.requestFocus();
-                    segAct -= targetFrameTime;
-                } else if (segAct >= targetFrameTime && juego.pausa) {
                     root.requestFocus();
                     segAct -= targetFrameTime;
                 }
+            }
+
+            private void handleGameCompletion() {
+                juego.pausa();
+                P06_GameOverViewController gameOver = (P06_GameOverViewController) FlowController.getInstance().getController("P06_GameOverView");
+                if (juego.getNivel() == 10) {
+                    gameOver.cargarInterfazJuegoCompletado(juego, partida);
+                } else {
+                    gameOver.cargarInterfazSiguienteNivel(juego, partida);
+                }
+                Platform.runLater(() -> FlowController.getInstance().goViewInWindowModal("P06_GameOverView", stage, false));
+            }
+
+            private void handleGameOver() {
+                juego.pausa();
+                P06_GameOverViewController gameOver = (P06_GameOverViewController) FlowController.getInstance().getController("P06_GameOverView");
+                if (juego.getPacMan().getPuntos() > 1500) {
+                    gameOver.cargarInterfazSinVidas(juego, partida);
+                } else {
+                    gameOver.cargarInterfazSinVidasSinPuntos(juego, partida);
+                }
+                Platform.runLater(() -> FlowController.getInstance().goViewInWindowModal("P06_GameOverView", stage, false));
+            }
+
+            private void handleGameUpdate() {
+                actualizar();
+                pintar();
+                root.requestFocus();
             }
         };
         animationTimer.start();
     }
 
     public void actualizar() {
-        if (!juego.encierroUsado && !juego.pacmanMurio && juego.puntosActuales <= juego.puntosTotales / 2) {
-            juego.encierro();
-        }
-        if (juego.getPacMan().getPuntos() >= 500 && juego.incrementoVelocidad == 0) {
-            juego.incrementoVelocidad += 0.02;
-            juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
-        } else if (juego.getPacMan().getPuntos() >= 1000 && juego.incrementoVelocidad == 0.02) {
-            juego.incrementoVelocidad = 0.05;
-            juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
-        }
+//        actualizarEncierro();
+//        actualizarVelocidadFantasmas();
         if (segundoAct > segundoAnt + 0.4) {
             segundoAnt = segundoAct;
         }
-        if ((int) juego.getFantasmas().get(3).getX() / SIZE == juego.getFantasmas().get(3).ultPosX
-                && (int) juego.getFantasmas().get(3).getY() / SIZE == juego.getFantasmas().get(3).ultPosY
-                && !juego.getFantasmas().get(3).isVulnerable() && !juego.getFantasmas().get(3).isEncerrado()) {
-            juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
-        }
+//        if ((int) juego.getFantasmas().get(3).getX() / SIZE == juego.getFantasmas().get(3).ultPosX
+//                && (int) juego.getFantasmas().get(3).getY() / SIZE == juego.getFantasmas().get(3).ultPosY
+//                && !juego.getFantasmas().get(3).isVulnerable() && !juego.getFantasmas().get(3).isEncerrado()) {
+//            juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
+//        }
         juego.getPacMan().mover(direccion, juego.getLaberinto());
-        juego.getPacMan().comer(juego.getLaberinto(), juego);
+        juego.getPacMan().comer(juego.getLaberinto(), juego, partida);
 
+        actualizarMovimientoFantasmas();
+    }
+
+    private void actualizarEncierro() {
+        if (!juego.encierroUsado && !juego.pacmanMurio && juego.puntosActuales <= juego.puntosTotales / 2) {
+            juego.encierro();
+            Trofeo trofeo = partida.obtenerTrofeo("Encierro");
+            if (!trofeo.isDesbloqueado()) {
+                trofeo.setCont(1);
+                if (trofeo.getCont() > 5) {
+                    trofeo.setDesbloqueado(true);
+                }
+                partida.actualizarTrofeo("Encierro", trofeo);
+            }
+        }
+    }
+
+    private void actualizarVelocidadFantasmas() {
+        int puntos = juego.getPacMan().getPuntos();
+        if (puntos >= 500 && juego.incrementoVelocidad == 0) {
+            juego.incrementoVelocidad += 0.02;
+            juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
+        } else if (puntos >= 1000 && juego.incrementoVelocidad == 0.02) {
+            juego.incrementoVelocidad = 0.05;
+            juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
+        }
+    }
+
+    private void actualizarMovimientoFantasmas() {
         for (Fantasma fant : juego.getFantasmas()) {
             if (fant.isMuerto()) {
                 fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE);
@@ -259,7 +293,7 @@ public class JuegoViewController extends Controller implements Initializable {
                 }
             } else if (!fant.isEncerrado()) {
                 if (!fant.isVulnerable()) {
-                    fant.comer(juego.getLaberinto(), juego);
+                    fant.comer(juego.getLaberinto(), juego, partida);
                 }
 
                 int fantX = (int) fant.getX() / SIZE;
@@ -344,6 +378,13 @@ public class JuegoViewController extends Controller implements Initializable {
     public void SiguienteNivel() {
         if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
             partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
+            for (int i = 1; i <= 10; i++) {
+                partida.actualizarEstadistica("TotalPuntos", partida.obtenerEstadistica("TotalPuntos")
+                        + partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()));
+            }
+        }
+        if (!this.juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
+            partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
         }
         partida.getNivel(nivel).setDesbloqueado(true);
         AppContext.getInstance().set("Partida", partida);
@@ -356,6 +397,13 @@ public class JuegoViewController extends Controller implements Initializable {
     public void FinalizarJuego() {
         if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
             partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
+            for (int i = 1; i <= 10; i++) {
+                partida.actualizarEstadistica("TotalPuntos", partida.obtenerEstadistica("TotalPuntos")
+                        + partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()));
+            }
+        }
+        if (!this.juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
+            partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
         }
         AppContext.getInstance().set("Partida", partida);
         animationTimer.stop();

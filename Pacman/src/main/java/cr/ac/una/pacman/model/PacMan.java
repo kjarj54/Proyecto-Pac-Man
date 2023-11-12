@@ -174,7 +174,7 @@ public class PacMan extends Personaje {
         }
     }
 
-    public void comer(Laberinto laberinto, Juego juego) { // Come Pac-dots y Power Pellets ademas revisa si come fantasmas y si son consecutivos
+    public void comer(Laberinto laberinto, Juego juego, Partida partida) { // Come Pac-dots y Power Pellets ademas revisa si come fantasmas y si son consecutivos
         int x = (int) getX() / SIZE;
         int x1 = (int) (getX() + (SIZE - 1)) / SIZE;
         int y = (int) getY() / SIZE;
@@ -211,6 +211,15 @@ public class PacMan extends Personaje {
                         this.superVelocidad = true;
                         this.puntos += (100 * juego.multiplicadorPuntaje);
                     }
+                    Trofeo trofeo = partida.obtenerTrofeo("Cazador");
+                    if (!trofeo.isDesbloqueado()) {
+                        trofeo.setCont(1);
+                        if (trofeo.getCont() > 5) {
+                            trofeo.setDesbloqueado(true);
+                        }
+                        partida.actualizarTrofeo("Cazador", trofeo);
+                    }
+                    partida.actualizarEstadistica("TotalFantasmasComidos", partida.obtenerEstadistica("TotalFantasmasComidos") + 1);
                 }
             }
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
@@ -227,6 +236,15 @@ public class PacMan extends Personaje {
                         this.superVelocidad = true;
                         this.puntos += (100 * juego.multiplicadorPuntaje);
                     }
+                    Trofeo trofeo = partida.obtenerTrofeo("Cazador");
+                    if (!trofeo.isDesbloqueado()) {
+                        trofeo.setCont(1);
+                        if (trofeo.getCont() > 5) {
+                            trofeo.setDesbloqueado(true);
+                        }
+                        partida.actualizarTrofeo("Cazador", trofeo);
+                    }
+                    partida.actualizarEstadistica("TotalFantasmasComidos", partida.obtenerEstadistica("TotalFantasmasComidos") + 1);
                 }
             }
         }

@@ -26,7 +26,6 @@ public class Juego {
     private Laberinto laberinto;
     private int tiempo;
     private int nivel;
-    
 
     private Timeline animacionInicialFantasmasHilo;
     private Timeline comeFantasmasConsecutivosHilo;
@@ -330,7 +329,7 @@ public class Juego {
         }
     }
 
-    public void superVelocidad() {
+    public void superVelocidad(Partida partida) {
         if (!hiloSuperVelocidad && this.getPacMan().superVelocidad) {
             hiloSuperVelocidad = true;
 
@@ -340,6 +339,14 @@ public class Juego {
             KeyFrame inicioKeyFrame = new KeyFrame(Duration.ZERO, (event) -> {
                 cambiarVelocidadPacman(0.1);
                 this.multiplicadorPuntaje = 2;
+                Trofeo trofeo = partida.obtenerTrofeo("Flash");
+                if (!trofeo.isDesbloqueado()) {
+                    trofeo.setCont(1);
+                    if (trofeo.getCont() > 5) {
+                        trofeo.setDesbloqueado(true);
+                    }
+                    partida.actualizarTrofeo("Flash", trofeo);
+                }
                 System.out.println("Hola Super Velocidad");
             });
 
@@ -355,7 +362,7 @@ public class Juego {
             superVelocidadHilo.play();
         }
     }
-    
+
     public void matarHilos() {
         if (hiloAnimacionInicialFantasmas) {
             animacionInicialFantasmasHilo.stop();

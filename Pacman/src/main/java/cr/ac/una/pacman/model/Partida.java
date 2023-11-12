@@ -22,14 +22,14 @@ public class Partida {
     private String dificultad;
     private List<Laberinto> laberintos;
     private Map<String, Integer> estadisticas;
-    private List<Trofeo> trofeos;
+    private Map<String, Trofeo> trofeos;
 
     public Partida(String jugador, String dificultad) {
         this.jugador = jugador;
         this.dificultad = dificultad;
         this.laberintos = new ArrayList<>();
         this.estadisticas = new HashMap<>();
-        this.trofeos = new ArrayList<>();
+        this.trofeos = new HashMap<>();
 
         this.estadisticas.put("TotalPuntos", 0);
         this.estadisticas.put("MayorPuntosN1", 0);
@@ -58,12 +58,12 @@ public class Partida {
         this.estadisticas.put("MejorTiempo", 0);
         this.estadisticas.put("TiempoTotal", 0);
 
-        this.trofeos.add(new Trofeo("Clásico", 2023, "Trofeo para el ganador del torneo Clásico"));
-        this.trofeos.add(new Trofeo("Cazador", 2023, "Trofeo para el jugador con más bajas en el torneo Cazador"));
-        this.trofeos.add(new Trofeo("Experto", 2023, "Trofeo para el jugador con más puntos en el torneo Experto"));
-        this.trofeos.add(new Trofeo("Encierro", 2023, "Trofeo para el ganador del torneo Encierro"));
-        this.trofeos.add(new Trofeo("Flash", 2023, "Trofeo para el jugador más rápido en el torneo Flash"));
-        this.trofeos.add(new Trofeo("Rey del Pac-Man", 2023, "Trofeo para el ganador del torneo Rey del Pac-Man"));        
+        this.trofeos.put("Clasico", new Trofeo("Clásico", 2023, "Trofeo para el ganador del torneo Clásico"));
+        this.trofeos.put("Cazador", new Trofeo("Cazador", 2023, "Trofeo para el jugador con más bajas en el torneo Cazador"));
+        this.trofeos.put("Experto", new Trofeo("Experto", 2023, "Trofeo para el jugador con más puntos en el torneo Experto"));
+        this.trofeos.put("Encierro", new Trofeo("Encierro", 2023, "Trofeo para el ganador del torneo Encierro"));
+        this.trofeos.put("Flash", new Trofeo("Flash", 2023, "Trofeo para el jugador más rápido en el torneo Flash"));
+        this.trofeos.put("Rey", new Trofeo("Rey del Pac-Man", 2023, "Trofeo para el ganador del torneo Rey del Pac-Man"));        
     }
 
     public String getJugador() {
@@ -92,6 +92,18 @@ public class Partida {
     // Obtén el valor de una estadística
     public int obtenerEstadistica(String estadistica) {
         return estadisticas.getOrDefault(estadistica, 0);
+    }
+    
+    // Actualiza un Trofeo en el mapa
+    public void actualizarTrofeo(String trofeo, Trofeo valor) {
+        if (trofeos.containsKey(trofeo)) {
+            trofeos.put(trofeo, valor);
+        }
+    }
+
+    // Obtén el valor de un Trofeo
+    public Trofeo obtenerTrofeo(String trofeo) {
+        return trofeos.getOrDefault(trofeo, null);
     }
     
     public Laberinto getNivel(int nivel) {
