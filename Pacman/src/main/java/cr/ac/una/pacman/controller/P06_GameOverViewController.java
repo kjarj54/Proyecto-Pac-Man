@@ -95,6 +95,7 @@ public class P06_GameOverViewController extends Controller implements Initializa
             getStage().close();
         });
         hxContBoton.getChildren().add(btnContinuar);
+        partida.getNivel(juego.getNivel()).setDesbloqueado(true);
     }
 
     public void cargarInterfazPausa(Juego juego, Partida partida) {

@@ -104,17 +104,17 @@ public class JuegoViewController extends Controller implements Initializable {
         Fantasma fantasmaRojo = new Fantasma(iniX, iniY - SIZE * 2, 0.7, 3, imagenFantasmaRojo, "Rojo", "dijkstra");
         fantasmaRojo.ultPosX = ((COLUMNS * SIZE) / 2) / SIZE;
         fantasmaRojo.ultPosY = (((ROWS * SIZE) / 2) + SIZE * 3) / SIZE;
-//        Fantasma fantasmaRosa = new Fantasma(iniX + SIZE, iniY, 0.7, 3, imagenFantasmaRosa, "Rosa", "dijkstraAlternativo");
-//        Fantasma fantasmaCian = new Fantasma(iniX - SIZE, iniY, 0.7, 3, imagenFantasmaCian, "Cian", "dijkstraAlternativo");
-//        Fantasma fantasmaNaranja = new Fantasma(iniX, iniY, 0.7, 3, imagenFantasmaNaranja, "Naranja", "floyd");
+        Fantasma fantasmaRosa = new Fantasma(iniX + SIZE, iniY, 0.7, 3, imagenFantasmaRosa, "Rosa", "dijkstraAlternativo");
+        Fantasma fantasmaCian = new Fantasma(iniX - SIZE, iniY, 0.7, 3, imagenFantasmaCian, "Cian", "dijkstraAlternativo");
+        Fantasma fantasmaNaranja = new Fantasma(iniX, iniY, 0.7, 3, imagenFantasmaNaranja, "Naranja", "floyd");
 //            fantasmaRojo.setVulnerable(true);
 //            fantasmaRosa.setVulnerable(true);
 //            fantasmaCian.setVulnerable(true);
 //            fantasmaNaranja.setVulnerable(true);
         fantasmas.add(fantasmaRojo);
-//        fantasmas.add(fantasmaRosa);
-//        fantasmas.add(fantasmaCian);
-//        fantasmas.add(fantasmaNaranja);
+        fantasmas.add(fantasmaRosa);
+        fantasmas.add(fantasmaCian);
+        fantasmas.add(fantasmaNaranja);
 
         PacMan pacman = new PacMan(6, 0, "A", (COLUMNS * SIZE) / 2, (ROWS * SIZE) / 2, 0.69, 3, imagenPacman);
 
@@ -128,12 +128,11 @@ public class JuegoViewController extends Controller implements Initializable {
 //            juego.nuevaPosEscape(juego.getFantasmas().get(1));
 //            juego.nuevaPosEscape(juego.getFantasmas().get(2));
 //            juego.nuevaPosEscape(juego.getFantasmas().get(3));
-//        juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
+        juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
         lbPlayer.setText(partida.getJugador());
         lbNivel.setText("Nivel " + juego.getNivel());
         lbHighScore.setText("" + partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()));
         graficos = cvLaberinto.getGraphicsContext2D();
-        System.out.println(juego.puntosTotales);
         pintar();
 
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -162,7 +161,7 @@ public class JuegoViewController extends Controller implements Initializable {
                 }
             }
         });
-//        juego.animacionInicialFantasmas();
+        juego.animacionInicialFantasmas();
         segundoAct = 0;
         segundoAnt = 0;
         direccion = 3;
@@ -237,16 +236,16 @@ public class JuegoViewController extends Controller implements Initializable {
     }
 
     public void actualizar() {
-//        actualizarEncierro();
-//        actualizarVelocidadFantasmas();
+        actualizarEncierro();
+        actualizarVelocidadFantasmas();
         if (segundoAct > segundoAnt + 0.4) {
             segundoAnt = segundoAct;
         }
-//        if ((int) juego.getFantasmas().get(3).getX() / SIZE == juego.getFantasmas().get(3).ultPosX
-//                && (int) juego.getFantasmas().get(3).getY() / SIZE == juego.getFantasmas().get(3).ultPosY
-//                && !juego.getFantasmas().get(3).isVulnerable() && !juego.getFantasmas().get(3).isEncerrado()) {
-//            juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
-//        }
+        if ((int) juego.getFantasmas().get(3).getX() / SIZE == juego.getFantasmas().get(3).ultPosX
+                && (int) juego.getFantasmas().get(3).getY() / SIZE == juego.getFantasmas().get(3).ultPosY
+                && !juego.getFantasmas().get(3).isVulnerable() && !juego.getFantasmas().get(3).isEncerrado()) {
+            juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
+        }
         juego.getPacMan().mover(direccion, juego.getLaberinto());
         juego.getPacMan().comer(juego.getLaberinto(), juego, partida);
 
@@ -386,7 +385,6 @@ public class JuegoViewController extends Controller implements Initializable {
         if (!this.juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
             partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
         }
-        partida.getNivel(nivel).setDesbloqueado(true);
         AppContext.getInstance().set("Partida", partida);
         AppContext.getInstance().set("Nivel", "" + (nivel + 1));
         animationTimer.stop();
