@@ -258,7 +258,7 @@ public class JuegoViewController extends Controller implements Initializable {
             Trofeo trofeo = partida.obtenerTrofeo("Encierro");
             if (!trofeo.isDesbloqueado()) {
                 trofeo.setCont(1);
-                if (trofeo.getCont() > 5) {
+                if (trofeo.getCont() >= 5) {
                     trofeo.setDesbloqueado(true);
                 }
                 partida.actualizarTrofeo("Encierro", trofeo);
@@ -280,7 +280,7 @@ public class JuegoViewController extends Controller implements Initializable {
     private void actualizarMovimientoFantasmas() {
         for (Fantasma fant : juego.getFantasmas()) {
             if (fant.isMuerto()) {
-                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE);
+                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
                 if ((int) fant.getX() / SIZE == fant.ultPosX
                         && (int) fant.getY() / SIZE == fant.ultPosY) {
                     fant.setMuerto(false);
@@ -303,11 +303,11 @@ public class JuegoViewController extends Controller implements Initializable {
                 }
 
                 if (fant.isVulnerable()) {
-                    fant.mover(juego.getLaberinto(), juego.getPacMan(), fant.ultPosX * SIZE, fant.ultPosY * SIZE);
+                    fant.mover(juego.getLaberinto(), juego.getPacMan(), fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
                 } else if (!"floyd".equals(fant.getAlgoritmo())) {
-                    fant.mover(juego.getLaberinto(), null, juego.getPacMan().getX(), juego.getPacMan().getY());
+                    fant.mover(juego.getLaberinto(), null, juego.getPacMan().getX(), juego.getPacMan().getY(), partida.getDificultad());
                 } else {
-                    fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE);
+                    fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
                 }
             } else {
                 if ((int) fant.getY() / SIZE == ROWS / 2 && (int) (fant.getY() + SIZE - 1) / SIZE == ROWS / 2) {
@@ -315,7 +315,7 @@ public class JuegoViewController extends Controller implements Initializable {
                 } else if ((int) fant.getY() / SIZE == ROWS / 2 + 1 && (int) (fant.getY() + SIZE - 1) / SIZE == ROWS / 2 + 1) {
                     fant.ultPosY = ROWS / 2;
                 }
-                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE);
+                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
             }
         }
     }

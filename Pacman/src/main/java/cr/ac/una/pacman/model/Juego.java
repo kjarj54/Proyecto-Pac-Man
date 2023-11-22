@@ -342,7 +342,7 @@ public class Juego {
                 Trofeo trofeo = partida.obtenerTrofeo("Flash");
                 if (!trofeo.isDesbloqueado()) {
                     trofeo.setCont(1);
-                    if (trofeo.getCont() > 5) {
+                    if (trofeo.getCont() >= 5) {
                         trofeo.setDesbloqueado(true);
                     }
                     partida.actualizarTrofeo("Flash", trofeo);

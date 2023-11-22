@@ -13,6 +13,7 @@ import java.util.Random;
  * @author ANTHONY
  */
 public class Laberinto {
+
     private int nivel;
     private String tema;
     private char[][] matriz;
@@ -24,7 +25,7 @@ public class Laberinto {
         this.matriz = new char[rows][columns];
         this.desbloqueado = nivel == 1;
     }
-    
+
     public void actualizar(Laberinto laberinto) {
         for (int i = 1; i < ROWS; i++) {
             for (int j = 1; j < COLUMNS; j++) {
@@ -35,7 +36,7 @@ public class Laberinto {
         this.nivel = laberinto.getNivel();
         this.tema = laberinto.getTema();
     }
-    
+
     public void generarLaberinto() {
         Random random = new Random();
 
@@ -81,6 +82,49 @@ public class Laberinto {
                 }
             }
         }
+
+        Random rand = new Random();
+        // Recorrer la matriz interna (sin incluir los bordes)
+        for (int i = 2; i < ROWS - 1; i++) {
+            for (int j = 2; j < COLUMNS - 1; j++) {
+                // Contar el número de vecinos
+                int vecinos = contarVecinos(i, j);
+
+                // Si hay más de 2 vecinos, eliminar aleatoriamente algunos
+                while (vecinos > 2) {
+                    // Elegir una dirección aleatoria (arriba, abajo, izquierda o derecha)
+                    int direccion = rand.nextInt(4);
+
+                    // Eliminar el vecino en la dirección seleccionada si es diferente de un borde
+                    switch (direccion) {
+                        case 0 -> {
+                            if (matriz[i - 1][j] == '#' && i - 1 > 2) {
+                                matriz[i - 1][j] = ' ';
+                            }
+                        }
+                        case 1 -> {
+                            if (matriz[i][j - 1] == '#' && j - 1 > 2) {
+                                matriz[i][j - 1] = ' ';
+                            }
+                        }
+                        case 2 -> {
+                            if (matriz[i + 1][j] == '#' && i + 1 < ROWS - 1) {
+                                matriz[i + 1][j] = ' ';
+                            }
+                        }
+                        case 3 -> {
+                            if (matriz[i][j + 1] == '#' && j + 1 < COLUMNS - 1) {
+                                matriz[i][j + 1] = ' ';
+                            }
+                        }
+                    }
+
+                    // Actualizar el contador de vecinos después de eliminar un vecino
+                    vecinos = contarVecinos(i, j);
+                }
+            }
+        }
+
         for (int i = 2; i < ROWS - 1; i++) { // Se marcan todos lo campos vacios como "p" puntos
             for (int j = 2; j < COLUMNS - 1; j++) {
                 if (getMatrizCelda(i, j) == ' ') {
@@ -140,12 +184,9 @@ public class Laberinto {
                 contPP++;
             }
         }
-        setMatrizCelda(' ', 1, 1);
-        setMatrizCelda(' ', 18, 14);
     }
 
     // Getters y Setters para todos los atributos
-
     public int getNivel() {
         return nivel;
     }
@@ -169,15 +210,15 @@ public class Laberinto {
     public void setMatriz(char[][] matriz) {
         this.matriz = matriz;
     }
-    
+
     public char getMatrizCelda(int row, int col) {
         return matriz[row][col];
     }
-    
+
     public void setMatrizCelda(char valor, int row, int col) {
         matriz[row][col] = valor;
     }
-    
+
     public boolean isDesbloqueado() {
         return desbloqueado;
     }
@@ -193,5 +234,23 @@ public class Laberinto {
             }
             System.out.println();
         }
+    }
+
+    // Método para contar el número de vecinos de una celda en la matriz
+    private int contarVecinos(int fila, int columna) {
+        int vecinos = 0;
+        if (matriz[fila - 1][columna] == '#') {
+            vecinos++;
+        }
+        if (matriz[fila + 1][columna] == '#') {
+            vecinos++;
+        }
+        if (matriz[fila][columna - 1] == '#') {
+            vecinos++;
+        }
+        if (matriz[fila][columna + 1] == '#') {
+            vecinos++;
+        }
+        return vecinos;
     }
 }
