@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="cr.ac.una.pacman.controller.P07_EstadisticasViewController">
+   <children>
+      <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="TOP_CENTER" maxWidth="400.0" spacing="25.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <MFXButton fx:id="btnSalir" onAction="#onActionBtnSalir" styleClass="mfx-button-Image">
+                           <graphic>
+                              <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../../../../../../Proyecto-CuboRubik/Proyecto1_Datos/src/main/resources/cr/ac/una/proyecto1_datos/resources/media/icons/back.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <tooltip>
+                              <Tooltip text="Regresar al menú principal" />
+                           </tooltip>
+                        </MFXButton>
+                     </children>
+                  </HBox>
+                  <Label text="Top 10 historico" />
+                  <TableView fx:id="tbvHistorico" maxWidth="325.0">
+                    <columns>
+                        <TableColumn fx:id="tbcPosicion" prefWidth="75.0" text="Posición" />
+                      <TableColumn fx:id="tbcNombre" prefWidth="150.0" text="Nombre" />
+                      <TableColumn fx:id="tbcPuntaje" prefWidth="100.0" text="Puntaje" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="lbPlayer" text="Player" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="200.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Total puntos ganados" wrapText="true" />
+                              <Label fx:id="lbTotalPuntos" text="--" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label prefWidth="100.0" text="Mayor cantidad de puntos sin perder una vida" wrapText="true" />
+                              <Label fx:id="lbMayorPuntosNoVidas" text="--" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Total vida perdidas" wrapText="true" />
+                              <Label fx:id="lbTotalVidasP" text="--" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label prefWidth="100.0" text="Cantidad de fantasmas comidos" wrapText="true" />
+                              <Label fx:id="lbFantasmasComidos" text="--" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Tiempo Total de juego" wrapText="true" />
+                              <Label fx:id="lbTiempoTotalJ" text="--" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox spacing="5.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="TOP_CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Mayor cantidad de puntos por nivel" />
+                              <VBox fx:id="vbxContPuntosXnivel" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Cantidad de veces que ha jugado un nivel" />
+                              <VBox fx:id="vbxContCantNivelJugado" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Mejor tiempo por nivel" />
+                              <VBox fx:id="bvxMejorTiempoXnivel" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

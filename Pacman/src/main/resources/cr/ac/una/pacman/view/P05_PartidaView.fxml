@@ -29,6 +29,11 @@
                         <Tooltip text="Regresar al menú principal" />
                      </tooltip>
                   </MFXButton>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <MFXButton fx:id="btnEstadisticas" onAction="#onActionBtnEstadisticas" text="Estadisticas" />
+                     </children>
+                  </VBox>
                </children>
                <HBox.margin>
                   <Insets />

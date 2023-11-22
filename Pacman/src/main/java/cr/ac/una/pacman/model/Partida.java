@@ -6,7 +6,6 @@ package cr.ac.una.pacman.model;
 
 import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
 import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
-import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +54,16 @@ public class Partida {
         this.estadisticas.put("CantNivelJugadoN9", 0);
         this.estadisticas.put("CantNivelJugadoN10", 0);
         this.estadisticas.put("TotalFantasmasComidos", 0);
-        this.estadisticas.put("MejorTiempo", 0);
+        this.estadisticas.put("MejorTiempoN1", 0);
+        this.estadisticas.put("MejorTiempoN2", 0);
+        this.estadisticas.put("MejorTiempoN3", 0);
+        this.estadisticas.put("MejorTiempoN4", 0);
+        this.estadisticas.put("MejorTiempoN5", 0);
+        this.estadisticas.put("MejorTiempoN6", 0);
+        this.estadisticas.put("MejorTiempoN7", 0);
+        this.estadisticas.put("MejorTiempoN8", 0);
+        this.estadisticas.put("MejorTiempoN9", 0);
+        this.estadisticas.put("MejorTiempoN10", 0);
         this.estadisticas.put("TiempoTotal", 0);
 
         this.trofeos.put("Clasico", new Trofeo("Clásico", 2023, "Trofeo para el ganador del torneo Clásico"));

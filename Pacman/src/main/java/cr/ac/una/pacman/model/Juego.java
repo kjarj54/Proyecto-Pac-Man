@@ -7,11 +7,13 @@ package cr.ac.una.pacman.model;
 import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
 import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
+import cr.ac.una.pacman.util.Cronometro;
 import static io.github.palexdev.materialfx.utils.RandomUtils.random;
 import java.util.List;
 import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 /**
@@ -44,6 +46,7 @@ public class Juego {
     public boolean pacmanMurio;
     public boolean encierroUsado;
     public boolean pausa;
+    public Cronometro cronometro;
 
     public Juego(PacMan pacMan, List<Fantasma> fantasmas, int rows, int columns, int nivel, Laberinto laberinto) {
         this.pacMan = pacMan;
@@ -385,6 +388,7 @@ public class Juego {
     }
 
     public void pausa() {
+        cronometro.pauseCronometro();
         if (hiloAnimacionInicialFantasmas) {
             animacionInicialFantasmasHilo.pause();
         }
@@ -404,6 +408,7 @@ public class Juego {
     }
 
     public void continuar() {
+        cronometro.startCronometro();
         if (hiloAnimacionInicialFantasmas) {
             animacionInicialFantasmasHilo.play();
         }
@@ -472,5 +477,10 @@ public class Juego {
             }
         }
         puntosActuales = puntosTotales;
+    }
+    
+    public void iniciarContador(Label lnCronometro) {
+        cronometro = new Cronometro(lnCronometro);
+        cronometro.startCronometro();
     }
 }

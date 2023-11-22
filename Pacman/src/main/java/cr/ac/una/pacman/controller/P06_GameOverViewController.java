@@ -8,6 +8,7 @@ import cr.ac.una.pacman.model.Juego;
 import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
+import cr.ac.una.pacman.util.Cronometro;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.Mensaje;
 import io.github.palexdev.materialfx.controls.MFXButton;

@@ -35,6 +35,8 @@ public class P05_PartidaViewController extends Controller implements Initializab
     private VBox vxContJuegos;
     @FXML
     private VBox vxContTrofeos;
+    @FXML
+    private MFXButton btnEstadisticas;
 
     Partida partida;
 
@@ -113,6 +115,10 @@ public class P05_PartidaViewController extends Controller implements Initializab
     private void onActionBtnSalir(ActionEvent event) {
         FlowController.getInstance().delete("P05_PartidaView");
         FlowController.getInstance().goView("P02_MenuView");
+    }
+
+    @FXML
+    private void onActionBtnEstadisticas(ActionEvent event) {
     }
 
 }
