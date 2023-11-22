@@ -93,10 +93,9 @@ public class Fantasma extends Personaje {
 
     // Este método mueve al fantasma según su algoritmo y el estado del juego
     public void mover(Laberinto laberinto, PacMan pacman, double objetivoX, double objetivoY, String dificultad) {
-        int distancia = (int) Math.sqrt(Math.pow(ultPosX - objetivoX / SIZE, 2)
-                + Math.pow(ultPosY - objetivoY / SIZE, 2));
-        int distanciaFantasma = (int) Math.sqrt(Math.pow(ultPosX - miUltPosX, 2)
-                + Math.pow(ultPosY - miUltPosY, 2));
+        int distancia = calcularDistancia(ultPosX, ultPosY, objetivoX / SIZE, objetivoY / SIZE);
+        int distanciaFantasma = calcularDistancia(ultPosX, ultPosY, miUltPosX, miUltPosY);
+
         if (this.vulnerable && !this.encerrado && !this.muerto) {
             if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
                 escaparDePacman(laberinto, pacman, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
@@ -109,7 +108,7 @@ public class Fantasma extends Personaje {
         } else {
             switch (this.algoritmo) {
                 case DIJKSTRA -> {
-                    if ((distancia >= 5 || distanciaFantasma <= 7) && (int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                    if ((distancia >= 5 || distanciaFantasma <= 7) && enCeldaCentro()) {
                         distanciasL.add(0, algoritmoDijkstra(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE));
                         padresXL.add(0, padresX);
                         padresYL.add(0, padresY);
@@ -129,14 +128,14 @@ public class Fantasma extends Personaje {
                         ultPosX = (int) objetivoX / SIZE;
                         ultPosY = (int) objetivoY / SIZE;
                         eraVulnerable = false;
-                    } else if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                    } else if (enCeldaCentro()) {
                         miUltPosX = (int) this.getX() / SIZE;
                         miUltPosY = (int) this.getY() / SIZE;
                         eraVulnerable = false;
                     }
                 }
                 case DIJKSTRAALTERNATIVO -> {
-                    if ((distancia >= 5 || distanciaFantasma <= 7) && (int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                    if ((distancia >= 5 || distanciaFantasma <= 7) && enCeldaCentro()) {
                         distanciasL.add(0, algoritmoDijkstraAlternativo(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE));
                         padresXL.add(0, padresX);
                         padresYL.add(0, padresY);
@@ -153,14 +152,14 @@ public class Fantasma extends Personaje {
                         ultPosX = (int) objetivoX / SIZE;
                         ultPosY = (int) objetivoY / SIZE;
                         eraVulnerable = false;
-                    } else if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                    } else if (enCeldaCentro()) {
                         miUltPosX = (int) this.getX() / SIZE;
                         miUltPosY = (int) this.getY() / SIZE;
                         eraVulnerable = false;
                     }
                 }
                 case FLOYD -> {
-                    if ((int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE) {
+                    if (enCeldaCentro()) {
                         algoritmoFloyd(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
                         miUltPosX = (int) this.getX() / SIZE;
                         miUltPosY = (int) this.getY() / SIZE;
@@ -174,6 +173,15 @@ public class Fantasma extends Personaje {
             }
         }
         moverFantasma(laberinto, ultPosX, ultPosY);
+    }
+
+    private int calcularDistancia(int x1, int y1, double x2, double y2) {
+        return (int) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    private boolean enCeldaCentro() {
+        return (int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE
+                && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE;
     }
 
     public int[][] algoritmoDijkstra(Laberinto laberinto, int objetivoX, int objetivoY) {
@@ -377,13 +385,13 @@ public class Fantasma extends Personaje {
             }
         }
 
-        if (distancias[objetivoY][objetivoX] == Integer.MAX_VALUE) {
-            System.out.println("No se encontró un camino al objetivo.");
-        } else {
-            System.out.println("La distancia mínima al objetivo es: " + distancias[objetivoY][objetivoX]);
-            System.out.println("Camino desde (" + this.getX() / SIZE + ", " + this.getY() / SIZE + ") a (" + objetivoX + ", " + objetivoY + "):");
-            imprimirCamino((int) this.getX() / SIZE, (int) this.getY() / SIZE, objetivoX, objetivoY);
-        }
+//        if (distancias[objetivoY][objetivoX] == Integer.MAX_VALUE) {
+//            System.out.println("No se encontró un camino al objetivo.");
+//        } else {
+//            System.out.println("La distancia mínima al objetivo es: " + distancias[objetivoY][objetivoX]);
+//            System.out.println("Camino desde (" + this.getX() / SIZE + ", " + this.getY() / SIZE + ") a (" + objetivoX + ", " + objetivoY + "):");
+//            imprimirCamino((int) this.getX() / SIZE, (int) this.getY() / SIZE, objetivoX, objetivoY);
+//        }
         return distancias;
     }
 
@@ -606,80 +614,23 @@ public class Fantasma extends Personaje {
         if ((this.vulnerable && !this.encerrado) && !this.muerto && this.eraVulnerable && padresX != null && padresY != null) {
             Stack<int[]> camino = new Stack<>();
 
-            // Verificar si hay un camino válido antes de intentar imprimirlo
             if (padresX != null && padresY != null && x >= 0 && x < padresX[0].length && y >= 0 && y < padresY.length) {
-                while (x != miUltPosX || y != miUltPosY) {
-                    if (x < 0 || y < 0) {
-                        break;  // Salir si se alcanza un valor no válido
-                    }
-                    camino.push(new int[]{x, y});
-                    int tempX = padresX[y][x];
-                    int tempY = padresY[y][x];
-                    x = tempX;
-                    y = tempY;
-                }
+                camino = construirCamino(padresX, padresY, objetivoX, objetivoY);
             }
             int[] nuevaPos = camino.pop();
             int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
             int yDestino = nuevaPos[1] * SIZE;
 
-            int xActual = (int) this.getX();
-            int yActual = (int) this.getY();
-
-            int xMovimiento = xDestino - xActual;
-            int yMovimiento = yDestino - yActual;
-
-            if (xMovimiento > 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 0; // Mover hacia la derecha
-            } else if (xMovimiento < 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 2; // Mover hacia la izquierda
-            } else if (yMovimiento > 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 1; // Mover hacia abajo
-            } else if (yMovimiento < 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 3; // Mover hacia arriba
-            }
+            direccion = moverHaciaDestino(xDestino, yDestino);
         } else if (("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo))
-                && padresX != null && padresY != null
-                && !this.eraVulnerable) {
-            Stack<int[]> camino = new Stack<>();
+                && padresX != null && padresY != null && !this.eraVulnerable) {
+            Stack<int[]> camino = construirCamino(padresX, padresY, objetivoX, objetivoY);
 
-            while (x != miUltPosX || y != miUltPosY) {
-                if (x < 0 || y < 0) {
-                    break;  // Salir si se alcanza un valor no válido
-                }
-                camino.push(new int[]{x, y});
-                int tempX = padresX[y][x];
-                int tempY = padresY[y][x];
-                x = tempX;
-                y = tempY;
-            }
             int[] nuevaPos = camino.pop();
             int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
             int yDestino = nuevaPos[1] * SIZE;
 
-            int xActual = (int) this.getX();
-            int yActual = (int) this.getY();
-
-            int xMovimiento = xDestino - xActual;
-            int yMovimiento = yDestino - yActual;
-
-            if (xMovimiento > 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 0; // Mover hacia la derecha
-            } else if (xMovimiento < 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 2; // Mover hacia la izquierda
-            } else if (yMovimiento > 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 1; // Mover hacia abajo
-            } else if (yMovimiento < 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 3; // Mover hacia arriba
-            }
+            direccion = moverHaciaDestino(xDestino, yDestino);
         } else if ("floyd".equals(algoritmo) && distance != null
                 && !this.eraVulnerable) {
             Stack<int[]> camino = new Stack<>();
@@ -705,64 +656,84 @@ public class Fantasma extends Personaje {
             int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
             int yDestino = nuevaPos[1] * SIZE;
 
-            int xActual = (int) this.getX();
-            int yActual = (int) this.getY();
-
-            int xMovimiento = xDestino - xActual;
-            int yMovimiento = yDestino - yActual;
-
-            if (xMovimiento > 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 0; // Mover hacia la derecha
-            } else if (xMovimiento < 0) {
-                this.setY(miUltPosY * SIZE);
-                direccion = 2; // Mover hacia la izquierda
-            } else if (yMovimiento > 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 1; // Mover hacia abajo
-            } else if (yMovimiento < 0) {
-                this.setX(miUltPosX * SIZE);
-                direccion = 3; // Mover hacia arriba
-            }
+            direccion = moverHaciaDestino(xDestino, yDestino);
+//            System.out.println("Direccion Actual: " + this.getDireccion());
+//            System.out.println("Direccion Nueva: " + direccion);
+//            System.out.println("X: " + miUltPosX + " | Y: " + miUltPosY);
+//            System.out.println("X: " + this.getX() + " | Y: " + this.getY());
+//            System.out.println("Objetivo X: " + ultPosX + " | Objetivo Y: " + ultPosY);
+//            System.out.println("Vulnerable: " + this.isVulnerable());
+//            System.out.println("Era vulnerable: " + this.eraVulnerable);
+//            System.out.println("");
         }
-//        System.out.println("Direccion Actual: " + this.getDireccion());
-//        System.out.println("Direccion Nueva: " + direccion);
-//        System.out.println("X: " + this.getX() + " | Y: " + this.getY());
-//        System.out.println("Objetivo X: " + ultPosX + " | Objetivo Y: " + ultPosY);
-//        System.out.println("Vulnerable: " + this.isVulnerable());
-//        System.out.println("Era vulnerable: " + this.eraVulnerable);
-//        System.out.println("");
         if (this.getDireccion() != direccion) {
             cambioDireccion(direccion, laberinto);
         }
         switch (this.getDireccion()) {
-            case 0 -> {
-                if (this.getDireccion() == 0 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() + SIZE) / SIZE) != '#'
-                        && laberinto.getMatrizCelda((int) (getY() + (SIZE - 1)) / SIZE, (int) (getX() + SIZE) / SIZE) != '#') {
-                    this.setX(getX() + this.getVelocidad());
-                }
-            }
-            case 1 -> {
-                if (this.getDireccion() == 1 && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) getX() / SIZE) != '#'
-                        && laberinto.getMatrizCelda((int) (getY() + SIZE) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
-                    this.setY(getY() + this.getVelocidad());
-                }
-            }
-            case 2 -> {
-                if (this.getDireccion() == 2 && laberinto.getMatrizCelda((int) getY() / SIZE, (int) (getX() - 1) / SIZE) != '#'
-                        && laberinto.getMatrizCelda(((int) getY() + (SIZE - 1)) / SIZE, (int) (getX() - 1) / SIZE) != '#') {
-                    this.setX(getX() - this.getVelocidad());
-                }
-            }
-            case 3 -> {
-                if (this.getDireccion() == 3 && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) getX() / SIZE) != '#'
-                        && laberinto.getMatrizCelda((int) (getY() - 1) / SIZE, (int) (getX() + (SIZE - 1)) / SIZE) != '#') {
-                    this.setY(getY() - this.getVelocidad());
-                }
-            }
-
+            case 0 ->
+                moverEnDireccion(laberinto, getX() + this.getVelocidad(), getY(), getX() + SIZE, getY() + (SIZE - 1));
+            case 1 ->
+                moverEnDireccion(laberinto, getX(), getY() + this.getVelocidad(), getX() + (SIZE - 1), getY() + SIZE);
+            case 2 ->
+                moverEnDireccion(laberinto, getX() - this.getVelocidad(), getY(), getX() - 1, getY() + (SIZE - 1));
+            case 3 ->
+                moverEnDireccion(laberinto, getX(), getY() - this.getVelocidad(), getX() + (SIZE - 1), getY() - 1);
             default -> {
             }
+        }
+    }
+
+    public int moverHaciaDestino(int xDestino, int yDestino) {
+        int xActual = (int) this.getX();
+        int yActual = (int) this.getY();
+
+        int xMovimiento = xDestino - xActual;
+        int yMovimiento = yDestino - yActual;
+
+        int direccion = 3;
+
+        if (xMovimiento > 0) {
+            this.setY(miUltPosY * SIZE);
+            direccion = 0; // Mover hacia la derecha
+        } else if (xMovimiento < 0) {
+            this.setY(miUltPosY * SIZE);
+            direccion = 2; // Mover hacia la izquierda
+        } else if (yMovimiento > 0) {
+            this.setX(miUltPosX * SIZE);
+            direccion = 1; // Mover hacia abajo
+        } else if (yMovimiento < 0) {
+            this.setX(miUltPosX * SIZE);
+            direccion = 3; // Mover hacia arriba
+        }
+        return direccion;
+    }
+
+    private Stack<int[]> construirCamino(int[][] padresX, int[][] padresY, int objetivoX, int objetivoY) {
+        int x = objetivoX;
+        int y = objetivoY;
+        Stack<int[]> camino = new Stack<>();
+
+        while (x != miUltPosX || y != miUltPosY) {
+            if (x < 0 || y < 0) {
+                break;
+            }
+            camino.push(new int[]{x, y});
+            int tempX = padresX[y][x];
+            int tempY = padresY[y][x];
+            x = tempX;
+            y = tempY;
+        }
+        return camino;
+    }
+
+    private void moverEnDireccion(Laberinto laberinto, double xNuevo, double yNuevo, double xCheck, double yCheck) {
+        int xNuevoGrid = (int) xNuevo / SIZE;
+        int yNuevoGrid = (int) yNuevo / SIZE;
+
+        if (laberinto.getMatrizCelda(yNuevoGrid, xNuevoGrid) != '#'
+                && laberinto.getMatrizCelda((int) yCheck / SIZE, (int) xCheck / SIZE) != '#') {
+            setX(xNuevo);
+            setY(yNuevo);
         }
     }
 

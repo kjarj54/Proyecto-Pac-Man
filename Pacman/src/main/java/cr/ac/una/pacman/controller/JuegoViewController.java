@@ -241,11 +241,18 @@ public class JuegoViewController extends Controller implements Initializable {
         if (segundoAct > segundoAnt + 0.4) {
             segundoAnt = segundoAct;
         }
-        if ((int) juego.getFantasmas().get(3).getX() / SIZE == juego.getFantasmas().get(3).ultPosX
-                && (int) juego.getFantasmas().get(3).getY() / SIZE == juego.getFantasmas().get(3).ultPosY
-                && !juego.getFantasmas().get(3).isVulnerable() && !juego.getFantasmas().get(3).isEncerrado()) {
-            juego.nuevaPosAleatoria(juego.getFantasmas().get(3));
+        Fantasma fantasma = juego.getFantasmas().get(3);
+        int xInicio = (int) fantasma.getX() / SIZE;
+        int xFin = (int) (fantasma.getX() + SIZE - 1) / SIZE;
+        int yInicio = (int) fantasma.getY() / SIZE;
+        int yFin = (int) (fantasma.getY() + SIZE - 1) / SIZE;
+
+        if (xInicio == fantasma.ultPosX && xFin == fantasma.ultPosX
+                && yInicio == fantasma.ultPosY && yFin == fantasma.ultPosY
+                && !fantasma.isVulnerable() && !fantasma.isEncerrado()) {
+            juego.nuevaPosAleatoria(fantasma);
         }
+
         juego.getPacMan().mover(direccion, juego.getLaberinto());
         juego.getPacMan().comer(juego.getLaberinto(), juego, partida);
 
@@ -269,10 +276,10 @@ public class JuegoViewController extends Controller implements Initializable {
     private void actualizarVelocidadFantasmas() {
         int puntos = juego.getPacMan().getPuntos();
         if (puntos >= 500 && juego.incrementoVelocidad == 0) {
-            juego.incrementoVelocidad += 0.02;
+            juego.incrementoVelocidad += 0.01;
             juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
-        } else if (puntos >= 1000 && juego.incrementoVelocidad == 0.02) {
-            juego.incrementoVelocidad = 0.05;
+        } else if (puntos >= 1000 && juego.incrementoVelocidad == 0.01) {
+            juego.incrementoVelocidad = 0.02;
             juego.getFantasmas().get(0).setVelocidad(0.7 + juego.incrementoVelocidad);
         }
     }
@@ -280,7 +287,7 @@ public class JuegoViewController extends Controller implements Initializable {
     private void actualizarMovimientoFantasmas() {
         for (Fantasma fant : juego.getFantasmas()) {
             if (fant.isMuerto()) {
-                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
+                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, "Dificil");
                 if ((int) fant.getX() / SIZE == fant.ultPosX
                         && (int) fant.getY() / SIZE == fant.ultPosY) {
                     fant.setMuerto(false);
@@ -303,11 +310,11 @@ public class JuegoViewController extends Controller implements Initializable {
                 }
 
                 if (fant.isVulnerable()) {
-                    fant.mover(juego.getLaberinto(), juego.getPacMan(), fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
+                    fant.mover(juego.getLaberinto(), juego.getPacMan(), fant.ultPosX * SIZE, fant.ultPosY * SIZE, "Dificil");
                 } else if (!"floyd".equals(fant.getAlgoritmo())) {
                     fant.mover(juego.getLaberinto(), null, juego.getPacMan().getX(), juego.getPacMan().getY(), partida.getDificultad());
                 } else {
-                    fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
+                    fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, "Dificil");
                 }
             } else {
                 if ((int) fant.getY() / SIZE == ROWS / 2 && (int) (fant.getY() + SIZE - 1) / SIZE == ROWS / 2) {
@@ -315,7 +322,7 @@ public class JuegoViewController extends Controller implements Initializable {
                 } else if ((int) fant.getY() / SIZE == ROWS / 2 + 1 && (int) (fant.getY() + SIZE - 1) / SIZE == ROWS / 2 + 1) {
                     fant.ultPosY = ROWS / 2;
                 }
-                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, partida.getDificultad());
+                fant.mover(juego.getLaberinto(), null, fant.ultPosX * SIZE, fant.ultPosY * SIZE, "Dificil");
             }
         }
     }

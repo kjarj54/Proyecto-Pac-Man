@@ -8,7 +8,6 @@ import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
 import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import static io.github.palexdev.materialfx.utils.RandomUtils.random;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javafx.animation.KeyFrame;
@@ -205,19 +204,23 @@ public class Juego {
                 switch (estado) {
                     case 0 -> {
                         getFantasmas().get(1).setEncerrado(false);
+                        System.out.println("Sale fantama rosa");
+                        estado++;
                     }
                     case 1 -> {
                         getFantasmas().get(3).setEncerrado(false);
+                        System.out.println("sale fantasma naranja");
+                        estado++;
                     }
                     case 2 -> {
                         getFantasmas().get(2).setEncerrado(false);
+                        System.out.println("Sale fantasma cian");
                         System.out.println("Adiós Animacion Inicial Fantasmas");
                         hiloAnimacionInicialFantasmas = false;
                         estado = 0;
                         animacionInicialFantasmasHilo.stop();
                     }
                 }
-                estado++;
             }));
             animacionInicialFantasmasHilo.setCycleCount(Timeline.INDEFINITE);
             animacionInicialFantasmasHilo.play();

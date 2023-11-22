@@ -63,7 +63,7 @@ public class Laberinto {
 
         for (int i = 2; i < ROWS - 1; i++) { // se ponen muros el las localizaciones impares y sus vecinos dependiendo la probabilidad
             for (int j = 2; j < COLUMNS - 1; j++) {
-                if (i % 2 == 1 && j % 2 == 1 && random.nextInt(10) >= 3) {
+                if (i % 2 == 1 && j % 2 == 1 && random.nextInt(10) >= 1) {
 //                if (i % 2 == 1 && j % 2 == 1) {
                     setMatrizCelda('#', i, j);
                     int vecino = random.nextInt(4);

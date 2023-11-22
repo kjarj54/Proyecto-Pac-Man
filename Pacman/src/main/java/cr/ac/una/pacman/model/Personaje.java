@@ -14,7 +14,7 @@ import java.util.List;
 public class Personaje {
     private double x, y;
     private double velocidad;
-    private int direccion;
+    int direccion;
     private List<String> imagen;
 
     public Personaje() {
