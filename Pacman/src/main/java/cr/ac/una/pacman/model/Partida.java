@@ -74,6 +74,14 @@ public class Partida {
         this.trofeos.put("Rey", new Trofeo("Rey del Pac-Man", "Trofeo para el ganador del torneo Rey del Pac-Man"));
     }
 
+    public Partida(String jugador, String dificultad, List<Laberinto> laberintos, Map<String, Integer> estadisticas, Map<String, Trofeo> trofeos) {
+        this.jugador = jugador;
+        this.dificultad = dificultad;
+        this.laberintos = laberintos;
+        this.estadisticas = estadisticas;
+        this.trofeos = trofeos;
+    }
+
     public String getJugador() {
         return jugador;
     }
@@ -137,4 +145,30 @@ public class Partida {
             this.laberintos.add(laberinto);
         }
     }
+
+    public List<Laberinto> getLaberintos() {
+        return laberintos;
+    }
+
+    public void setLaberintos(List<Laberinto> laberintos) {
+        this.laberintos = laberintos;
+    }
+
+    public Map<String, Integer> getEstadisticas() {
+        return estadisticas;
+    }
+
+    public void setEstadisticas(Map<String, Integer> estadisticas) {
+        this.estadisticas = estadisticas;
+    }
+
+    public Map<String, Trofeo> getTrofeos() {
+        return trofeos;
+    }
+
+    public void setTrofeos(Map<String, Trofeo> trofeos) {
+        this.trofeos = trofeos;
+    }
+    
+    
 }
