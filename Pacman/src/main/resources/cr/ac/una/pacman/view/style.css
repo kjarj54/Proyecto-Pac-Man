@@ -10,8 +10,8 @@
 
 /* P05_PartidaView */
 .vx-itemDentro {
-    -fx-border-color: black;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 0);
+    -fx-border-color: grey;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 50, 0, 0, 0);
 }
 
 .images-effect {
