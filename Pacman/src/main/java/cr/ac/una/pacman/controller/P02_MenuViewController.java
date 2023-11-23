@@ -31,8 +31,6 @@ public class P02_MenuViewController extends Controller implements Initializable 
     private MFXButton btnAcercaDe;
     @FXML
     private MFXButton btnSalir;
-    @FXML
-    private TableView<?> tbvMejoresTiempos;
 
     /**
      * Initializes the controller class.

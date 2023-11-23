@@ -6,6 +6,8 @@ package cr.ac.una.pacman.model;
 
 import cr.ac.una.pacman.App;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,10 +15,16 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
@@ -810,12 +818,13 @@ public class Fantasma extends Personaje {
         transform.append(rotate);
         graficos.setTransform(transform);
 
-        graficos.drawImage(new Image(getImagen().get(0)), getX() + 2, getY() + 2, SIZE - 5, SIZE - 5);
-//        if (segundoAct > segundoAnt + 0.25) {
-//            graficos.drawImage(new Image(getImagen().get(0)), getX() + 2, getY() + 2, 15, 15);
-//        } else {
-//            graficos.drawImage(new Image(getImagen().get(1)), getX() + 2, getY() + 2, 15, 15);
-//        }
+        if (this.muerto) {
+            graficos.drawImage(new Image("cr/ac/una/pacman/resources/FantasmaMuerto.png"), getX() + 2, getY() + 2, SIZE - 5, SIZE - 5);
+        } else if (this.vulnerable) {
+            graficos.drawImage(new Image("cr/ac/una/pacman/resources/FantasmaVulnerable.png"), getX() + 2, getY() + 2, SIZE - 5, SIZE - 5);
+        } else {
+            graficos.drawImage(new Image(getImagen().get(0)), getX() + 2, getY() + 2, SIZE - 5, SIZE - 5);
+        }
         graficos.setTransform(oldTransform);
     }
 }

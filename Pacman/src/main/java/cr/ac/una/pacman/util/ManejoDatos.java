@@ -136,7 +136,7 @@ public class ManejoDatos {
                 // Se itera sobre los movimientos y se escribe cada uno en el formato adecuado.
                 for (Laberinto laberinto : laberintos) {
                     // Se escribe el nivel, tema y matriz del laberinto.
-                    bw.write(laberinto.getNivel() + "<" + laberinto.getTema() + "<");
+                    bw.write(laberinto.getNivel() + "<" + laberinto.getTema() + "<" + laberinto.isDesbloqueado() + "<");
 
                     char[][] matriz = laberinto.getMatriz();
                     for (int i = 0; i < matriz.length; i++) {
@@ -204,12 +204,14 @@ public class ManejoDatos {
                     String[] laberintoInfo = laberintoData.split("<");
                     int nivelLaberinto = Integer.parseInt(laberintoInfo[0]);
                     String temaLaberinto = laberintoInfo[1];
+                    boolean desbloqueadoLaberinto = Boolean.parseBoolean(laberintoInfo[2]);
 
                     Laberinto laberinto = new Laberinto(ROWS, COLUMNS, nivelLaberinto, temaLaberinto);
+                    laberinto.setDesbloqueado(desbloqueadoLaberinto);
 
                     // Se obtiene la matriz del laberinto.
                     char[][] matrizLaberinto = new char[ROWS][COLUMNS];
-                    char[] caracteresMatriz = laberintoInfo[2].toCharArray();
+                    char[] caracteresMatriz = laberintoInfo[3].toCharArray();
                     int index = 0;
                     for (int i = 0; i < ROWS; i++) {
                         for (int j = 0; j < COLUMNS; j++) {

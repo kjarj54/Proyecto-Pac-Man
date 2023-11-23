@@ -387,38 +387,15 @@ public class JuegoViewController extends Controller implements Initializable {
     }
 
     public void SiguienteNivel() {
-        if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
-            partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
-            for (int i = 1; i <= 10; i++) {
-                partida.actualizarEstadistica("TotalPuntos", ((int) partida.obtenerEstadistica("TotalPuntos")
-                        + (int) partida.obtenerEstadistica("MayorPuntosN" + i)));
-            }
-        }
-        if (!this.juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
-            partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
-        }
         AppContext.getInstance().set("Partida", partida);
         AppContext.getInstance().set("Nivel", "" + (nivel + 1));
-        ManejoDatos.guardarPartidas(partida);
         animationTimer.stop();
         juego.matarHilos();
         inicializarJuego();
     }
 
     public void FinalizarJuego() {
-        if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
-            partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
-            partida.actualizarEstadistica("TotalPuntos", 0);
-            for (int i = 1; i <= 10; i++) {
-                partida.actualizarEstadistica("TotalPuntos", ((int) partida.obtenerEstadistica("TotalPuntos")
-                        + (int) partida.obtenerEstadistica("MayorPuntosN" + i)));
-            }
-        }
-        if (!this.juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
-            partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
-        }
         AppContext.getInstance().set("Partida", partida);
-        ManejoDatos.guardarPartidas(partida);
         animationTimer.stop();
         juego.matarHilos();
         FlowController.getInstance().delete("JuegoView");

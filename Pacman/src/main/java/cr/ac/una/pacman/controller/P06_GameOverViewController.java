@@ -8,6 +8,7 @@ import cr.ac.una.pacman.model.Juego;
 import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.FlowController;
+import cr.ac.una.pacman.util.ManejoDatos;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -84,6 +85,19 @@ public class P06_GameOverViewController extends Controller implements Initializa
                 }
             }
         }
+        if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
+            partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
+            partida.actualizarEstadistica("TotalPuntos", 0);
+            for (int i = 1; i <= 10; i++) {
+                partida.actualizarEstadistica("TotalPuntos", ((int) partida.obtenerEstadistica("TotalPuntos")
+                        + (int) partida.obtenerEstadistica("MayorPuntosN" + i)));
+            }
+        }
+        if (!juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
+            partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
+        }
+        ManejoDatos.guardarPartidas(partida);
+        ManejoDatos.guardarRecord(partida);
     }
 
     public void cargarInterfazSiguienteNivel(Juego juego, Partida partida) {
@@ -95,15 +109,6 @@ public class P06_GameOverViewController extends Controller implements Initializa
             }
             partida.actualizarTrofeo("Experto", trofeo);
         }
-        MFXButton btnContinuar = new MFXButton("Siguiente Nivel");
-        btnContinuar.setOnAction(event -> {
-            JuegoViewController juegoView = (JuegoViewController) FlowController.getInstance().getController("JuegoView");
-            juegoView.SiguienteNivel();
-            hxContBoton.getChildren().clear();
-            getStage().close();
-        });
-        hxContBoton.getChildren().add(btnContinuar);
-        partida.getNivel(juego.getNivel()).setDesbloqueado(true);
         if (partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()) > juego.cronometro.getTime()) {
             partida.actualizarEstadistica("MejorTiempoN" + juego.getNivel(), juego.cronometro.getTime());
             partida.actualizarEstadistica("TiempoTotal", 0);
@@ -114,6 +119,28 @@ public class P06_GameOverViewController extends Controller implements Initializa
                 }
             }
         }
+        if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
+            partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
+            partida.actualizarEstadistica("TotalPuntos", 0);
+            for (int i = 1; i <= 10; i++) {
+                partida.actualizarEstadistica("TotalPuntos", ((int) partida.obtenerEstadistica("TotalPuntos")
+                        + (int) partida.obtenerEstadistica("MayorPuntosN" + i)));
+            }
+        }
+        if (!juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
+            partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
+        }
+        MFXButton btnContinuar = new MFXButton("Siguiente Nivel");
+        btnContinuar.setOnAction(event -> {
+            JuegoViewController juegoView = (JuegoViewController) FlowController.getInstance().getController("JuegoView");
+            juegoView.SiguienteNivel();
+            hxContBoton.getChildren().clear();
+            getStage().close();
+        });
+        hxContBoton.getChildren().add(btnContinuar);
+        partida.getNivel(juego.getNivel()).setDesbloqueado(true);
+        ManejoDatos.guardarPartidas(partida);
+        ManejoDatos.guardarRecord(partida);
     }
 
     public void cargarInterfazPausa(Juego juego, Partida partida) {

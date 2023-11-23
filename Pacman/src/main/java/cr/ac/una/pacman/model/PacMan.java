@@ -7,11 +7,18 @@ package cr.ac.una.pacman.model;
 import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
 import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
+import cr.ac.una.pacman.util.SoundUtil;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
@@ -172,6 +179,11 @@ public class PacMan extends Personaje {
             default -> {
             }
         }
+    }
+
+    private boolean enCeldaCentro() {
+        return (int) this.getX() / SIZE == (int) (this.getX() + (SIZE - 1)) / SIZE
+                && (int) this.getY() / SIZE == (int) (this.getY() + (SIZE - 1)) / SIZE;
     }
 
     public void comer(Laberinto laberinto, Juego juego, Partida partida) { // Come Pac-dots y Power Pellets ademas revisa si come fantasmas y si son consecutivos
