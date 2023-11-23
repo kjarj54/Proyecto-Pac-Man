@@ -1,5 +1,56 @@
+
+/*
+ * Empty Stylesheet file.
+ */
+
+@font-face {
+    font-family: "Retro Gaming"; /* Nombre de la fuente que deseas utilizar */
+    src: url("../resources/fonts/RetroGaming.ttf"); /* Ruta de la fuente descargada */
+}
+
 /* P05_PartidaView */
 .vx-itemDentro {
     -fx-border-color: black;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 0);
+}
+
+.images-effect {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 1), 10, 0.5, 0.0, 0.0);
+}
+
+.fondo-joker{
+    -fx-background-image: url("../resources/fondos/Joker.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+
+.fondo-inicio{
+    -fx-background-image: url("../resources/fondos/fondoInicio.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+
+/******************************************************************************************************/
+.mfx-button-inicio{
+    -fx-cursor: hand;
+    -fx-background-color: transparent; /* Establece el fondo del botón como transparente */
+    -fx-font: 40px "Retro Gaming";
+    -fx-background-repeat: no-repeat; /* Evita que la imagen se repita */
+    -fx-background-size: contain; /* Ajusta el tamaño de la imagen al botón */
+    -fx-background-position: center; /* Centra la imagen en el botón */
+    -fx-padding: 0;  /*Elimina el relleno del botón */
+    -fx-text-fill: #ffffff;
+}
+
+.mfx-button-menu{
+    -fx-cursor: hand;
+    -fx-background-color: transparent; /* Establece el fondo del botón como transparente */
+    -fx-font: 25px "Retro Gaming";
+    -fx-background-repeat: no-repeat; /* Evita que la imagen se repita */
+    -fx-background-size: contain; /* Ajusta el tamaño de la imagen al botón */
+    -fx-background-position: center; /* Centra la imagen en el botón */
+    -fx-padding: 0;  /*Elimina el relleno del botón */
+    -fx-text-fill: #ffffff;
 }

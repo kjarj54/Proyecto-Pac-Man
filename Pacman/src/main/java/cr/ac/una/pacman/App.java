@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Stack;
+import javafx.scene.image.Image;
 
 /**
  * JavaFX App
@@ -29,7 +30,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FlowController.getInstance().InitializeFlow(stage, null);
-//        stage.getIcons().add(new Image(App.class.getResourceAsStream("/cr/ac/una/unaplanilla/resources/LogoUNArojo.png")));
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/cr/ac/una/pacman/resources/FantasmaRojo.png")));
         stage.setTitle("Pac-Man");
         FlowController.getInstance().goMain();
 

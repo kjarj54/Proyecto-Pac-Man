@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.util.FlowController;
+import cr.ac.una.pacman.util.SoundUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,7 +39,8 @@ public class P02_MenuViewController extends Controller implements Initializable 
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        eventosBotones();
+        
     }
 
     @Override
@@ -67,6 +65,32 @@ public class P02_MenuViewController extends Controller implements Initializable 
     @FXML
     private void onActionBtnSalir(ActionEvent event) {
         FlowController.getInstance().salir();
+    }
+    
+    public void eventosBotones(){
+        btnNuevaPartida.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnNuevaPartida.setText("►Nueva Partida");
+        });
+        btnNuevaPartida.setOnMouseExited(e -> btnNuevaPartida.setText(" Nueva Partida"));
+        
+        btnContinuarPartida.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnContinuarPartida.setText("►Continuar Partida");
+        });
+        btnContinuarPartida.setOnMouseExited(e -> btnContinuarPartida.setText(" Continuar Partida"));
+        
+        btnAcercaDe.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnAcercaDe.setText("►Acerca de...");
+        });
+        btnAcercaDe.setOnMouseExited(e -> btnAcercaDe.setText(" Acerca de..."));
+        
+        btnSalir.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnSalir.setText("►Salir");
+        });
+        btnSalir.setOnMouseExited(e -> btnSalir.setText(" Salir"));
     }
 
 }
