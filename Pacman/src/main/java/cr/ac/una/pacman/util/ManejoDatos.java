@@ -132,12 +132,11 @@ public class ManejoDatos {
                 for (String trofeoData : trofeosData) {
                     String[] trofeoInfo = trofeoData.split("-");
                     String nombreTrofeo = trofeoInfo[0];
-                    int anioTrofeo = Integer.parseInt(trofeoInfo[1]);
                     String descripcionTrofeo = trofeoInfo[2];
                     boolean desbloqueadoTrofeo = Boolean.parseBoolean(trofeoInfo[3]);
                     int contTrofeo = Integer.parseInt(trofeoInfo[4]);
 
-                    Trofeo trofeo = new Trofeo(nombreTrofeo, anioTrofeo, descripcionTrofeo);
+                    Trofeo trofeo = new Trofeo(nombreTrofeo, descripcionTrofeo);
                     trofeo.setDesbloqueado(desbloqueadoTrofeo);
                     trofeo.setCont(contTrofeo);
 
