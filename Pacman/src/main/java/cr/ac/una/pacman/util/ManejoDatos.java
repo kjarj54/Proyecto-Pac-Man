@@ -15,7 +15,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,7 @@ import java.util.Map;
 public class ManejoDatos {
 
     private static final String TXT_PATH = "src/main/java/cr/ac/una/pacman/model/datos_partida.txt";
+    private static final String TXT_PATH_RECORDS = "src/main/java/cr/ac/una/pacman/model/records.txt";
 
     // Método para buscar un Jugador por su nombre.
     public static Partida buscarJugadorPorNombre(String nombre) {
@@ -38,6 +43,43 @@ public class ManejoDatos {
             }
         }
         return null; // Si el jugador no se encuentra
+    }
+
+    public static List<Partida> leerRecords() {
+        List<Partida> partidas = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(TXT_PATH_RECORDS))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] datos = line.split(",");
+                String jugador = datos[0];
+                String dificultad = datos[1];
+                int totalPuntos = Integer.parseInt(datos[2]);
+                int tiempoTotal = Integer.parseInt(datos[3]);
+
+                Partida partida = new Partida(jugador, dificultad);
+                partida.actualizarEstadistica("TotalPuntos", totalPuntos);
+                partida.actualizarEstadistica("TiempoTotal", tiempoTotal);
+
+                // Puedes agregar más actualizaciones de estadísticas según sea necesario
+                partidas.add(partida);
+            }
+
+            // Ordenar la lista de partidas por TotalPuntos en orden descendente
+            Collections.sort(partidas, Comparator.comparingInt(p -> -p.obtenerEstadistica("TotalPuntos")));
+
+            // Obtener el top 10
+            int topCount = Math.min(10, partidas.size());
+            return partidas.subList(0, topCount);
+
+        } catch (FileNotFoundException e) {
+            System.err.println("El archivo no se encontró: " + e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        return partidas;
     }
 
     public static void guardarPartidas(Partida partida) {
@@ -194,5 +236,47 @@ public class ManejoDatos {
 
         // Se retorna la lista de partidas.
         return partidas;
+    }
+
+    public static void guardarRecord(Partida partida) {
+        String jugador = partida.getJugador();
+        int nuevoTotalPuntos = partida.getEstadisticas().get("TotalPuntos");
+
+        try {
+            List<String> lineas = Files.readAllLines(Paths.get(TXT_PATH_RECORDS));
+
+            // Buscar si ya existe un registro para el jugador
+            boolean jugadorEncontrado = false;
+            for (int i = 0; i < lineas.size(); i++) {
+                String[] campos = lineas.get(i).split(",");
+                if (campos.length >= 3 && campos[0].equals(jugador)) {
+                    jugadorEncontrado = true;
+                    int puntosAnteriores = Integer.parseInt(campos[2]);
+                    if (nuevoTotalPuntos > puntosAnteriores) {
+                        // Sobrescribir el registro solo si el nuevo total de puntos es mayor
+                        lineas.set(i, jugador + "," + partida.getDificultad() + "," + nuevoTotalPuntos + "," + partida.getEstadisticas().get("TiempoTotal"));
+                        break;
+                    }
+                }
+            }
+
+            // Si el jugador no se encontró en los registros, agregar un nuevo registro
+            if (!jugadorEncontrado) {
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(TXT_PATH_RECORDS, true))) {
+                    bw.write(jugador + "," + partida.getDificultad() + "," + nuevoTotalPuntos + "," + partida.getEstadisticas().get("TiempoTotal"));
+                    bw.newLine();
+                }
+            } else {
+                // Sobrescribir todo el archivo con las nuevas líneas
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(TXT_PATH_RECORDS))) {
+                    for (String linea : lineas) {
+                        bw.write(linea);
+                        bw.newLine();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
