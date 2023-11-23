@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  *
@@ -76,7 +75,7 @@ public class ManejoDatos {
                 // Se itera sobre los trofeos y se escribe cada uno en el formato adecuado.
                 for (Map.Entry<String, Trofeo> entry : trofeos.entrySet()) {
                     Trofeo trofeo = entry.getValue();
-                    bw.write(trofeo.getNombre() + "-" + trofeo.getAnio() + "-" + trofeo.getDescripcion() + "-" + trofeo.isDesbloqueado() + "-" + trofeo.getCont() + ";");
+                    bw.write(trofeo.getNombre() + "-" + trofeo.getDescripcion() + "-" + trofeo.isDesbloqueado() + "-" + trofeo.getCont() + ";");
                 }
 
                 // Se obtienen las estadísticas del jugador.
