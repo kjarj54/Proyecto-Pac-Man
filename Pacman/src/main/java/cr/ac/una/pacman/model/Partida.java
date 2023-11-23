@@ -54,24 +54,24 @@ public class Partida {
         this.estadisticas.put("CantNivelJugadoN9", 0);
         this.estadisticas.put("CantNivelJugadoN10", 0);
         this.estadisticas.put("TotalFantasmasComidos", 0);
-        this.estadisticas.put("MejorTiempoN1", 0);
-        this.estadisticas.put("MejorTiempoN2", 0);
-        this.estadisticas.put("MejorTiempoN3", 0);
-        this.estadisticas.put("MejorTiempoN4", 0);
-        this.estadisticas.put("MejorTiempoN5", 0);
-        this.estadisticas.put("MejorTiempoN6", 0);
-        this.estadisticas.put("MejorTiempoN7", 0);
-        this.estadisticas.put("MejorTiempoN8", 0);
-        this.estadisticas.put("MejorTiempoN9", 0);
-        this.estadisticas.put("MejorTiempoN10", 0);
-        this.estadisticas.put("TiempoTotal", 0);
+        this.estadisticas.put("MejorTiempoN1", 9999999);
+        this.estadisticas.put("MejorTiempoN2", 9999999);
+        this.estadisticas.put("MejorTiempoN3", 9999999);
+        this.estadisticas.put("MejorTiempoN4", 9999999);
+        this.estadisticas.put("MejorTiempoN5", 9999999);
+        this.estadisticas.put("MejorTiempoN6", 9999999);
+        this.estadisticas.put("MejorTiempoN7", 9999999);
+        this.estadisticas.put("MejorTiempoN8", 9999999);
+        this.estadisticas.put("MejorTiempoN9", 9999999);
+        this.estadisticas.put("MejorTiempoN10", 9999999);
+        this.estadisticas.put("TiempoTotal", 9999999);
 
-        this.trofeos.put("Clasico", new Trofeo("Clásico", 2023, "Trofeo para el ganador del torneo Clásico"));
-        this.trofeos.put("Cazador", new Trofeo("Cazador", 2023, "Trofeo para el jugador con más bajas en el torneo Cazador"));
-        this.trofeos.put("Experto", new Trofeo("Experto", 2023, "Trofeo para el jugador con más puntos en el torneo Experto"));
-        this.trofeos.put("Encierro", new Trofeo("Encierro", 2023, "Trofeo para el ganador del torneo Encierro"));
-        this.trofeos.put("Flash", new Trofeo("Flash", 2023, "Trofeo para el jugador más rápido en el torneo Flash"));
-        this.trofeos.put("Rey", new Trofeo("Rey del Pac-Man", 2023, "Trofeo para el ganador del torneo Rey del Pac-Man"));        
+        this.trofeos.put("Clasico", new Trofeo("Clásico", "Trofeo para el ganador del torneo Clásico"));
+        this.trofeos.put("Cazador", new Trofeo("Cazador", "Trofeo para el jugador con más bajas en el torneo Cazador"));
+        this.trofeos.put("Experto", new Trofeo("Experto", "Trofeo para el jugador con más puntos en el torneo Experto"));
+        this.trofeos.put("Encierro", new Trofeo("Encierro", "Trofeo para el ganador del torneo Encierro"));
+        this.trofeos.put("Flash", new Trofeo("Flash", "Trofeo para el jugador más rápido en el torneo Flash"));
+        this.trofeos.put("Rey", new Trofeo("Rey del Pac-Man", "Trofeo para el ganador del torneo Rey del Pac-Man"));
     }
 
     public String getJugador() {
@@ -101,7 +101,7 @@ public class Partida {
     public int obtenerEstadistica(String estadistica) {
         return estadisticas.getOrDefault(estadistica, 0);
     }
-    
+
     // Actualiza un Trofeo en el mapa
     public void actualizarTrofeo(String trofeo, Trofeo valor) {
         if (trofeos.containsKey(trofeo)) {
@@ -113,14 +113,26 @@ public class Partida {
     public Trofeo obtenerTrofeo(String trofeo) {
         return trofeos.getOrDefault(trofeo, null);
     }
-    
+
     public Laberinto getNivel(int nivel) {
         return laberintos.get(nivel);
     }
 
     public void generarNiveles() {
+        String[] nombres = {
+            "Joker.jpg",
+            "Simpson.jpg",
+            "IronMan.jpg",
+            "SpiderMan.jpg",
+            "Batman.jpg",
+            "Superman.png",
+            "DeadPool.jpg",
+            "OnePiece.jpg",
+            "NarutoShippuden.jpg",
+            "DragonBallZ.jpg"
+        };
         for (int i = 1; i <= 10; i++) {
-            Laberinto laberinto = new Laberinto(ROWS, COLUMNS, i, "");
+            Laberinto laberinto = new Laberinto(ROWS, COLUMNS, i, nombres[i - 1]);
             laberinto.generarLaberinto();
             this.laberintos.add(laberinto);
         }

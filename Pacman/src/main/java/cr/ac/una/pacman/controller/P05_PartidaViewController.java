@@ -17,8 +17,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 /**
  * FXML Controller class
@@ -82,7 +86,6 @@ public class P05_PartidaViewController extends Controller implements Initializab
             z++;
             vxContJuegos.getChildren().add(hxItems);
         }
-
         String[] vector = {"Clasico", "Cazador", "Experto", "Encierro", "Flash", "Rey"};
         for (int i = 0; i < 6; i++) {
             Trofeo trofeo = partida.obtenerTrofeo(vector[i]);
@@ -102,7 +105,16 @@ public class P05_PartidaViewController extends Controller implements Initializab
             });
 
             Label lbTituloItem = new Label(trofeo.getNombre());
-            vxItem.getChildren().add(lbTituloItem);
+            ImageView imageTrofeo = new ImageView(new Image("cr/ac/una/pacman/resources/Trofeos/" + vector[i] + ".png"));
+            imageTrofeo.setPreserveRatio(false);
+            imageTrofeo.setFitWidth(50);
+            imageTrofeo.setFitHeight(50);
+            Label lbDescripcion = new Label(trofeo.getDescripcion());
+            lbDescripcion.setTextAlignment(TextAlignment.CENTER);
+            lbDescripcion.setFont(new Font(10));
+            lbDescripcion.setWrapText(true);
+            lbDescripcion.setPrefWidth(100);
+            vxItem.getChildren().addAll(lbTituloItem, imageTrofeo, lbDescripcion);
             vxContTrofeos.getChildren().add(vxItem);
         }
     }
@@ -119,6 +131,9 @@ public class P05_PartidaViewController extends Controller implements Initializab
 
     @FXML
     private void onActionBtnEstadisticas(ActionEvent event) {
+        AppContext.getInstance().set("Partida", partida);
+        FlowController.getInstance().delete("P05_PartidaView");
+        FlowController.getInstance().goView("P07_EstadisticasView");
     }
 
 }

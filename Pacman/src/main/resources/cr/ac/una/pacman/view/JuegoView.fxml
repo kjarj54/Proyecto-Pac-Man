@@ -3,6 +3,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,6 +15,11 @@
         <URL value="@style.css" />
     </stylesheets>
    <children>
+      <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="imvFondo" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" />
+         </children>
+      </StackPane>
       <BorderPane layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
             <StackPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="640.0" BorderPane.alignment="CENTER">

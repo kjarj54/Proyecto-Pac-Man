@@ -11,14 +11,11 @@ import cr.ac.una.pacman.model.PacMan;
 import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
-import cr.ac.una.pacman.util.Cronometro;
 import cr.ac.una.pacman.util.FlowController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -59,6 +56,8 @@ public class JuegoViewController extends Controller implements Initializable {
     private Label lbNivel1;
     @FXML
     private Label lnCronometro;
+    @FXML
+    private ImageView imvFondo;
 
     AnimationTimer animationTimer;
     GraphicsContext graficos;
@@ -96,6 +95,7 @@ public class JuegoViewController extends Controller implements Initializable {
         List<String> imagenPacman = new ArrayList<>();
         imagenPacman.add("cr/ac/una/pacman/resources/PacMan.png");
         imagenPacman.add("cr/ac/una/pacman/resources/PacMan2.png");
+        imvFondo.setImage(new Image("cr/ac/una/pacman/resources/fondos/" + laberinto.getTema()));
 
         List<Fantasma> fantasmas = new ArrayList<>();
         List<String> imagenFantasmaRojo = new ArrayList<>();
@@ -394,16 +394,8 @@ public class JuegoViewController extends Controller implements Initializable {
         if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
             partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
             for (int i = 1; i <= 10; i++) {
-                partida.actualizarEstadistica("TotalPuntos", partida.obtenerEstadistica("TotalPuntos")
-                        + partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()));
-            }
-        }
-        if (partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()) > juego.cronometro.getTime()) {
-            partida.actualizarEstadistica("MejorTiempoN" + juego.getNivel(), juego.cronometro.getTime());
-            partida.actualizarEstadistica("TiempoTotal", 0);
-            for (int i = 1; i <= 10; i++) {
-                partida.actualizarEstadistica("TiempoTotal", partida.obtenerEstadistica("TiempoTotal")
-                        + partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()));
+                partida.actualizarEstadistica("TotalPuntos", ((int) partida.obtenerEstadistica("TotalPuntos")
+                        + (int) partida.obtenerEstadistica("MayorPuntosN" + i)));
             }
         }
         if (!this.juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
@@ -421,16 +413,8 @@ public class JuegoViewController extends Controller implements Initializable {
             partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
             partida.actualizarEstadistica("TotalPuntos", 0);
             for (int i = 1; i <= 10; i++) {
-                partida.actualizarEstadistica("TotalPuntos", partida.obtenerEstadistica("TotalPuntos")
-                        + partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()));
-            }
-        }
-        if (partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()) > juego.cronometro.getTime()) {
-            partida.actualizarEstadistica("MejorTiempoN" + juego.getNivel(), juego.cronometro.getTime());
-            partida.actualizarEstadistica("TiempoTotal", 0);
-            for (int i = 1; i <= 10; i++) {
-                partida.actualizarEstadistica("TiempoTotal", partida.obtenerEstadistica("TiempoTotal")
-                        + partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()));
+                partida.actualizarEstadistica("TotalPuntos", ((int) partida.obtenerEstadistica("TotalPuntos")
+                        + (int) partida.obtenerEstadistica("MayorPuntosN" + i)));
             }
         }
         if (!this.juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {

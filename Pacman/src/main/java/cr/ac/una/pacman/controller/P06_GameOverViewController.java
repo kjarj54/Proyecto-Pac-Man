@@ -7,10 +7,7 @@ package cr.ac.una.pacman.controller;
 import cr.ac.una.pacman.model.Juego;
 import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.model.Trofeo;
-import cr.ac.una.pacman.util.AppContext;
-import cr.ac.una.pacman.util.Cronometro;
 import cr.ac.una.pacman.util.FlowController;
-import cr.ac.una.pacman.util.Mensaje;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -77,6 +74,16 @@ public class P06_GameOverViewController extends Controller implements Initializa
             trofeo.setDesbloqueado(true);
             partida.actualizarTrofeo("Rey", trofeo);
         }
+        if (partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()) > juego.cronometro.getTime()) {
+            partida.actualizarEstadistica("MejorTiempoN" + juego.getNivel(), juego.cronometro.getTime());
+            partida.actualizarEstadistica("TiempoTotal", 0);
+            for (int i = 1; i <= 10; i++) {
+                if ((int) partida.obtenerEstadistica("MejorTiempoN" + i) != 9999999) {
+                    partida.actualizarEstadistica("TiempoTotal", ((int) partida.obtenerEstadistica("TiempoTotal")
+                            + (int) partida.obtenerEstadistica("MejorTiempoN" + i)));
+                }
+            }
+        }
     }
 
     public void cargarInterfazSiguienteNivel(Juego juego, Partida partida) {
@@ -97,6 +104,16 @@ public class P06_GameOverViewController extends Controller implements Initializa
         });
         hxContBoton.getChildren().add(btnContinuar);
         partida.getNivel(juego.getNivel()).setDesbloqueado(true);
+        if (partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()) > juego.cronometro.getTime()) {
+            partida.actualizarEstadistica("MejorTiempoN" + juego.getNivel(), juego.cronometro.getTime());
+            partida.actualizarEstadistica("TiempoTotal", 0);
+            for (int i = 1; i <= 10; i++) {
+                if ((int) partida.obtenerEstadistica("MejorTiempoN" + i) != 9999999) {
+                    partida.actualizarEstadistica("TiempoTotal", ((int) partida.obtenerEstadistica("TiempoTotal")
+                            + (int) partida.obtenerEstadistica("MejorTiempoN" + i)));
+                }
+            }
+        }
     }
 
     public void cargarInterfazPausa(Juego juego, Partida partida) {

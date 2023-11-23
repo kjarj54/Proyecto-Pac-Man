@@ -11,14 +11,12 @@ package cr.ac.una.pacman.model;
 public class Trofeo {
 
     private String nombre;
-    private int anio;
     private String descripcion;
     private boolean desbloqueado;
     private int cont;
 
-    public Trofeo(String nombre, int anio, String descripcion) {
+    public Trofeo(String nombre, String descripcion) {
         this.nombre = nombre;
-        this.anio = anio;
         this.descripcion = descripcion;
         this.desbloqueado = false;
         this.cont = 0;
@@ -31,14 +29,6 @@ public class Trofeo {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public int getAnio() {
-        return anio;
-    }
-
-    public void setAnio(int anio) {
-        this.anio = anio;
     }
 
     public String getDescripcion() {
