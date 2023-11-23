@@ -138,6 +138,10 @@ public class JuegoViewController extends Controller implements Initializable {
         lbPlayer.setText(partida.getJugador());
         lbNivel.setText("Nivel " + juego.getNivel());
         lbHighScore.setText("" + partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()));
+        hboxVidas.getChildren().clear();
+        for (int i = 0; i < juego.getPacMan().getVidas(); i++) {
+            hboxVidas.getChildren().add(new ImageView(new Image("cr/ac/una/pacman/resources/PacMan.png")));
+        }
         graficos = cvLaberinto.getGraphicsContext2D();
         pintar();
 
@@ -370,10 +374,19 @@ public class JuegoViewController extends Controller implements Initializable {
             fantasma.pintar(graficos, segundoAct, segundoAnt);
         }
 
-        if (juego.getPacMan().getVidas() > hboxVidas.getChildren().size()) {
-            hboxVidas.getChildren().add(new ImageView(new Image("cr/ac/una/pacman/resources/PacMan.png")));
-        } else if (juego.getPacMan().getVidas() < hboxVidas.getChildren().size()) {
-            hboxVidas.getChildren().remove(0);
+//        if (juego.getPacMan().getVidas() < hboxVidas.getChildren().size()) {
+//            hboxVidas.getChildren().get(juego.getPacMan().getVidas()-1).set;
+//        } else if (juego.getPacMan().getVidas() < hboxVidas.getChildren().size()) {
+//            hboxVidas.getChildren().remove(0);
+//        }
+        for (int i = 0; i < 6; i++) {
+            if (juego.getPacMan().getVidas() < i + 1) {
+                ImageView image = (ImageView) hboxVidas.getChildren().get(i);
+                image.setImage(new Image("cr/ac/una/pacman/resources/PacManMuerto.png"));
+            } else {
+                ImageView image = (ImageView) hboxVidas.getChildren().get(i);
+                image.setImage(new Image("cr/ac/una/pacman/resources/PacMan.png"));
+            }
         }
         lbScore.setText(String.valueOf(juego.getPacMan().getPuntos()));
     }

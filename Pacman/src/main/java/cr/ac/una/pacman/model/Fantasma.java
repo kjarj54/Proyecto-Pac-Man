@@ -116,7 +116,14 @@ public class Fantasma extends Personaje {
         } else {
             switch (this.algoritmo) {
                 case DIJKSTRA -> {
-                    if ((distancia >= 5 || distanciaFantasma <= 7) && enCeldaCentro()) {
+                    if (this.muerto && enCeldaCentro()) {
+                        algoritmoDijkstra(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
+                        miUltPosX = (int) this.getX() / SIZE;
+                        miUltPosY = (int) this.getY() / SIZE;
+                        ultPosX = (int) objetivoX / SIZE;
+                        ultPosY = (int) objetivoY / SIZE;
+                        eraVulnerable = false;
+                    } else if ((distancia >= 5 || distanciaFantasma <= 7) && enCeldaCentro()) {
                         distanciasL.add(0, algoritmoDijkstra(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE));
                         padresXL.add(0, padresX);
                         padresYL.add(0, padresY);
@@ -143,7 +150,14 @@ public class Fantasma extends Personaje {
                     }
                 }
                 case DIJKSTRAALTERNATIVO -> {
-                    if ((distancia >= 5 || distanciaFantasma <= 7) && enCeldaCentro()) {
+                    if (this.muerto && enCeldaCentro()) {
+                        algoritmoDijkstra(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE);
+                        miUltPosX = (int) this.getX() / SIZE;
+                        miUltPosY = (int) this.getY() / SIZE;
+                        ultPosX = (int) objetivoX / SIZE;
+                        ultPosY = (int) objetivoY / SIZE;
+                        eraVulnerable = false;
+                    } else if ((distancia >= 5 || distanciaFantasma <= 7) && enCeldaCentro()) {
                         distanciasL.add(0, algoritmoDijkstraAlternativo(laberinto, (int) objetivoX / SIZE, (int) objetivoY / SIZE));
                         padresXL.add(0, padresX);
                         padresYL.add(0, padresY);
@@ -625,11 +639,13 @@ public class Fantasma extends Personaje {
             if (padresX != null && padresY != null && x >= 0 && x < padresX[0].length && y >= 0 && y < padresY.length) {
                 camino = construirCamino(padresX, padresY, objetivoX, objetivoY);
             }
-            int[] nuevaPos = camino.pop();
-            int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
-            int yDestino = nuevaPos[1] * SIZE;
+            if (!camino.isEmpty()) {
+                int[] nuevaPos = camino.pop();
+                int xDestino = nuevaPos[0] * SIZE; // Multiplicamos por SIZE para obtener la coordenada real del destino
+                int yDestino = nuevaPos[1] * SIZE;
 
-            direccion = moverHaciaDestino(xDestino, yDestino);
+                direccion = moverHaciaDestino(xDestino, yDestino);
+            }
         } else if (("dijkstra".equals(algoritmo) || "dijkstraAlternativo".equals(algoritmo))
                 && padresX != null && padresY != null && !this.eraVulnerable) {
             Stack<int[]> camino = construirCamino(padresX, padresY, objetivoX, objetivoY);

@@ -16,6 +16,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 /**
@@ -41,7 +43,6 @@ public class P06_GameOverViewController extends Controller implements Initializa
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
     }
 
     @Override
@@ -57,6 +58,9 @@ public class P06_GameOverViewController extends Controller implements Initializa
     }
 
     public void cargarInterfazJuegoCompletado(Juego juego, Partida partida) {
+        lbGameWinOver.setText("Partida Completada");
+        lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
+        cargarVidas(juego);
         Trofeo trofeo = partida.obtenerTrofeo("Experto");
         if (!juego.pacmanMurio && !trofeo.isDesbloqueado()) {
             trofeo.setCont(1);
@@ -101,6 +105,9 @@ public class P06_GameOverViewController extends Controller implements Initializa
     }
 
     public void cargarInterfazSiguienteNivel(Juego juego, Partida partida) {
+        lbGameWinOver.setText("Nivel Completado");
+        lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
+        cargarVidas(juego);
         Trofeo trofeo = partida.obtenerTrofeo("Experto");
         if (!juego.pacmanMurio && !trofeo.isDesbloqueado()) {
             trofeo.setCont(1);
@@ -144,6 +151,9 @@ public class P06_GameOverViewController extends Controller implements Initializa
     }
 
     public void cargarInterfazPausa(Juego juego, Partida partida) {
+        lbGameWinOver.setText("Juego Pausado");
+        lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
+        cargarVidas(juego);
         MFXButton btnContinuar = new MFXButton("Continuar");
         btnContinuar.setOnAction(event -> {
             hxContBoton.getChildren().clear();
@@ -154,6 +164,9 @@ public class P06_GameOverViewController extends Controller implements Initializa
     }
 
     public void cargarInterfazSinVidas(Juego juego, Partida partida) {
+        lbGameWinOver.setText("Sin vidas");
+        lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
+        cargarVidas(juego);
         MFXButton btnContinuar = new MFXButton("Comprar Vida y Continuar -1500pts.");
         btnContinuar.setOnAction(event -> {
             juego.getPacMan().setPuntos(juego.getPacMan().getPuntos() - 1500);
@@ -166,6 +179,9 @@ public class P06_GameOverViewController extends Controller implements Initializa
     }
 
     public void cargarInterfazSinVidasSinPuntos(Juego juego, Partida partida) {
+        lbGameWinOver.setText("Sin vidas y puntos suficientes");
+        lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
+        cargarVidas(juego);
         MFXButton btnContinuar = new MFXButton("Reintentar nivel " + juego.getNivel());
         btnContinuar.setOnAction(event -> {
             JuegoViewController juegoView = (JuegoViewController) FlowController.getInstance().getController("JuegoView");
@@ -174,6 +190,17 @@ public class P06_GameOverViewController extends Controller implements Initializa
             getStage().close();
         });
         hxContBoton.getChildren().add(btnContinuar);
+    }
+    
+    private void cargarVidas(Juego juego) {
+        hxContVidas.getChildren().clear();
+        for (int i = 0; i < 6; i++) {
+            if (juego.getPacMan().getVidas() < i + 1) {
+                hxContVidas.getChildren().add(new ImageView(new Image("cr/ac/una/pacman/resources/PacManMuerto.png")));
+            } else {
+                hxContVidas.getChildren().add(new ImageView(new Image("cr/ac/una/pacman/resources/PacMan.png")));
+            }
+        }
     }
 
 }

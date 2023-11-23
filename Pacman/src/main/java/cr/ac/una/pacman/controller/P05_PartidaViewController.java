@@ -40,10 +40,12 @@ public class P05_PartidaViewController extends Controller implements Initializab
     private VBox vxContTrofeos;
     @FXML
     private MFXButton btnEstadisticas;
-
-    Partida partida;
     @FXML
     private AnchorPane root;
+    @FXML
+    private Label lbDificultad;
+
+    Partida partida;
 
     /**
      * Initializes the controller class.
@@ -55,7 +57,8 @@ public class P05_PartidaViewController extends Controller implements Initializab
         AnchorPane.setRightAnchor(root, 0.0);
         AnchorPane.setBottomAnchor(root, 0.0);
         partida = (Partida) AppContext.getInstance().get("Partida");
-        lbTitulo.setText("Jugador:" + partida.getJugador());
+        lbDificultad.setText("Dificultad: " + partida.getDificultad());
+        lbTitulo.setText("Jugador: " + partida.getJugador());
         for (int i = 0; i < 10; i += 3) {
             HBox hxItems = new HBox();
             hxItems.setAlignment(Pos.CENTER);
