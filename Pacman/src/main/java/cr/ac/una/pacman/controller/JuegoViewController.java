@@ -12,6 +12,7 @@ import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
+import cr.ac.una.pacman.util.ManejoDatos;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +160,7 @@ public class JuegoViewController extends Controller implements Initializable {
                             juego.pausa();
                             P06_GameOverViewController gameOver = (P06_GameOverViewController) FlowController.getInstance().getController("P06_GameOverView");
                             gameOver.cargarInterfazPausa(juego, partida);
+//                            gameOver.cargarInterfazSiguienteNivel(juego, partida);
                             FlowController.getInstance().goViewInWindowModal("P06_GameOverView", stage, false);
                         }
                     }
@@ -377,12 +379,6 @@ public class JuegoViewController extends Controller implements Initializable {
     }
 
     public void reiniciarJuego() {
-        if (partida.obtenerEstadistica("MayorPuntosN" + juego.getNivel()) < juego.getPacMan().getPuntos()) {
-            partida.actualizarEstadistica("MayorPuntosN" + juego.getNivel(), juego.getPacMan().getPuntos());
-        }
-        if (partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()) > juego.cronometro.getTime()) {
-            partida.actualizarEstadistica("MejorTiempoN" + juego.getNivel(), juego.cronometro.getTime());
-        }
         AppContext.getInstance().set("Partida", partida);
         AppContext.getInstance().set("Nivel", "" + nivel);
         animationTimer.stop();
@@ -403,6 +399,7 @@ public class JuegoViewController extends Controller implements Initializable {
         }
         AppContext.getInstance().set("Partida", partida);
         AppContext.getInstance().set("Nivel", "" + (nivel + 1));
+        ManejoDatos.guardarPartidas(partida);
         animationTimer.stop();
         juego.matarHilos();
         inicializarJuego();
@@ -421,6 +418,7 @@ public class JuegoViewController extends Controller implements Initializable {
             partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
         }
         AppContext.getInstance().set("Partida", partida);
+        ManejoDatos.guardarPartidas(partida);
         animationTimer.stop();
         juego.matarHilos();
         FlowController.getInstance().delete("JuegoView");

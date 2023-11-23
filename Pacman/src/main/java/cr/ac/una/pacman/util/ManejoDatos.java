@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class ManejoDatos {
 
-    private static final String TXT_PATH = "src/main/java/cr/ac/una/proyecto1_datos/model/datos_partida.txt";
+    private static final String TXT_PATH = "src/main/java/cr/ac/una/pacman/model/datos_partida.txt";
 
     // Método para buscar un Jugador por su nombre.
     public static Partida buscarJugadorPorNombre(String nombre) {
@@ -77,6 +77,7 @@ public class ManejoDatos {
                     Trofeo trofeo = entry.getValue();
                     bw.write(trofeo.getNombre() + "-" + trofeo.getDescripcion() + "-" + trofeo.isDesbloqueado() + "-" + trofeo.getCont() + ";");
                 }
+                bw.write(",");
 
                 // Se obtienen las estadísticas del jugador.
                 Map<String, Integer> estadisticas = partida.getEstadisticas();
@@ -93,7 +94,7 @@ public class ManejoDatos {
                 // Se itera sobre los movimientos y se escribe cada uno en el formato adecuado.
                 for (Laberinto laberinto : laberintos) {
                     // Se escribe el nivel, tema y matriz del laberinto.
-                    bw.write(laberinto.getNivel() + "#" + laberinto.getTema() + "#");
+                    bw.write(laberinto.getNivel() + "<" + laberinto.getTema() + "<");
 
                     char[][] matriz = laberinto.getMatriz();
                     for (int i = 0; i < matriz.length; i++) {
@@ -132,9 +133,9 @@ public class ManejoDatos {
                 for (String trofeoData : trofeosData) {
                     String[] trofeoInfo = trofeoData.split("-");
                     String nombreTrofeo = trofeoInfo[0];
-                    String descripcionTrofeo = trofeoInfo[2];
-                    boolean desbloqueadoTrofeo = Boolean.parseBoolean(trofeoInfo[3]);
-                    int contTrofeo = Integer.parseInt(trofeoInfo[4]);
+                    String descripcionTrofeo = trofeoInfo[1];
+                    boolean desbloqueadoTrofeo = Boolean.parseBoolean(trofeoInfo[2]);
+                    int contTrofeo = Integer.parseInt(trofeoInfo[3]);
 
                     Trofeo trofeo = new Trofeo(nombreTrofeo, descripcionTrofeo);
                     trofeo.setDesbloqueado(desbloqueadoTrofeo);
@@ -158,7 +159,7 @@ public class ManejoDatos {
                 List<Laberinto> laberintos = new ArrayList<>();
                 String[] laberintosData = datos[4].split(";");
                 for (String laberintoData : laberintosData) {
-                    String[] laberintoInfo = laberintoData.split("#");
+                    String[] laberintoInfo = laberintoData.split("<");
                     int nivelLaberinto = Integer.parseInt(laberintoInfo[0]);
                     String temaLaberinto = laberintoInfo[1];
 

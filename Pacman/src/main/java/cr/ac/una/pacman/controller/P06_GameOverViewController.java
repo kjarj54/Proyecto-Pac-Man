@@ -69,10 +69,10 @@ public class P06_GameOverViewController extends Controller implements Initializa
             trofeo.setDesbloqueado(true);
             partida.actualizarTrofeo("Clasico", trofeo);
         }
-        trofeo = partida.obtenerTrofeo("Rey");
+        trofeo = partida.obtenerTrofeo("Rey del PacMan");
         if ("Dificil".equals(partida.getDificultad()) && !trofeo.isDesbloqueado()) {
             trofeo.setDesbloqueado(true);
-            partida.actualizarTrofeo("Rey", trofeo);
+            partida.actualizarTrofeo("Rey del PacMan", trofeo);
         }
         if (partida.obtenerEstadistica("MejorTiempoN" + juego.getNivel()) > juego.cronometro.getTime()) {
             partida.actualizarEstadistica("MejorTiempoN" + juego.getNivel(), juego.cronometro.getTime());

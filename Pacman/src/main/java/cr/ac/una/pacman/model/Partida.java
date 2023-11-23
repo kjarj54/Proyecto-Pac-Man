@@ -66,12 +66,12 @@ public class Partida {
         this.estadisticas.put("MejorTiempoN10", 9999999);
         this.estadisticas.put("TiempoTotal", 9999999);
 
-        this.trofeos.put("Clasico", new Trofeo("Clásico", "Trofeo para el ganador del torneo Clásico"));
+        this.trofeos.put("Clasico", new Trofeo("Clasico", "Trofeo para el ganador del torneo Clásico"));
         this.trofeos.put("Cazador", new Trofeo("Cazador", "Trofeo para el jugador con más bajas en el torneo Cazador"));
         this.trofeos.put("Experto", new Trofeo("Experto", "Trofeo para el jugador con más puntos en el torneo Experto"));
         this.trofeos.put("Encierro", new Trofeo("Encierro", "Trofeo para el ganador del torneo Encierro"));
         this.trofeos.put("Flash", new Trofeo("Flash", "Trofeo para el jugador más rápido en el torneo Flash"));
-        this.trofeos.put("Rey", new Trofeo("Rey del Pac-Man", "Trofeo para el ganador del torneo Rey del Pac-Man"));
+        this.trofeos.put("Rey del PacMan", new Trofeo("Rey del PacMan", "Trofeo para el ganador del torneo Rey del PacMan"));
     }
 
     public Partida(String jugador, String dificultad, List<Laberinto> laberintos, Map<String, Integer> estadisticas, Map<String, Trofeo> trofeos) {

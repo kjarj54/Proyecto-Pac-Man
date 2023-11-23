@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -51,17 +52,21 @@ public class P05_PartidaViewController extends Controller implements Initializab
     public void initialize(URL url, ResourceBundle rb) {
         partida = (Partida) AppContext.getInstance().get("Partida");
         lbTitulo.setText(partida.getJugador());
-        int z = 0;
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 0; i < 10; i += 3) {
             HBox hxItems = new HBox();
             hxItems.setAlignment(Pos.CENTER);
-            for (int j = 0 + i; j < 2 + i; j++) {
+            hxItems.setSpacing(20);
+            VBox.setVgrow(hxItems, Priority.ALWAYS);
+            for (int j = 0; j < 3 && i + j < 10; j++) {
                 VBox vxItem = new VBox();
-                vxItem.setId("" + (j + z));
+                vxItem.setId("" + (i + j + 1));
                 vxItem.setPrefHeight(150);
-                vxItem.setPrefWidth(200);
-                vxItem.setAlignment(Pos.TOP_CENTER);
-                vxItem.setDisable(!partida.getNivel((j + z - 1)).isDesbloqueado());
+                vxItem.setPrefWidth(240);
+                vxItem.setAlignment(Pos.CENTER);
+                vxItem.setDisable(!partida.getNivel((i + j)).isDesbloqueado());
+                vxItem.setStyle("-fx-background-image: url('cr/ac/una/pacman/resources/fondos/" + partida.getNivel((i + j)).getTema() + "');"
+                        + "-fx-background-size: cover;"
+                        + "-fx-border-width: 5px;");
                 vxItem.setOnMouseClicked(event -> {
                     if (new Mensaje().showConfirmation("Iniciar nivel", getStage(), "Desea jugar el nivel " + vxItem.getId() + "?")) {
                         AppContext.getInstance().set("Partida", partida);
@@ -70,23 +75,21 @@ public class P05_PartidaViewController extends Controller implements Initializab
                         FlowController.getInstance().goView("JuegoView");
                     }
                 });
-                // Cambiar el fondo a gris cuando el mouse pasa por encima
-                vxItem.setOnMouseEntered(event -> {
-                    vxItem.setStyle("-fx-background-color: grey;");
-                });
-                // Restaurar el fondo cuando el mouse sale
-                vxItem.setOnMouseExited(event -> {
-                    vxItem.setStyle("-fx-background-color: transparent;");
-                });
+                vxItem.setOnMouseEntered(event -> vxItem.getStyleClass().add("vx-itemDentro"));
+                vxItem.setOnMouseExited(event -> vxItem.getStyleClass().remove("vx-itemDentro"));
 
-                Label lbTituloItem = new Label("" + (j + z));
+                Label lbTituloItem = new Label("" + (i + j + 1));
+                lbTituloItem.setStyle("-fx-font-size: 60px;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-effect: dropshadow(gaussian, black, 1, 1, 0, 0);"
+                        + "-fx-stroke: black;"
+                        + "-fx-stroke-width: 800;");
                 vxItem.getChildren().add(lbTituloItem);
                 hxItems.getChildren().add(vxItem);
             }
-            z++;
             vxContJuegos.getChildren().add(hxItems);
         }
-        String[] vector = {"Clasico", "Cazador", "Experto", "Encierro", "Flash", "Rey"};
+        String[] vector = {"Clasico", "Cazador", "Experto", "Encierro", "Flash", "Rey del PacMan"};
         for (int i = 0; i < 6; i++) {
             Trofeo trofeo = partida.obtenerTrofeo(vector[i]);
             VBox vxItem = new VBox();
@@ -95,13 +98,14 @@ public class P05_PartidaViewController extends Controller implements Initializab
             vxItem.setPrefWidth(200);
             vxItem.setAlignment(Pos.TOP_CENTER);
             vxItem.setDisable(!trofeo.isDesbloqueado());
-            // Cambiar el fondo a gris cuando el mouse pasa por encima
+            vxItem.setStyle("-fx-border-width: 5px;");
             vxItem.setOnMouseEntered(event -> {
                 vxItem.setStyle("-fx-background-color: grey;");
+                vxItem.getStyleClass().add("vx-itemDentro");
             });
-            // Restaurar el fondo cuando el mouse sale
             vxItem.setOnMouseExited(event -> {
                 vxItem.setStyle("-fx-background-color: transparent;");
+                vxItem.getStyleClass().remove("vx-itemDentro");
             });
 
             Label lbTituloItem = new Label(trofeo.getNombre());

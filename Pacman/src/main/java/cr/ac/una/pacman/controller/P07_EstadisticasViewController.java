@@ -100,6 +100,52 @@ public class P07_EstadisticasViewController extends Controller implements Initia
             // Agregar el HBox al VBox
             vbxContPuntosXnivel.getChildren().add(hbox);
         }
+        // Crear un bucle que se repita 10 veces
+        for (int i = 0; i < 10; i++) {
+            // Crear un HBox
+            HBox hbox = new HBox();
+            hbox.setAlignment(Pos.CENTER);
+            hbox.setSpacing(25);
+
+            // Crear dos Label y configurar su texto
+            Label labelNumero = new Label("Nivel " + Integer.toString(i + 1));
+            Label labelSeparador = new Label("--");
+            if (partida.obtenerEstadistica("CantNivelJugadoN" + (i + 1)) != 0) {
+                labelSeparador.setText("" + partida.obtenerEstadistica("CantNivelJugadoN" + (i + 1)));
+            }
+
+            // Agregar los Label al HBox
+            hbox.getChildren().addAll(labelNumero, labelSeparador);
+
+            // Agregar el HBox al VBox
+            vbxContCantNivelJugado.getChildren().add(hbox);
+        }
+        // Crear un bucle que se repita 10 veces
+        for (int i = 0; i < 10; i++) {
+            // Crear un HBox
+            HBox hbox = new HBox();
+            hbox.setAlignment(Pos.CENTER);
+            hbox.setSpacing(25);
+
+            // Crear dos Label y configurar su texto
+            Label labelNumero = new Label("Nivel " + Integer.toString(i + 1));
+            Label labelSeparador = new Label("--");
+            if (partida.obtenerEstadistica("MejorTiempoN" + (i + 1)) != 0) {
+                int time = partida.obtenerEstadistica("MejorTiempoN" + (i + 1));
+                int minutes = time / 60;
+                int seconds = time % 60;
+
+                String minutesStr = String.format("%02d", minutes); // Formatea los minutos con dos dígitos
+                String secondsStr = String.format("%02d", seconds); // Formatea los segundos con dos dígitos
+                labelSeparador.setText("Tiempo: " + minutesStr + ":" + secondsStr);
+            }
+
+            // Agregar los Label al HBox
+            hbox.getChildren().addAll(labelNumero, labelSeparador);
+
+            // Agregar el HBox al VBox
+            bvxMejorTiempoXnivel.getChildren().add(hbox);
+        }
     }
 
     @Override
