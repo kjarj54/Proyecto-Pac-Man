@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Partida;
@@ -9,6 +5,7 @@ import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.Mensaje;
+import cr.ac.una.pacman.util.SoundUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,7 +48,7 @@ public class P05_PartidaViewController extends Controller implements Initializab
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         partida = (Partida) AppContext.getInstance().get("Partida");
-        lbTitulo.setText(partida.getJugador());
+        lbTitulo.setText("Jugador:" + partida.getJugador());
         for (int i = 0; i < 10; i += 3) {
             HBox hxItems = new HBox();
             hxItems.setAlignment(Pos.CENTER);
@@ -113,14 +110,18 @@ public class P05_PartidaViewController extends Controller implements Initializab
             imageTrofeo.setPreserveRatio(false);
             imageTrofeo.setFitWidth(50);
             imageTrofeo.setFitHeight(50);
+            lbTituloItem.getStyleClass().add("label-minus");
+
             Label lbDescripcion = new Label(trofeo.getDescripcion());
             lbDescripcion.setTextAlignment(TextAlignment.CENTER);
-            lbDescripcion.setFont(new Font(10));
+            //lbDescripcion.setFont(new Font(10));
             lbDescripcion.setWrapText(true);
-            lbDescripcion.setPrefWidth(100);
+            lbDescripcion.setPrefWidth(250);
+            lbDescripcion.getStyleClass().add("label-minus");
             vxItem.getChildren().addAll(lbTituloItem, imageTrofeo, lbDescripcion);
             vxContTrofeos.getChildren().add(vxItem);
         }
+        onActionMouse();
     }
 
     @Override
@@ -129,15 +130,33 @@ public class P05_PartidaViewController extends Controller implements Initializab
 
     @FXML
     private void onActionBtnSalir(ActionEvent event) {
+        SoundUtil.mouseEnterSound();
         FlowController.getInstance().delete("P05_PartidaView");
         FlowController.getInstance().goView("P02_MenuView");
     }
 
     @FXML
     private void onActionBtnEstadisticas(ActionEvent event) {
+        SoundUtil.mouseEnterSound();
         AppContext.getInstance().set("Partida", partida);
         FlowController.getInstance().delete("P05_PartidaView");
         FlowController.getInstance().goView("P07_EstadisticasView");
+    }
+
+    private void onActionMouse() {
+        btnEstadisticas.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnEstadisticas.setText("►Estadísticas");
+        });
+
+        btnEstadisticas.setOnMouseExited(event -> btnEstadisticas.setText(" Estadísticas"));
+
+        btnSalir.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnSalir.setText("►Salir");
+        });
+
+        btnSalir.setOnMouseExited(event -> btnSalir.setText(" Salir"));
     }
 
 }

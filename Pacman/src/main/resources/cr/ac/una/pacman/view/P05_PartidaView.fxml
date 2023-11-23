@@ -4,49 +4,36 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pacman.controller.P05_PartidaViewController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" styleClass="fondo-pantalla" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pacman.controller.P05_PartidaViewController">
    <children>
-      <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <MFXButton fx:id="btnSalir" onAction="#onActionBtnSalir" styleClass="mfx-button-Image">
-                     <graphic>
-                        <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../../Proyecto-CuboRubik/Proyecto1_Datos/src/main/resources/cr/ac/una/proyecto1_datos/resources/media/icons/back.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="Regresar al menú principal" />
-                     </tooltip>
-                  </MFXButton>
+                  <HBox>
+                     <children>
+                        <MFXButton fx:id="btnSalir" onAction="#onActionBtnSalir" styleClass="mfx-button-menu" text=" Salir" />
+                     </children>
+                  </HBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <MFXButton fx:id="btnEstadisticas" onAction="#onActionBtnEstadisticas" text="Estadisticas" />
+                        <MFXButton fx:id="btnEstadisticas" onAction="#onActionBtnEstadisticas" styleClass="mfx-button-menu-minus" text=" Estadísticas" />
                      </children>
                   </VBox>
                </children>
                <HBox.margin>
                   <Insets />
                </HBox.margin>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
             </VBox>
-            <VBox maxWidth="780.0" prefWidth="780.0">
+            <VBox maxWidth="780.0" prefWidth="780.0" spacing="5.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="panel-border">
                      <children>
-                        <Label fx:id="lbTitulo" text="Partida ........." />
+                        <Label fx:id="lbTitulo" styleClass="label-all" text="Partida ........." />
                      </children>
                   </HBox>
                   <ScrollPane VBox.vgrow="ALWAYS">
@@ -59,17 +46,20 @@
                   </ScrollPane>
                </children>
             </VBox>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="300.0">
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="300.0" spacing="5.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="panel-border">
                      <children>
-                        <Label text="Trofeos" />
+                        <Label styleClass="label-all" text="Trofeos" />
                      </children>
                   </HBox>
-                  <VBox fx:id="vxContTrofeos" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
+                  <VBox fx:id="vxContTrofeos" alignment="TOP_CENTER" styleClass="panel-border" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
          </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
       </HBox>
    </children>
 </AnchorPane>

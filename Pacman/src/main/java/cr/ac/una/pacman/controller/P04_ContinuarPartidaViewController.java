@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Partida;
@@ -9,6 +5,7 @@ import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.ManejoDatos;
 import cr.ac.una.pacman.util.Mensaje;
+import cr.ac.una.pacman.util.SoundUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
@@ -43,8 +40,8 @@ public class P04_ContinuarPartidaViewController extends Controller implements In
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-    }    
+        onActionMouse();
+    }
 
     @Override
     public void initialize() {
@@ -52,11 +49,13 @@ public class P04_ContinuarPartidaViewController extends Controller implements In
 
     @FXML
     private void onActionBtnSalir(ActionEvent event) {
+        SoundUtil.mouseEnterSound();
         FlowController.getInstance().goView("P02_MenuView");
     }
 
     @FXML
     private void onActionBtnIniciar(ActionEvent event) {
+        SoundUtil.mouseEnterSound();
         if (txfNombre.getText().isBlank() || txfNombre.getText().isEmpty()) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Ingresar Jugador", getStage(), "Es necesario digitar un nombre para cargar partida");
         } else if (ManejoDatos.buscarJugadorPorNombre(txfNombre.getText()) == null) {
@@ -68,5 +67,20 @@ public class P04_ContinuarPartidaViewController extends Controller implements In
             FlowController.getInstance().goView("P05_PartidaView");
         }
     }
-    
+
+    private void onActionMouse() {
+        btnCargarPartida.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnCargarPartida.setText("►Iniciar Partida");
+        });
+
+        btnCargarPartida.setOnMouseExited(event -> btnCargarPartida.setText(" Iniciar Partida"));
+
+        btnSalir.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnSalir.setText("►Salir");
+        });
+
+        btnSalir.setOnMouseExited(event -> btnSalir.setText(" Salir"));
+    }
 }

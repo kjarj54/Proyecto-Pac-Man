@@ -1,26 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.Mensaje;
+import cr.ac.una.pacman.util.SoundUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXRadioButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Stack;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.MediaView;
@@ -72,12 +66,14 @@ public class P03_NuevaPartidaViewController extends Controller implements Initia
 
     @FXML
     private void onActionBtnSalir(ActionEvent event) {
+        SoundUtil.mouseEnterSound();
         FlowController.getInstance().delete("P03_NuevaPartidaViewController");
         FlowController.getInstance().goView("P02_MenuView");
     }
 
     @FXML
     private void onActionBtnIniciar(ActionEvent event) {
+        SoundUtil.mouseEnterSound();
         if (txfNombre.getText().isBlank()) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Ingresar Partida", getStage(), "Es necesario digitar un nombre para continuar");
         } else {
@@ -85,7 +81,7 @@ public class P03_NuevaPartidaViewController extends Controller implements Initia
             partida.generarNiveles();
             AppContext.getInstance().set("Partida", partida);
             FlowController.getInstance().delete("P03_NuevaPartidaViewController");
-            
+
             FlowController.getInstance().goView("P05_PartidaView");
             txfNombre.clear();
         }
@@ -93,17 +89,17 @@ public class P03_NuevaPartidaViewController extends Controller implements Initia
 
     private void onActionMouse() {
         btnIniciar.setOnMouseEntered(event -> {
-            String imageFile = new File("src/main/resources/cr/ac/una/pacman/resources/media/icons/playButton.gif").getAbsolutePath();
-            Image image = new Image(new File(imageFile).toURI().toString());
-            imvPlayButton.setImage(image);
+            SoundUtil.mouseHoverSound();
+            btnIniciar.setText("►Iniciar Partida");
         });
 
-        btnIniciar.setOnMouseExited(event -> {
-            if (!event.isPrimaryButtonDown()) {
-                String imageFile = new File("src/main/resources/cr/ac/una/pacman/resources/media/icons/playButton.png").getAbsolutePath();
-                Image image = new Image(new File(imageFile).toURI().toString());
-                imvPlayButton.setImage(image);
-            }
+        btnIniciar.setOnMouseExited(event -> btnIniciar.setText(" Iniciar Partida"));
+
+        btnSalir.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnSalir.setText("►Salir");
         });
+
+        btnSalir.setOnMouseExited(event -> btnSalir.setText(" Salir"));
     }
 }
