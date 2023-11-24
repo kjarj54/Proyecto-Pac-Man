@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.pacman.model;
 
-import cr.ac.una.pacman.App;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
-import java.io.File;
-import java.io.IOException;
+import cr.ac.una.pacman.util.SoundUtil;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,16 +9,10 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
@@ -789,6 +777,7 @@ public class Fantasma extends Personaje {
 
         if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
             if ((int) juego.getPacMan().getY() / SIZE == y && (int) juego.getPacMan().getX() / SIZE == x) {
+                SoundUtil.pacmanDeath();
                 partida.actualizarEstadistica("TotalVidasPerdidas", partida.obtenerEstadistica("TotalVidasPerdidas") + 1);
                 juego.cambiarVidas(-1);
                 juego.pacmanMurio = true;
@@ -801,6 +790,7 @@ public class Fantasma extends Personaje {
             }
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             if ((int) (juego.getPacMan().getY() + 19) / SIZE == y1 && (int) (juego.getPacMan().getX() + 19) / SIZE == x1) {
+                SoundUtil.pacmanDeath();
                 juego.cambiarVidas(-1);
                 partida.actualizarEstadistica("TotalVidasPerdidas", partida.obtenerEstadistica("TotalVidasPerdidas") + 1);
                 juego.pacmanMurio = true;

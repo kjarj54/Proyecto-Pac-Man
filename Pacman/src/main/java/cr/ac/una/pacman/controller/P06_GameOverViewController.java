@@ -5,6 +5,7 @@ import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.ManejoDatos;
+import cr.ac.una.pacman.util.SoundUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -39,6 +40,7 @@ public class P06_GameOverViewController extends Controller implements Initializa
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        onActionMouse();
     }
 
     @Override
@@ -47,6 +49,7 @@ public class P06_GameOverViewController extends Controller implements Initializa
 
     @FXML
     private void onActionBtnAbandonar(ActionEvent event) {
+        SoundUtil.mouseHoverSound();
         JuegoViewController juegoView = (JuegoViewController) FlowController.getInstance().getController("JuegoView");
         juegoView.FinalizarJuego();
         hxContBoton.getChildren().clear();
@@ -133,13 +136,20 @@ public class P06_GameOverViewController extends Controller implements Initializa
         if (!juego.pacmanMurio && partida.obtenerEstadistica("MayorPuntosVidas") < juego.getPacMan().getPuntos()) {
             partida.actualizarEstadistica("MayorPuntosVidas", juego.getPacMan().getPuntos());
         }
-        MFXButton btnContinuar = new MFXButton("Siguiente Nivel");
+        MFXButton btnContinuar = new MFXButton(" Siguiente Nivel");
+        btnContinuar.getStyleClass().add("mfx-button-menu");
         btnContinuar.setOnAction(event -> {
             JuegoViewController juegoView = (JuegoViewController) FlowController.getInstance().getController("JuegoView");
             juegoView.SiguienteNivel();
             hxContBoton.getChildren().clear();
             getStage().close();
         });
+        btnContinuar.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnContinuar.setText("►Siguiente Nivel");
+        });
+        btnContinuar.setOnMouseExited(event -> btnContinuar.setText(" Siguiente Nivel"));
+        
         hxContBoton.getChildren().add(btnContinuar);
         partida.getNivel(juego.getNivel()).setDesbloqueado(true);
         ManejoDatos.guardarPartidas(partida);
@@ -151,11 +161,17 @@ public class P06_GameOverViewController extends Controller implements Initializa
         lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
         cargarVidas(juego);
         MFXButton btnContinuar = new MFXButton("Continuar");
+        btnContinuar.getStyleClass().add("mfx-button-menu");
         btnContinuar.setOnAction(event -> {
             hxContBoton.getChildren().clear();
             juego.continuar();
             getStage().close();
         });
+        btnContinuar.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnContinuar.setText("►Continuar");
+        });
+        btnContinuar.setOnMouseExited(event -> btnContinuar.setText(" Continuar"));
         hxContBoton.getChildren().add(btnContinuar);
     }
 
@@ -163,7 +179,9 @@ public class P06_GameOverViewController extends Controller implements Initializa
         lbGameWinOver.setText("Sin vidas");
         lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
         cargarVidas(juego);
-        MFXButton btnContinuar = new MFXButton("Comprar Vida y Continuar -1500pts.");
+        
+        MFXButton btnContinuar = new MFXButton(" Comprar Vida y Continuar -1500pts.");
+        btnContinuar.getStyleClass().add("mfx-button-menu-minus");
         btnContinuar.setOnAction(event -> {
             juego.getPacMan().setPuntos(juego.getPacMan().getPuntos() - 1500);
             juego.getPacMan().setVidas(juego.getPacMan().getVidas() + 1);
@@ -171,9 +189,15 @@ public class P06_GameOverViewController extends Controller implements Initializa
             juego.continuar();
             getStage().close();
         });
+        btnContinuar.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnContinuar.setText("►Comprar Vida y Continuar -1500pts.");
+        });
+        btnContinuar.setOnMouseExited(event -> btnContinuar.setText(" Comprar Vida y Continuar -1500pts."));
+        
         hxContBoton.getChildren().add(btnContinuar);
     }
-    
+
     public void cargarInterfazSinVidasSinPuntos(Juego juego, Partida partida) {
         lbGameWinOver.setText("Sin vidas y puntos suficientes");
         lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
@@ -187,7 +211,7 @@ public class P06_GameOverViewController extends Controller implements Initializa
         });
         hxContBoton.getChildren().add(btnContinuar);
     }
-    
+
     private void cargarVidas(Juego juego) {
         hxContVidas.getChildren().clear();
         for (int i = 0; i < 6; i++) {
@@ -197,6 +221,14 @@ public class P06_GameOverViewController extends Controller implements Initializa
                 hxContVidas.getChildren().add(new ImageView(new Image("cr/ac/una/pacman/resources/PacMan.png")));
             }
         }
+    }
+
+    private void onActionMouse() {
+        btnAbandonar.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnAbandonar.setText("►Abandonar");
+        });
+        btnAbandonar.setOnMouseExited(event -> btnAbandonar.setText(" Abandonar"));
     }
 
 }

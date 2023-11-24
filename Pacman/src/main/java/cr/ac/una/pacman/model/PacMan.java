@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.pacman.model;
 
 import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
 import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
+import cr.ac.una.pacman.util.SoundUtil;
 import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -188,10 +185,12 @@ public class PacMan extends Personaje {
         char celda1 = laberinto.getMatrizCelda(y1, x1);
 
         if ((this.getDireccion() == 0 || this.getDireccion() == 1) && celda == 'p') {
+//            SoundUtil.pacmanMunchUniq();
             laberinto.setMatrizCelda(' ', y, x);
             this.puntos += (10 * juego.multiplicadorPuntaje);
             juego.puntosActuales -= 1;
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3) && celda1 == 'p') {
+//            SoundUtil.pacmanMunchUniq();
             laberinto.setMatrizCelda(' ', y1, x1);
             this.puntos += (10 * juego.multiplicadorPuntaje);
             juego.puntosActuales -= 1;
@@ -205,6 +204,7 @@ public class PacMan extends Personaje {
         if ((this.getDireccion() == 0 || this.getDireccion() == 1)) {
             for (Fantasma fant : juego.getFantasmas()) {
                 if (!fant.isEncerrado() && !fant.isMuerto() && fant.isVulnerable() && ((int) fant.getY() / SIZE == y && (int) fant.getX() / SIZE == x)) {
+                    SoundUtil.ghostDeath();
                     fant.ultPosY = ROWS / 2;
                     fant.ultPosX = COLUMNS / 2;
                     fant.setMuerto(true);
@@ -230,6 +230,7 @@ public class PacMan extends Personaje {
         } else if ((this.getDireccion() == 2 || this.getDireccion() == 3)) {
             for (Fantasma fant : juego.getFantasmas()) {
                 if (!fant.isEncerrado() && !fant.isMuerto() && fant.isVulnerable() && ((int) (fant.getY() + (SIZE - 1)) / SIZE == y1 && (int) (fant.getX() + (SIZE - 1)) / SIZE == x1)) {
+                    SoundUtil.ghostDeath();
                     fant.ultPosY = ROWS / 2;
                     fant.ultPosX = COLUMNS / 2;
                     fant.setMuerto(true);

@@ -1,3 +1,4 @@
 anthony,Facil,38270,1046
 Anthony,Dificil,7820,271
 Harold,Medio,5010,96
+Luis,Facil,12410,636

@@ -34,7 +34,7 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="panel-border">
                      <children>
-                        <Label fx:id="lbPlayer" styleClass="label-all" text="Player" />
+                        <Label fx:id="lbPlayer" styleClass="label-all-black" text="Player" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" spacing="10.0" styleClass="panel-border">

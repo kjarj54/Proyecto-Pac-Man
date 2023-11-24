@@ -133,4 +133,54 @@ public class SoundUtil {
             ex.printStackTrace(); // Manejo de errores: imprime la traza de errores
         }
     }
+    public static void ghostDeath() {
+        try {
+            File soundFile = new File("src/main/resources/cr/ac/una/pacman/resources/audios/eat_ghost.wav");
+
+            Clip sound = AudioSystem.getClip();
+            sound.open(AudioSystem.getAudioInputStream(soundFile));
+            sound.start();
+
+        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
+            ex.printStackTrace(); // Manejo de errores: imprime la traza de errores
+        }
+    }
+    public static void powerPellet() {
+        try {
+            File soundFile = new File("src/main/resources/cr/ac/una/pacman/resources/audios/power_pellet.wav");
+
+            Clip sound = AudioSystem.getClip();
+            sound.open(AudioSystem.getAudioInputStream(soundFile));
+            sound.start();
+
+        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
+            ex.printStackTrace(); // Manejo de errores: imprime la traza de errores
+        }
+    }
+    
+    public static void pacmanMunchUniq() {
+        try {
+            File soundFile = new File("src/main/resources/cr/ac/una/pacman/resources/audios/munch_1.wav");
+
+            Clip sound = AudioSystem.getClip();
+            sound.open(AudioSystem.getAudioInputStream(soundFile));
+            sound.start();
+
+        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
+            ex.printStackTrace(); // Manejo de errores: imprime la traza de errores
+        }
+    }
+    
+    public static void pacmanDeath() {
+        try {
+            File soundFile = new File("src/main/resources/cr/ac/una/pacman/resources/audios/death_1.wav");
+
+            Clip sound = AudioSystem.getClip();
+            sound.open(AudioSystem.getAudioInputStream(soundFile));
+            sound.start();
+
+        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
+            ex.printStackTrace(); // Manejo de errores: imprime la traza de errores
+        }
+    }
 }

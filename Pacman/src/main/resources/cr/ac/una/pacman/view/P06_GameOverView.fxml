@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="500.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pacman.controller.P06_GameOverViewController">
+<AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="500.0" styleClass="fondo-pantalla" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pacman.controller.P06_GameOverViewController">
    <children>
       <VBox alignment="CENTER" layoutX="250.0" layoutY="131.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -40,7 +39,7 @@
             <HBox fx:id="hxContBoton" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <MFXButton fx:id="btnAbandonar" onAction="#onActionBtnAbandonar" styleClass="mfx-button-menu" text="Abandonar" />
+                  <MFXButton fx:id="btnAbandonar" onAction="#onActionBtnAbandonar" styleClass="mfx-button-menu" text=" Abandonar" />
                </children>
             </HBox>
          </children>

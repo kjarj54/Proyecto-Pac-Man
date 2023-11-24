@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Fantasma;
@@ -12,7 +8,7 @@ import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.model.Trofeo;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
-import cr.ac.una.pacman.util.ManejoDatos;
+import cr.ac.una.pacman.util.SoundUtil;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +155,7 @@ public class JuegoViewController extends Controller implements Initializable {
                         direccion = 3;
                     case "SPACE" ->
                         juego.superVelocidad(partida);
-                    case "P" -> {
+                    case "ESC" -> {
                         if (!juego.pausa) {
                             juego.pausa();
                             P06_GameOverViewController gameOver = (P06_GameOverViewController) FlowController.getInstance().getController("P06_GameOverView");
@@ -178,6 +174,7 @@ public class JuegoViewController extends Controller implements Initializable {
         segundoAnt = 0;
         direccion = 3;
         ciclo();
+        SoundUtil.pacmanMusic(); 
     }
 
     public void ciclo() {

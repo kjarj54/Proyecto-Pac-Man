@@ -1,17 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Partida;
 import cr.ac.una.pacman.util.AppContext;
 import cr.ac.una.pacman.util.FlowController;
 import cr.ac.una.pacman.util.ManejoDatos;
+import cr.ac.una.pacman.util.SoundUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -79,6 +74,7 @@ public class P07_EstadisticasViewController extends Controller implements Initia
         cargarPuntosXnivel();
         cargarCantJugadoXnivel();
         cargarMejorTiempoXnivel();
+        onActionMouse();
     }
 
     @Override
@@ -200,5 +196,14 @@ public class P07_EstadisticasViewController extends Controller implements Initia
 
         // Asignar la lista observable a la TableView
         tbvHistorico.setItems(partidas);
+    }
+
+    private void onActionMouse() {
+        btnSalir.setOnMouseEntered(event -> {
+            SoundUtil.mouseHoverSound();
+            btnSalir.setText("►Salir");
+        });
+
+        btnSalir.setOnMouseExited(event -> btnSalir.setText(" Salir"));
     }
 }

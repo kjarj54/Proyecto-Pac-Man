@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.pacman.model;
 
 import static cr.ac.una.pacman.controller.JuegoViewController.COLUMNS;
 import static cr.ac.una.pacman.controller.JuegoViewController.ROWS;
 import static cr.ac.una.pacman.controller.JuegoViewController.SIZE;
 import cr.ac.una.pacman.util.Cronometro;
+import cr.ac.una.pacman.util.SoundUtil;
 import static io.github.palexdev.materialfx.utils.RandomUtils.random;
 import java.util.List;
 import java.util.Random;
@@ -262,6 +259,7 @@ public class Juego {
     }
 
     public void powerPellet() {
+        SoundUtil.powerPellet();
         if (!hiloPowerPellets) {
             hiloPowerPellets = true;
 
