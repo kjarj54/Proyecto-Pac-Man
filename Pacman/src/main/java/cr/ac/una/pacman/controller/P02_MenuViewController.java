@@ -57,7 +57,7 @@ public class P02_MenuViewController extends Controller implements Initializable 
 
     @FXML
     private void onActionBtnAcercaDe(ActionEvent event) {
-        FlowController.getInstance().goViewInWindowModal("P07_AcercaDeView", stage, Boolean.FALSE);
+        FlowController.getInstance().goViewInWindowModal("P09_AcercaDeView", stage, Boolean.FALSE);
     }
 
     @FXML
