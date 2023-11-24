@@ -155,7 +155,7 @@ public class JuegoViewController extends Controller implements Initializable {
                         direccion = 3;
                     case "SPACE" ->
                         juego.superVelocidad(partida);
-                    case "ESC" -> {
+                    case "P" -> {
                         if (!juego.pausa) {
                             juego.pausa();
                             P06_GameOverViewController gameOver = (P06_GameOverViewController) FlowController.getInstance().getController("P06_GameOverView");
