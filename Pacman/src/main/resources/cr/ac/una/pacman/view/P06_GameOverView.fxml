@@ -7,30 +7,31 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pacman.controller.P06_GameOverViewController">
+
+<AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="500.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pacman.controller.P06_GameOverViewController">
    <children>
       <VBox alignment="CENTER" layoutX="250.0" layoutY="131.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label text="PacMan" />
+                  <Label styleClass="label-all" text="PacMan" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="lbGameWinOver" text="Game Win or Over" />
+                  <Label fx:id="lbGameWinOver" styleClass="label-all" text="Game Win or Over" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label text="Puntos Totales: " />
-                  <Label fx:id="lbPuntosTotales" text="0" />
+                  <Label styleClass="label-all" text="Puntos Totales: " />
+                  <Label fx:id="lbPuntosTotales" styleClass="label-all" text="0" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label text="Vidas: " />
-                  <HBox fx:id="hxContVidas" alignment="CENTER" prefWidth="250.0" />
+                  <Label styleClass="label-all" text="Vidas: " />
+                  <HBox fx:id="hxContVidas" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -39,7 +40,7 @@
             <HBox fx:id="hxContBoton" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <MFXButton fx:id="btnAbandonar" onAction="#onActionBtnAbandonar" text="Abandonar" />
+                  <MFXButton fx:id="btnAbandonar" onAction="#onActionBtnAbandonar" styleClass="mfx-button-menu" text="Abandonar" />
                </children>
             </HBox>
          </children>

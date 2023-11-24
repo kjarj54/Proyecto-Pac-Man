@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.pacman.controller;
 
 import cr.ac.una.pacman.model.Juego;
@@ -177,7 +173,7 @@ public class P06_GameOverViewController extends Controller implements Initializa
         });
         hxContBoton.getChildren().add(btnContinuar);
     }
-
+    
     public void cargarInterfazSinVidasSinPuntos(Juego juego, Partida partida) {
         lbGameWinOver.setText("Sin vidas y puntos suficientes");
         lbPuntosTotales.setText("" + juego.getPacMan().getPuntos());
